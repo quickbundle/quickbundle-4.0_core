@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter 
+	xmlns="http://docbook.org/ns/docbook" 
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	version="5.0">
+	<title>安装</title>
+	<sect1>
+		<title>需要安装的第三方软件</title>
+		<para>建议JDK1.6.0，下载地址是http://www.java.com/</para>
+	</sect1>
+</chapter>
