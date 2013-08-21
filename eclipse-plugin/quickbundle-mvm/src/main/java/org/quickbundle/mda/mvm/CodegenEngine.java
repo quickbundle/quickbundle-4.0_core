@@ -101,16 +101,16 @@ public class CodegenEngine {
             monitor.beginTask("begin generate code......", mainRule.selectNodes(".//file").size() * lTableXmls.size());
         }
         for (Element thisTableTo : lTableXmls) {
-            String currentTableName = thisTableTo.getText();
+            String originalTableName = thisTableTo.getText();
             String currentTableXmlPath = RmXmlHelper.formatToUrl(quickbundleHome + FILE_CONCAT + thisTableTo.valueOf("@xmlName"));
             Document docCurrentTable = RmXmlHelper.parse(currentTableXmlPath);
-            currentTableName = getFilterTableName(currentTableXmlPath);
+            String filterTableName = getFilterTableName(currentTableXmlPath);
             List<Element> lFile = mvmDoc.selectNodes(".//file");
             for (Element eleFile : lFile) {
                 //取出当前rule的组件编码
                 String bundleCode = eleFile.valueOf("@bundleCode");
                 if(bundleCode != null && bundleCode.length() > 0 && docCurrentTable != null) {
-                	String customBundleCode = docCurrentTable.valueOf("/meta/tables/table[@tableName='" + currentTableName + "']/@customBundleCode");
+                	String customBundleCode = docCurrentTable.valueOf("/meta/tables/table[@tableName='" + originalTableName + "']/@customBundleCode");
                 	//如果定制编码不包含当前rule的组件编码，跳过
                 	if(!customBundleCode.matches("^[\\w,]*" + bundleCode + "[\\w,]*$")) {
                 		continue;
@@ -122,10 +122,10 @@ public class CodegenEngine {
                 String xsltPath = templatePath + eleFile.valueOf("@xsltPath");
                 String targetPath = eleFile.valueOf("@targetPath");
                 if (toTableNameKeyword != null && toTableNameKeyword.length() > 0) { //把TableName替换成表名
-                    targetPath = RmStringHelper.replaceFirst(targetPath, toTableNameKeyword, currentTableName);
+                    targetPath = RmStringHelper.replaceFirst(targetPath, toTableNameKeyword, filterTableName);
                 }
                 if ("java".equals(eleFile.valueOf("../@filesType")) || "jsp".equals(eleFile.valueOf("../@filesType"))) {
-                    targetPath = currentTableName.toLowerCase() + FILE_CONCAT + targetPath;
+                    targetPath = filterTableName.toLowerCase() + FILE_CONCAT + targetPath;
                 } else if ("config".equals(eleFile.valueOf("../@filesType"))) {
 
                 }

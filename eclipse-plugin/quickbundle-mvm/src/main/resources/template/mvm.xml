@@ -12,7 +12,6 @@
 			<file xsltPath="JavaEE-standard/java/dao/impl/TableNameDao.xsl" targetPath="dao/impl/TableNameDao.java"/>
 			<file xsltPath="JavaEE-standard/java/dao/ITableNameDao.xsl" targetPath="dao/ITableNameDao.java"/>
 			<file xsltPath="JavaEE-standard/java/util/exception/TableNameException.xsl" targetPath="util/exception/TableNameException.java"/>
-			<!--file xsltPath="JavaEE-standard/java/util/testcase/TableNameTestCase.xsl" targetPath="util/testcase/TableNameTestCase.java"/-->
 			<file xsltPath="JavaEE-standard/java/util/ITableNameConstants.xsl" targetPath="util/ITableNameConstants.java"/>
 			<file xsltPath="JavaEE-standard/java/vo/TableNameVo.xsl" targetPath="vo/TableNameVo.java"/>
 		</files>

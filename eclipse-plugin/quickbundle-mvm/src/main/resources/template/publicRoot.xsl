@@ -18,28 +18,28 @@
 	<xsl:variable name="userName" select="/meta/database/userName"/>
 	<xsl:variable name="password" select="/meta/database/password"/>
 	<xsl:variable name="dbProductName" select="/meta/database/dbProductName"/>
-	<!--定义/myTables中第1个table的全局变量-->
-	<xsl:variable name="tableName" select="/meta/tables/table[1]/@tableName"/>
-	<xsl:variable name="tableNameDisplay" select="/meta/tables/table[1]/@tableNameDisplay"/>
-	<xsl:variable name="tableFilterKeyword" select="/meta/tables/table[1]/@tableFilterKeyword"/>
-	<xsl:variable name="tablePk" select="/meta/tables/table[1]/@tablePk"/>
-	<xsl:variable name="statisticColumn" select="/meta/tables/table[1]/@statisticColumn"/>
-	<xsl:variable name="keyColumn" select="/meta/tables/table[1]/@keyColumn"/>
-	<xsl:variable name="tableComment" select="/meta/tables/table[1]/@tableComment"/>
-	<!--定义处理过的表名全局变量-->
-	<xsl:variable name="tableFormatName" select="str:filter($tableName, $tableFilterKeyword, 'specify')"/>
-	<xsl:variable name="tableFormatNameLower" select="lower-case($tableFormatName)"/>
-	<xsl:variable name="tableFormatNameUpperFirst" select="str:upperFirstTableName($tableName, $tableFilterKeyword, 'specify')"/>
-	<!--定义处理过的主键和外键-->
-	<xsl:variable name="tablePkFormat" select="str:filter($tablePk, /meta/tables/table[1]/column[@columnName=$tablePk]/@filterKeyword, /meta/tables/table[1]/column[@columnName=$tablePk]/@filterType)"/>
-	<xsl:variable name="tablePkFormatLower" select="lower-case($tablePkFormat)"/>
-	<xsl:variable name="tablePkDisplay" select="/meta/tables/table[1]/column[@columnName=$tablePk]/@columnNameDisplay"/>
-	<xsl:variable name="statisticColumnFormat" select="str:filter($statisticColumn, /meta/tables/table[1]/column[@columnName=$statisticColumn]/@filterKeyword, /meta/tables/table[1]/column[@columnName=$statisticColumn]/@filterType)"/>
-	<xsl:variable name="statisticColumnFormatLower" select="lower-case($statisticColumnFormat)"/>
-	<xsl:variable name="statisticColumnDisplay" select="/meta/tables/table[1]/column[@columnName=$statisticColumn]/@columnNameDisplay"/>
-	<xsl:variable name="keyColumnFormat" select="str:filter($keyColumn, /meta/tables/table[1]/column[@columnName=$keyColumn]/@filterKeyword, /meta/tables/table[1]/column[@columnName=$keyColumn]/@filterType)"/>
-	<xsl:variable name="keyColumnFormatLower" select="lower-case($keyColumnFormat)"/>
-	<xsl:variable name="keyColumnDisplay" select="/meta/tables/table[1]/column[@columnName=$keyColumn]/@columnNameDisplay"/>
+	<!--定义mainTable(默认主表)的全局变量-->
+	<xsl:variable name="tableName" select="str:getMainTableName(/meta)"/>
+	<xsl:variable name="tableNameDisplay" select="str:getTableNameDisplay(/meta, $tableName)"/>
+	<xsl:variable name="tableFilterKeyword" select="str:getTableFilterKeyword(/meta, $tableName)"/>
+	<xsl:variable name="tablePk" select="str:getTablePk(/meta, $tableName)"/>
+	<xsl:variable name="statisticColumn" select="str:getStatisticColumn(/meta, $tableName)"/>
+	<xsl:variable name="keyColumn" select="str:getKeyColumn(/meta, $tableName)"/>
+	<xsl:variable name="tableComment" select="str:getTableComment(/meta, $tableName)"/>
+	<!--定义mainTable(默认主表)的处理过的表名全局变量-->
+	<xsl:variable name="tableFormatName" select="str:getTableFormatName(/meta, $tableName)"/>
+	<xsl:variable name="tableFormatNameLower" select="str:getTableFormatNameLower(/meta, $tableName)"/>
+	<xsl:variable name="tableFormatNameUpperFirst" select="str:getTableFormatNameUpperFirst(/meta, $tableName)"/>
+	<!--定义mainTable(默认主表)的处理过的主键和外键-->
+	<xsl:variable name="tablePkFormat" select="str:getTablePkFormat(/meta, $tableName)"/>
+	<xsl:variable name="tablePkFormatLower" select="str:getTablePkFormatLower(/meta, $tableName)"/>
+	<xsl:variable name="tablePkDisplay" select="str:getTablePkDisplay(/meta, $tableName)"/>
+	<xsl:variable name="statisticColumnFormat" select="str:getStatisticColumnFormat(/meta, $tableName)"/>
+	<xsl:variable name="statisticColumnFormatLower" select="str:getStatisticColumnFormatLower(/meta, $tableName)"/>
+	<xsl:variable name="statisticColumnDisplay" select="str:getStatisticColumnDisplay(/meta, $tableName)"/>
+	<xsl:variable name="keyColumnFormat" select="str:getKeyColumnFormat(/meta, $tableName)"/>
+	<xsl:variable name="keyColumnFormatLower" select="str:getKeyColumnFormatLower(/meta, $tableName)"/>
+	<xsl:variable name="keyColumnDisplay" select="str:getKeyColumnDisplay(/meta, $tableName)"/>
 	<!--定义全局标记分隔符，为了统一过滤并批量替换-->
 	<xsl:variable name="division">RM_FLAG_DIVISION</xsl:variable>
 	<!--定义全局分隔符-->
@@ -146,6 +146,136 @@
 				<xsl:sequence select="lower-case($word)"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:function>
+	<!--************自定义函数，获得mainTable的tableName************-->
+	<xsl:function name="str:getMainTableName">
+		<xsl:param name="meta"/>
+		<xsl:choose>
+			<xsl:when test="$meta/relations/mainTable">
+				<xsl:sequence select="$meta/relations/mainTable/@tableName"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:sequence select="$meta/tables/table[1]/@tableName"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+	<!--************根据指定表名，获得xml的原始属性************-->
+	<!--自定义函数，获得指定tableName的tableNameDisplay-->
+	<xsl:function name="str:getTableNameDisplay">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/@tableNameDisplay"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的tableFilterKeyword-->
+	<xsl:function name="str:getTableFilterKeyword">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/@tableFilterKeyword"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的tablePk-->
+	<xsl:function name="str:getTablePk">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/@tablePk"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的statisticColumn-->
+	<xsl:function name="str:getStatisticColumn">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/@statisticColumn"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的keyColumn-->
+	<xsl:function name="str:getKeyColumn">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:variable name="keyColumn" select="$meta/tables/table[@tableName=$tableNameVar]/@keyColumn"/>
+		<xsl:sequence select="$keyColumn"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的tableComment-->
+	<xsl:function name="str:getTableComment">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/@tableComment"/>
+	</xsl:function>
+	<!--************根据指定表名，获得处理过的表名全局变量************-->
+	<!--自定义函数，获得指定tableName的tableFormatName-->
+	<xsl:function name="str:getTableFormatName">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="str:filter($tableNameVar, str:getTableFilterKeyword($meta, $tableNameVar), 'specify')"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的tableFormatNameLower-->
+	<xsl:function name="str:getTableFormatNameLower">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="lower-case(str:getTableFormatName($meta, $tableNameVar))"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的tableFormatNameUpperFirst-->
+	<xsl:function name="str:getTableFormatNameUpperFirst">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="str:upperFirstTableName($tableNameVar, str:getTableFilterKeyword($meta, $tableNameVar), 'specify')"/>
+	</xsl:function>
+	<!--************根据指定表名，获得处理过的主键和外键************-->
+	<!--自定义函数，获得指定tableName的tablePkFormat-->
+	<xsl:function name="str:getTablePkFormat">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:variable name="tablePkVar" select="str:getTablePk($meta, $tableNameVar)"/>
+		<xsl:sequence select="str:filter($tablePkVar, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$tablePkVar]/@filterKeyword, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$tablePkVar]/@filterType)"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的tablePkFormatLower-->
+	<xsl:function name="str:getTablePkFormatLower">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="lower-case(str:getTablePkFormat($meta, $tableNameVar))"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的tablePkDisplay-->
+	<xsl:function name="str:getTablePkDisplay">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:variable name="tablePkVar" select="str:getTablePk($meta, $tableNameVar)"/>
+		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$tablePkVar]/@columnNameDisplay"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的statisticColumnFormat-->
+	<xsl:function name="str:getStatisticColumnFormat">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:variable name="statisticColumnVar" select="str:getStatisticColumn($meta, $tableNameVar)"/>
+		<xsl:sequence select="str:filter($statisticColumnVar, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$statisticColumnVar]/@filterKeyword, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$statisticColumnVar]/@filterType)"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的statisticColumnFormatLower-->
+	<xsl:function name="str:getStatisticColumnFormatLower">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="lower-case(str:getStatisticColumnFormat($meta, $tableNameVar))"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的statisticColumnDisplay-->
+	<xsl:function name="str:getStatisticColumnDisplay">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:variable name="statisticColumnVar" select="str:getStatisticColumn($meta, $tableNameVar)"/>
+		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$statisticColumnVar]/@columnNameDisplay"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的keyColumnFormat-->
+	<xsl:function name="str:getKeyColumnFormat">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:variable name="keyColumnVar" select="str:getKeyColumn($meta, $tableNameVar)"/>
+		<xsl:sequence select="str:filter($keyColumnVar, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$keyColumnVar]/@filterKeyword, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$keyColumnVar]/@filterType)"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的keyColumnFormatLower-->
+	<xsl:function name="str:getKeyColumnFormatLower">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="lower-case(str:getKeyColumnFormat($meta, $tableNameVar))"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的keyColumnDisplay-->
+	<xsl:function name="str:getKeyColumnDisplay">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:variable name="keyColumnVar" select="str:getKeyColumn($meta, $tableNameVar)"/>
+		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$keyColumnVar]/@columnNameDisplay"/>
 	</xsl:function>
 	<!--处理根元素-->
 	<xsl:template match="/">

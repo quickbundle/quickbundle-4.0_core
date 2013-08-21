@@ -5,13 +5,13 @@
 	<!--忽略xml声明-->
 	<xsl:output method="xml" omit-xml-declaration="no" encoding="UTF-8"/>
 	<!--处理myTables-->
-	<xsl:template match="myTables">
+	<xsl:template match="meta">
 		<results>
 			<xsl:apply-templates/>
 		</results>
 	</xsl:template>
 	<!--处理table-->
-	<xsl:template match="/meta/tables/table[position()=1]">
+	<xsl:template match="/meta/tables/table[@tableName=str:getMainTableName(/meta)]">
 		<result>
 			<xsl:attribute name="tableFormatNameUpperFirst" select="$tableFormatNameUpperFirst"/>
 		</result>
