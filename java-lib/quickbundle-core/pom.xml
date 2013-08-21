@@ -3,15 +3,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.quickbundle</groupId>
-        <artifactId>java-lib.parent</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+	<parent>
+		<groupId>org.quickbundle</groupId>
+		<artifactId>java-lib.parent</artifactId>
+		<version>4.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-    <artifactId>quickbundle-core</artifactId>
-    <packaging>jar</packaging>
+	<artifactId>quickbundle-core</artifactId>
+	<packaging>jar</packaging>
 
 	<properties>
 		<encoding>UTF-8</encoding>
@@ -21,7 +21,7 @@
 		<jackson.version>2.1.4</jackson.version>
 		<basedir>./</basedir>
 	</properties>
-	
+
 	<licenses>
 		<license>
 			<name>Apache 2</name>
@@ -43,9 +43,19 @@
 		<developerConnection>scm:git:https://github.com/quickbundle/java-lib.git</developerConnection>
 		<url>https://github.com/quickbundle/java-lib/tree/master/quickbundle-core</url>
 	</scm>
-	
+
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<excludes>
+						<exclude>**/.gitkeep</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -168,11 +178,11 @@ encoding/<project>=UTF-8]]>
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.quickbundle</groupId>
-            <artifactId>quickbundle-tools</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
+		<dependency>
+			<groupId>org.quickbundle</groupId>
+			<artifactId>quickbundle-tools</artifactId>
+			<version>4.0.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
@@ -193,18 +203,18 @@ encoding/<project>=UTF-8]]>
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
 		</dependency>
-        <!-- JSON begin -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jaxb-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <!-- JSON end -->
+		<!-- JSON begin -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-jaxb-annotations</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<!-- JSON end -->
 		<dependency>
 			<groupId>org.safehaus.jug</groupId>
 			<artifactId>jug</artifactId>
