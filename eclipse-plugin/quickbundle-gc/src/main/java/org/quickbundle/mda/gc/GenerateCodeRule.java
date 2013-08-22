@@ -135,6 +135,7 @@ public class GenerateCodeRule {
                 mTempDisplayName.put(thisColumn.valueOf("../@tableName") + thisColumn.valueOf("@columnName"), defaultInit);
             }
             mTempOtherConfig.put("tableFilterKeyword", oldDocTable.valueOf("/meta/tables/table[1]/@tableFilterKeyword"));
+            mTempOtherConfig.put("tableDirName", oldDocTable.valueOf("/meta/tables/table[1]/@tableDirName"));
             mTempOtherConfig.put("tableNameDisplay", oldDocTable.valueOf("/meta/tables/table[1]/@tableNameDisplay"));
             mTempOtherConfig.put("statisticColumn", oldDocTable.valueOf("/meta/tables/table[1]/@statisticColumn"));
             mTempOtherConfig.put("keyColumn", oldDocTable.valueOf("/meta/tables/table[1]/@keyColumn"));
@@ -174,11 +175,14 @@ public class GenerateCodeRule {
                     thisColumn.selectSingleNode("@isBuild_list").setText(defaultInit[4]);
                 }
             }
+            if(mTempOtherConfig.get("tableNameDisplay") != null) {
+            	docTable.selectSingleNode("/meta/tables/table[1]/@tableNameDisplay").setText(mTempOtherConfig.get("tableNameDisplay").toString());
+            }
             if(mTempOtherConfig.get("tableFilterKeyword") != null) {
                 docTable.selectSingleNode("/meta/tables/table[1]/@tableFilterKeyword").setText(mTempOtherConfig.get("tableFilterKeyword").toString());
             }
-            if(mTempOtherConfig.get("tableNameDisplay") != null) {
-                docTable.selectSingleNode("/meta/tables/table[1]/@tableNameDisplay").setText(mTempOtherConfig.get("tableNameDisplay").toString());
+            if(mTempOtherConfig.get("tableDirName") != null) {
+            	docTable.selectSingleNode("/meta/tables/table[1]/@tableDirName").setText(mTempOtherConfig.get("tableDirName").toString());
             }
             if(mTempOtherConfig.get("statisticColumn") != null ) {
             	String statisticColumn = mTempOtherConfig.get("statisticColumn").toString();

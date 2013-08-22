@@ -22,6 +22,7 @@
 	<xsl:variable name="tableName" select="str:getMainTableName(/meta)"/>
 	<xsl:variable name="tableNameDisplay" select="str:getTableNameDisplay(/meta, $tableName)"/>
 	<xsl:variable name="tableFilterKeyword" select="str:getTableFilterKeyword(/meta, $tableName)"/>
+    <xsl:variable name="tableDirName" select="str:getTableDirName(/meta, $tableName)"/>
 	<xsl:variable name="tablePk" select="str:getTablePk(/meta, $tableName)"/>
 	<xsl:variable name="statisticColumn" select="str:getStatisticColumn(/meta, $tableName)"/>
 	<xsl:variable name="keyColumn" select="str:getKeyColumn(/meta, $tableName)"/>
@@ -172,6 +173,12 @@
 		<xsl:param name="tableNameVar" as="xs:string"/>
 		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/@tableFilterKeyword"/>
 	</xsl:function>
+    <!--自定义函数，获得指定tableName的tableDirName-->
+    <xsl:function name="str:getTableDirName">
+        <xsl:param name="meta"/>
+        <xsl:param name="tableNameVar" as="xs:string"/>
+        <xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/@tableDirName"/>
+    </xsl:function>
 	<!--自定义函数，获得指定tableName的tablePk-->
 	<xsl:function name="str:getTablePk">
 		<xsl:param name="meta"/>

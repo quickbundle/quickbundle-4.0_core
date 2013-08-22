@@ -10,59 +10,6 @@
 	<xsl:variable name="authorName" select="/meta/project/authorName"/>
 	<xsl:variable name="javaPackageName" select="/meta/project/javaPackageName"/>
 	<xsl:variable name="jspSourcePath" select="/meta/project/jspSourcePath"/>
-	<!--定义java文件的类名-->
-	<xsl:variable name="TableNameAction" select="concat($tableFormatNameUpperFirst, 'Action')"/>
-	<xsl:variable name="TableNameAjaxAction" select="concat($tableFormatNameUpperFirst, 'AjaxAction')"/>
-	<xsl:variable name="TableNameConditionAction" select="concat($tableFormatNameUpperFirst, 'ConditionAction')"/>
-	<xsl:variable name="TableNameReadOnlyAction" select="concat($tableFormatNameUpperFirst, 'ReadOnlyAction')"/>
-	<xsl:variable name="TableNameService" select="concat($tableFormatNameUpperFirst, 'Service')"/>
-	<xsl:variable name="ITableNameService" select="concat('I', $tableFormatNameUpperFirst, 'Service')"/>
-	<xsl:variable name="TableNameDao" select="concat($tableFormatNameUpperFirst, 'Dao')"/>
-	<xsl:variable name="ITableNameDao" select="concat('I', $tableFormatNameUpperFirst, 'Dao')"/>
-	<xsl:variable name="TableNameException" select="concat($tableFormatNameUpperFirst, 'Exception')"/>
-	<xsl:variable name="TableNameTestCase" select="concat($tableFormatNameUpperFirst, 'TestCase')"/>
-	<xsl:variable name="ITableNameConstants" select="concat('I', $tableFormatNameUpperFirst, 'Constants')"/>
-	<xsl:variable name="TableNameVo" select="concat($tableFormatNameUpperFirst, 'Vo')"/>
-	<!--定义java文件的包名-->
-	<xsl:variable name="TableNameActionPackage" select="concat($javaPackageName, '.', $tableFormatNameLower, '.web')"/>
-	<xsl:variable name="TableNameServicePackage" select="concat($javaPackageName, '.', $tableFormatNameLower, '.service.impl')"/>
-	<xsl:variable name="ITableNameServicePackage" select="concat($javaPackageName, '.', $tableFormatNameLower, '.service')"/>
-	<xsl:variable name="TableNameDaoPackage" select="concat($javaPackageName, '.', $tableFormatNameLower, '.dao.impl')"/>
-	<xsl:variable name="ITableNameDaoPackage" select="concat($javaPackageName, '.', $tableFormatNameLower, '.dao')"/>
-	<xsl:variable name="TableNameExceptionPackage" select="concat($javaPackageName, '.', $tableFormatNameLower, '.util.exception')"/>
-	<xsl:variable name="TableNameTestCasePackage" select="concat($javaPackageName, '.', $tableFormatNameLower, '.util.testcase')"/>
-	<xsl:variable name="ITableNameConstantsPackage" select="concat($javaPackageName, '.', $tableFormatNameLower, '.util')"/>
-	<xsl:variable name="TableNameVoPackage" select="concat($javaPackageName, '.', $tableFormatNameLower, '.vo')"/>
-	<!--定义java文件的路径加上类名-->
-	<xsl:variable name="TableNameActionFullPath" select="concat($TableNameActionPackage, '.', $TableNameAction)"/>
-	<xsl:variable name="TableNameAjaxActionFullPath" select="concat($TableNameActionPackage, '.', $TableNameAjaxAction)"/>
-	<xsl:variable name="TableNameConditionActionFullPath" select="concat($TableNameActionPackage, '.', $TableNameConditionAction)"/>
-	<xsl:variable name="TableNameReadOnlyActionFullPath" select="concat($TableNameActionPackage, '.', $TableNameReadOnlyAction)"/>
-	<xsl:variable name="TableNameServiceFullPath" select="concat($TableNameServicePackage, '.', $TableNameService)"/>
-	<xsl:variable name="ITableNameServiceFullPath" select="concat($ITableNameServicePackage, '.', $ITableNameService)"/>
-	<xsl:variable name="TableNameDaoFullPath" select="concat($TableNameDaoPackage, '.', $TableNameDao)"/>
-	<xsl:variable name="ITableNameDaoFullPath" select="concat($ITableNameDaoPackage, '.', $ITableNameDao)"/>
-	<xsl:variable name="TableNameExceptionFullPath" select="concat($TableNameExceptionPackage, '.', $TableNameException)"/>
-	<xsl:variable name="TableNameTestCaseFullPath" select="concat($TableNameTestCasePackage, '.', $TableNameTestCase)"/>
-	<xsl:variable name="ITableNameConstantsFullPath" select="concat($ITableNameConstantsPackage, '.', $ITableNameConstants)"/>
-	<xsl:variable name="TableNameVoFullPath" select="concat($TableNameVoPackage, '.', $TableNameVo)"/>
-	<!--定义jsp文件的文件名-->
-	<xsl:variable name="detailTableNameJsp" select="concat('detail', $tableFormatNameUpperFirst, '.jsp')"/>
-	<xsl:variable name="exportTableName_customJsp" select="concat('export', $tableFormatNameUpperFirst, '_custom.jsp')"/>
-	<xsl:variable name="exportTableName_excelJsp" select="concat('export', $tableFormatNameUpperFirst, '_excel.jsp')"/>
-	<xsl:variable name="importTableNameJsp" select="concat('import', $tableFormatNameUpperFirst, '.jsp')"/>
-	<xsl:variable name="insertTableNameJsp" select="concat('insert', $tableFormatNameUpperFirst, '.jsp')"/>
-	<xsl:variable name="listTableNameJsp" select="concat('list', $tableFormatNameUpperFirst, '.jsp')"/>
-	<xsl:variable name="referenceTableNameJsp" select="concat('reference', $tableFormatNameUpperFirst, '.jsp')"/>
-	<xsl:variable name="demoTableNameJsp" select="concat('demo', $tableFormatNameUpperFirst, '.jsp')"/>
-	<xsl:variable name="statisticTableName_chartJsp" select="concat('statistic', $tableFormatNameUpperFirst, '_chart.jsp')"/>
-	<xsl:variable name="statisticTableName_rowColumnJsp" select="concat('statistic', $tableFormatNameUpperFirst, '_rowColumn.jsp')"/>
-	<xsl:variable name="statisticTableName" select="concat('statistic', $tableFormatNameUpperFirst)"/>
-	<!--定义jsp文件的路径加上文件名-->
-	<xsl:variable name="jspFullPath" select="concat($jspSourcePath, '/', $tableFormatNameLower)"/>
-	<xsl:variable name="jspAjaxFullPath" select="concat($jspSourcePath, '/', $tableFormatNameLower, '/ajax')"/>
-	<xsl:variable name="jspConditionFullPath" select="concat($jspSourcePath, '/', $tableFormatNameLower, '/condition')"/>
-	<xsl:variable name="jspUtilFullPath" select="concat($jspSourcePath, '/', $tableFormatNameLower, '/util')"/>
 	<!--自定义函数，获得某个Java文件的非JavaDoc注释，调用java文件或concat字符串实现-->
 	<xsl:function name="str:getJavaFileComment">
 		<xsl:param name="filePathName" as="xs:string"/>

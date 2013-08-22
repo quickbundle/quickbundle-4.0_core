@@ -77,6 +77,8 @@ public class ConfigTableDialog extends Dialog implements Listener {
 
     private Text tableFilterKeyword;
     
+    private Text tableDirName;
+    
     private Text tablePk;
     
     private Text statisticColumn;
@@ -114,6 +116,7 @@ public class ConfigTableDialog extends Dialog implements Listener {
         if (buttonId == IDialogConstants.OK_ID) {
             ((Attribute) gcRule.getTableDoc(currentTable).selectObject("/meta/tables/table[1]/@tableNameDisplay")).setValue(tableNameDisplay.getText());
             ((Attribute) gcRule.getTableDoc(currentTable).selectObject("/meta/tables/table[1]/@tableFilterKeyword")).setValue(tableFilterKeyword.getText());
+            ((Attribute) gcRule.getTableDoc(currentTable).selectObject("/meta/tables/table[1]/@tableDirName")).setValue(tableDirName.getText());
             ((Attribute) gcRule.getTableDoc(currentTable).selectObject("/meta/tables/table[1]/@tablePk")).setValue(tablePk.getText());
             ((Attribute) gcRule.getTableDoc(currentTable).selectObject("/meta/tables/table[1]/@statisticColumn")).setValue(statisticColumn.getText());
             ((Attribute) gcRule.getTableDoc(currentTable).selectObject("/meta/tables/table[1]/@keyColumn")).setValue(keyColumn.getText());
@@ -157,6 +160,7 @@ public class ConfigTableDialog extends Dialog implements Listener {
     	return 
     	validateText(tableNameDisplay, "表显示名称") && 
     	validateText(tableFilterKeyword, "规范后的表名") &&
+    	validateText(tableDirName, "目录名") &&
     	validateText(tablePk, "主键") &&
     	validateText(statisticColumn, "统计列") &&
     	validateText(keyColumn, "标识列") &&
@@ -239,8 +243,34 @@ public class ConfigTableDialog extends Dialog implements Listener {
 
         scroll.setContent(container);
 
+        createCustomTableHead(container, columns);
+
+        createCustomBundleArea(container, columns);
+        
+        createCustomColumnArea(container, columns);
+        
+        container.setSize(container.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        container.layout();
+        
+        initialize();
+        return container;
+    }
+
+    private void createCustomTableHead(Composite parent, int columns) {
+    	GridData gd = null;
+        //定义单独的画布
+        final Canvas container = new Canvas(parent, SWT.NONE);
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.FILL;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = columns;
+        container.setLayoutData(gd);
+        GridLayout layoutCanvas = new GridLayout();
+        layoutCanvas.numColumns = 8;
+        container.setLayout(layoutCanvas);
+        
         //新的1行，表名
-        new Label(container, SWT.NULL).setText("");
         new Label(container, SWT.NULL).setText("表名:");
         Text tableName = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
         gd = new GridData(GridData.VERTICAL_ALIGN_FILL);
@@ -277,11 +307,24 @@ public class ConfigTableDialog extends Dialog implements Listener {
         gd = new GridData(GridData.VERTICAL_ALIGN_FILL);
         gd.widthHint = 150;
         tableFilterKeyword.setLayoutData(gd);
-        
+
+        String tableDirNameDesc = "会作为生成代码的Java/Jsp文件所在的目录名，比如HR_EMPLOYEE表的目录名一般为hremployee，如果是主子表则建议是employee";
+        Label label_tableDirName = new Label(container, SWT.NONE);
+        label_tableDirName.setText("目录名:");
+        label_tableDirName.setToolTipText(tableDirNameDesc);
+        gd = new GridData(GridData.VERTICAL_ALIGN_FILL);
+        gd.horizontalAlignment = GridData.END;
+        label_tableDirName.setLayoutData(gd);
+
+
+        tableDirName = new Text(container, SWT.SINGLE | SWT.BORDER);
+        tableDirName.setToolTipText(tableDirNameDesc);
+        gd = new GridData(GridData.VERTICAL_ALIGN_FILL);
+        gd.widthHint = 150;
+        tableDirName.setLayoutData(gd);
         
         //新的一行，主键、引用主表外键、标识列
         String tablePkDesc = "定义这个表的主键，代码生成器仅支持单主键，不支持复合主键";
-        new Label(container, SWT.NULL).setText("");
         Label labelTablePk = new Label(container, SWT.NULL);
         labelTablePk.setText("主键:");
         labelTablePk.setToolTipText(tablePkDesc);
@@ -318,28 +361,38 @@ public class ConfigTableDialog extends Dialog implements Listener {
         gd = new GridData(GridData.VERTICAL_ALIGN_FILL);
         gd.widthHint = 150;
         keyColumn.setLayoutData(gd);
+        
+        new Label(container, SWT.NULL).setText("");
+        new Label(container, SWT.NULL).setText("");
+	}
 
+
+	private void createCustomBundleArea(Composite parent, int columns) {
+    	GridData gd = null;
+        //定义单独的画布
+        final Canvas container = new Canvas(parent, SWT.NONE);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.FILL;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = columns;
+        container.setLayoutData(gd);
+        GridLayout layoutCanvas = new GridLayout(30, false);
+        container.setLayout(layoutCanvas);
         
         //新的一行，定义勾选不同组件
         Label label_customBundle = new Label(container, SWT.NULL);
         gd = new GridData(GridData.VERTICAL_ALIGN_FILL);
-        gd.horizontalSpan = 2;
+        gd.horizontalSpan = 1;
         gd.horizontalAlignment = SWT.END;
         gd.verticalAlignment = SWT.CENTER;
         label_customBundle.setLayoutData(gd);
         label_customBundle.setText("生成组件:");
 
-        //组件勾选
-        Canvas canvasCustomBundle = new Canvas(container, SWT.NONE);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 5;
-        canvasCustomBundle.setLayoutData(gd);
-        GridLayout layoutCanvasCustomBundle = new GridLayout(30, false);
-        canvasCustomBundle.setLayout(layoutCanvasCustomBundle);
         List<Element> lEle = gcRule.getMainRule().selectNodes("/rules/customBundleCode/bundle");
         for(Element ele : lEle) {
             //是否构建
-            Button bCustomBundle = new Button(canvasCustomBundle, SWT.CHECK);
+            Button bCustomBundle = new Button(container, SWT.CHECK);
             gd = new GridData(SWT.BEGINNING, SWT.BEGINNING, true, true);
             gd.horizontalSpan = 1;
             gd.horizontalAlignment = SWT.END;
@@ -383,8 +436,11 @@ public class ConfigTableDialog extends Dialog implements Listener {
 				}
 			});
             lBCustomBundle.add(bCustomBundle);
-        }    
-        
+        }   
+	}
+
+	private void createCustomColumnArea(Composite container, int columns) {
+    	GridData gd = null;
         //新的1行，增加一行分隔线
         Config1MainRuleWizardPage.createLine(container, columns);
         //全选，全不选
@@ -559,18 +615,12 @@ public class ConfigTableDialog extends Dialog implements Listener {
             mColumn.put(String.valueOf(indexColumn), columnInfo);
             indexColumn++;
         }
-        
-        
-        container.setSize(container.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-        container.layout();
-        
-        initialize();
-        return container;
-    }
+	}
 
-    private void initialize() {
+	private void initialize() {
         tableNameDisplay.setText(gcRule.getTableDoc(currentTable).valueOf("/meta/tables/table[1]/@tableNameDisplay"));
         tableFilterKeyword.setText(gcRule.getTableDoc(currentTable).valueOf("/meta/tables/table[1]/@tableFilterKeyword"));
+        tableDirName.setText(gcRule.getTableDoc(currentTable).valueOf("/meta/tables/table[1]/@tableDirName"));
         tablePk.setText(gcRule.getTableDoc(currentTable).valueOf("/meta/tables/table[1]/@tablePk"));
         statisticColumn.setText(gcRule.getTableDoc(currentTable).valueOf("/meta/tables/table[1]/@statisticColumn"));
         keyColumn.setText(gcRule.getTableDoc(currentTable).valueOf("/meta/tables/table[1]/@keyColumn"));

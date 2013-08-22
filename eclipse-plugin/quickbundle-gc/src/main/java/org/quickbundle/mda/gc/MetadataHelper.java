@@ -66,6 +66,7 @@ public class MetadataHelper {
 			table.addAttribute("attachedRules", "");
 		}
 		table.addAttribute("tableFilterKeyword", getFormatTableName(table_name));
+		table.addAttribute("tableDirName", getFormatTableName(table_name).toLowerCase());
 		table.addAttribute("tablePk", "");
 		table.addAttribute("statisticColumn", "");
 		table.addAttribute("keyColumn", "");

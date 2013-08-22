@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.quickbundle.mda.mvm.MvmActivator;
 import org.quickbundle.tools.helper.io.RmFileHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
@@ -44,7 +45,24 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
     	container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     	container.setLayout(new GridLayout(columns, false));
     	GridData gd = null;
+
+
+    	Label labelTemplateSource = new Label(container, SWT.NULL);
+    	labelTemplateSource.setText("请选择模板源:");
+        gd = new GridData(GridData.CENTER);
+        gd.horizontalSpan = columns;
+        labelTemplateSource.setLayoutData(gd);
     	
+        new Label(container, SWT.NULL).setText("模板URI");
+        Combo serverTemplateSource = new Combo(container, SWT.BORDER | SWT.SINGLE);
+        serverTemplateSource.setText(RmFileHelper.formatToFile(getMvmTemplateSource()));
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 3;
+        gd.widthHint = 800;
+        serverTemplateSource.setLayoutData(gd);
+        
+        createLine(container, columns);
+        
     	Label labelFramework = new Label(container, SWT.NULL);
     	labelFramework.setText("请选择框架套餐:");
         gd = new GridData(GridData.CENTER);
@@ -64,29 +82,23 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 3;
         pcUiFramework.setLayoutData(gd);
-        
-        createLine(container, columns);
 
-    	Label labelTemplateSource = new Label(container, SWT.NULL);
-    	labelTemplateSource.setText("请选择模板源:");
+        createLine(container, columns);
+        
+    	Label labelProjectPropHead = new Label(container, SWT.NULL);
+    	labelProjectPropHead.setText("请定义项目属性:");
         gd = new GridData(GridData.CENTER);
         gd.horizontalSpan = columns;
-        labelTemplateSource.setLayoutData(gd);
-    	
-        new Label(container, SWT.NULL).setText("服务端");
-        Combo serverTemplateSource = new Combo(container, SWT.BORDER | SWT.SINGLE);
-        serverTemplateSource.setText(RmFileHelper.formatToFile(getMvmTemplateSource()));
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 3;
-        gd.widthHint = 800;
-        serverTemplateSource.setLayoutData(gd);
-        
-        new Label(container, SWT.NULL).setText("PC UI端");
-        Combo pcUiTemplateSource = new Combo(container, SWT.BORDER | SWT.SINGLE);
-        pcUiTemplateSource.setText(RmFileHelper.formatToFile(getMvmTemplateSource()));
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 3;
-        pcUiTemplateSource.setLayoutData(gd);
+        labelProjectPropHead.setLayoutData(gd);
+        //TODO 根据不同的框架套餐对应的mvm文件
+        for(int i=0; i<1; i++) {
+            new Label(container, SWT.NULL).setText("代码风格");
+            Text projectProp1 = new Text(container, SWT.BORDER);
+            projectProp1.setText("default");
+            gd = new GridData(GridData.FILL_HORIZONTAL);
+            gd.horizontalSpan = 3;
+            projectProp1.setLayoutData(gd);
+        }
         
         setControl(container);
 	}
@@ -109,7 +121,6 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
     }
 
 	public void handleEvent(Event event) {
-		// TODO Auto-generated method stub
 		
 	}
 
