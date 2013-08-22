@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
+import org.quickbundle.tools.helper.io.RmFileHelper;
 import org.quickbundle.tools.helper.xml.RmTransformHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
@@ -36,13 +37,13 @@ public class XsltHelper {
      */
     public static void outPutFile(String xsltPath, String myTableXml, String targetPath) {
         targetPath = RmXmlHelper.formatToFile(targetPath);
-        RmXmlHelper.initParentDir(targetPath); //创建父目录
+        RmFileHelper.initParentDir(targetPath); //创建父目录
         try {
             String context = RmTransformHelper.getStringFromTransform(xsltPath, myTableXml);
             if (targetPath.endsWith(".java")) {
                 context = getJavaFileDescComment(targetPath) + context;
             }
-            RmXmlHelper.saveFile(context, targetPath);
+            RmFileHelper.saveFile(context, targetPath);
         } catch (Exception e) {
         	EclipseLog.logError("xsltPath=" + xsltPath + ", myTableXml=" + myTableXml + "," + e.toString(), e);
             e.printStackTrace();
@@ -58,7 +59,7 @@ public class XsltHelper {
      * @param mAttribute
      */
     public static void outPutFile4ResultDocument(String xsltPath, String myTableXml, String targetPath) {
-    	RmXmlHelper.initSelfDir(RmXmlHelper.formatToFile(targetPath)); //创建目录
+    	RmFileHelper.initSelfDir(RmXmlHelper.formatToFile(targetPath)); //创建目录
     	Map<String, Object> mAttribute = new HashMap();
     	mAttribute.put("targetFullPath", RmXmlHelper.formatToUrl(targetPath));
         try {
@@ -85,7 +86,7 @@ public class XsltHelper {
      */
     public static void outPutFile(String xsltPath, String myTableXml, String targetPath, String afterKeyWord, boolean rowIsUnique) {
         targetPath = RmXmlHelper.formatToUrl(targetPath);
-        RmXmlHelper.initParentDir(targetPath); //创建父目录
+        RmFileHelper.initParentDir(targetPath); //创建父目录
         String context = "";
         try {
         	context = RmTransformHelper.getStringFromTransform(xsltPath, myTableXml);
@@ -210,7 +211,6 @@ public class XsltHelper {
             } catch (IOException e2) {
                 e2.printStackTrace();
             }
-
         }
     }
     

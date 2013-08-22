@@ -643,8 +643,8 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
             java.util.List lBaseTargetPath_conf = gcRule.getMainRule().selectNodes("/rules/codegen/files[@filesType='config']");
             for(Iterator itLBaseTargetPath_conf = lBaseTargetPath_conf.iterator(); itLBaseTargetPath_conf.hasNext(); ) {
                 Element baseTargetPath_conf = (Element) itLBaseTargetPath_conf.next();
-                String baseConfFilesPath = baseTargetPath_conf.valueOf("./@baseConfFilesPath");
-                baseTargetPath_conf.addAttribute("baseTargetPath", getMContainerText("webAppName") + "/" + baseConfFilesPath);
+                String appendPath = baseTargetPath_conf.valueOf("./@appendPath");
+                baseTargetPath_conf.addAttribute("baseTargetPath", getMContainerText("webAppName") + "/" + appendPath);
             }
         }
     }

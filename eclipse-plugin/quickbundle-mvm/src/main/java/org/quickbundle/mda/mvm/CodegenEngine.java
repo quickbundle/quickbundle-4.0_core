@@ -105,6 +105,7 @@ public class CodegenEngine {
             String currentTableXmlPath = RmXmlHelper.formatToUrl(quickbundleHome + FILE_CONCAT + thisTableTo.valueOf("@xmlName"));
             Document docCurrentTable = RmXmlHelper.parse(currentTableXmlPath);
             String filterTableName = getFilterTableName(currentTableXmlPath);
+            String tableDirName = docCurrentTable.valueOf("/meta/tables/table[1]/@tableDirName");
             List<Element> lFile = mvmDoc.selectNodes(".//file");
             for (Element eleFile : lFile) {
                 //取出当前rule的组件编码
@@ -117,7 +118,7 @@ public class CodegenEngine {
                 	}
                 }
                 //得到当前这组的基本路径
-                String baseTargetPath = eleFile.valueOf("../@baseTargetPath");
+                String baseTargetPath = getBaseTargetPath(eleFile);
                 //得到最终路径
                 String xsltPath = templatePath + eleFile.valueOf("@xsltPath");
                 String targetPath = eleFile.valueOf("@targetPath");
@@ -125,7 +126,7 @@ public class CodegenEngine {
                     targetPath = RmStringHelper.replaceFirst(targetPath, toTableNameKeyword, filterTableName);
                 }
                 if ("java".equals(eleFile.valueOf("../@filesType")) || "jsp".equals(eleFile.valueOf("../@filesType"))) {
-                    targetPath = filterTableName.toLowerCase() + FILE_CONCAT + targetPath;
+                    targetPath = tableDirName + FILE_CONCAT + targetPath;
                 } else if ("config".equals(eleFile.valueOf("../@filesType"))) {
 
                 }
@@ -157,6 +158,20 @@ public class CodegenEngine {
         aObj[0] = String.valueOf(index);
         aObj[1] = returnLog;
         return aObj;
+    }
+    
+    private String getBaseTargetPath(Element eleFile) {
+    	String baseTargetPath = eleFile.valueOf("../@baseTargetPath");
+        if(baseTargetPath == null || baseTargetPath.length() == 0) {
+        	String filesType = eleFile.valueOf("../@filesType");
+        	String appendPath = eleFile.valueOf("../@appendPath");
+        	StringBuilder xpathFiles = new StringBuilder("@filesType='").append(filesType).append("'");
+        	if(appendPath != null && appendPath.length() > 0) {
+        		xpathFiles.append(" and @appendPath='").append(appendPath).append("'");
+        	}
+        	baseTargetPath = mainRule.valueOf("/rules/codegen/files[" + appendPath + "]/@baseTargetPath");
+        }
+        return baseTargetPath;
     }
     
     /**

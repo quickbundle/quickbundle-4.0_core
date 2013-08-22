@@ -11,8 +11,8 @@
 		<!--定义要生成的文件列表，分java、jsp、配置文件3种-->
 		<files baseTargetPath="src/main/java/org/quickbundle/test/rm" filesType="java" />
 		<files baseTargetPath="webAppName/jsp/test/rm" filesType="jsp" />
-		<files baseTargetPath="webAppName/WEB-INF/config" filesType="config" baseConfFilesPath="WEB-INF/config" />
-		<files baseTargetPath="webAppName/jsp" filesType="config" baseConfFilesPath="jsp" />
+		<files baseTargetPath="webAppName/WEB-INF/config" filesType="config" appendPath="WEB-INF/config" />
+		<files baseTargetPath="webAppName/jsp" filesType="config" appendPath="jsp" />
 		<files baseTargetPath="src/main/java" filesType="other" />
 	</codegen>
 	<dataType>

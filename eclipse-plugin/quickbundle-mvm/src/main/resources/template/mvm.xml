@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rules rulesVersion="4.0.0">
-	<codegen baseProjectPath="" toTableNameKeyword="TableName">
+	<codegen>
 		<!--定义要生成的文件列表，分java、jsp、配置文件3种-->
-		<files baseTargetPath="src/main/java/org/quickbundle/test/rm" filesType="java">
+		<files filesType="java">
 			<file xsltPath="JavaEE-standard/java/web/TableNameAction.xsl" targetPath="web/TableNameAction.java" bundleCode="main"/>
 			<file xsltPath="JavaEE-standard/java/web/TableNameAjaxAction.xsl" targetPath="web/TableNameAjaxAction.java" bundleCode="ajax"/>
 			<file xsltPath="JavaEE-standard/java/web/TableNameConditionAction.xsl" targetPath="web/TableNameConditionAction.java" bundleCode="condition"/>
@@ -15,7 +15,7 @@
 			<file xsltPath="JavaEE-standard/java/util/ITableNameConstants.xsl" targetPath="util/ITableNameConstants.java"/>
 			<file xsltPath="JavaEE-standard/java/vo/TableNameVo.xsl" targetPath="vo/TableNameVo.java"/>
 		</files>
-		<files baseTargetPath="webAppName/jsp/test/rm" filesType="jsp">
+		<files filesType="jsp">
 			<file xsltPath="JavaEE-standard/jsp/ajax/listTableName.xsl" targetPath="ajax/listTableName.jsp" bundleCode="ajax"/>
 			<file xsltPath="JavaEE-standard/jsp/condition/detailTableName.xsl" targetPath="condition/detailTableName.jsp" bundleCode="condition"/>
 			<file xsltPath="JavaEE-standard/jsp/condition/insertTableName.xsl" targetPath="condition/insertTableName.jsp" bundleCode="condition"/>
@@ -33,18 +33,18 @@
 			<file xsltPath="JavaEE-standard/jsp/listTableName.xsl" targetPath="listTableName.jsp" bundleCode="main"/>
 			<file xsltPath="JavaEE-standard/jsp/middle/listMiddleTableName.xsl" targetPath="middle/" result-document="true" bundleCode="main"/>
 		</files>
-		<files baseTargetPath="webAppName/WEB-INF/config" filesType="config" baseConfFilesPath="WEB-INF/config">
+		<files filesType="config" appendPath="WEB-INF/config">
 			<file xsltPath="JavaEE-standard/config/applicationContext.xsl" targetPath="spring/rm.applicationContext.xml" afterKeyWord="&lt;!--startProjectBeans-->"/>
 			<file xsltPath="JavaEE-standard/config/struts-config.xsl" targetPath="struts/rm.struts-config.xml" afterKeyWord="&lt;action-mappings>"/>
 			<file xsltPath="JavaEE-standard/config/jdbc.xsl" targetPath="jdbc/jdbc.properties" afterKeyWord="NOT_EXIST_POSITION"/>
 			<file xsltPath="JavaEE-standard/config/id.xsl" targetPath="jdbc/id.xml" afterKeyWord="&lt;!--generateFromHere-->"/>
 			<file xsltPath="JavaEE-standard/config/initCodeTypeData.xsl" targetPath="rm/initCodeTypeData.xml" afterKeyWord="&lt;codes>" rowIsUnique="true"/>
 		</files>
-		<files baseTargetPath="webAppName/jsp" filesType="config" baseConfFilesPath="jsp">
+		<files filesType="config" appendPath="jsp">
 			<file xsltPath="JavaEE-standard/config/funcTree_default.xsl" targetPath="funcTree_default.jsp" afterKeyWord="language=&quot;java&quot; %>" bundleCode="main"/>
 			<file xsltPath="JavaEE-standard/config/tree_default.xsl" targetPath="ajax/tree_default.jsp" afterKeyWord="language=&quot;java&quot; %>" bundleCode="ajax"/>
 		</files>
-		<files baseTargetPath="src/main/java" filesType="other">
+		<files filesType="other">
 			<file xsltPath="JavaEE-standard/other/IRmCodeConstants.xsl" targetPath="org/quickbundle/modules/code/IRmCodeConstants.java" afterKeyWord="//start dictionary define" rowIsUnique="true"/>
 		</files>
 	</codegen>
