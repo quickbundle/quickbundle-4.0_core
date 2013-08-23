@@ -7,8 +7,8 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$TableNameVoPackage"/> --> <xsl:value-of select="$TableNameVo"/>.java</xsl:param>
-		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>package <xsl:value-of select="$TableNameVoPackage"/>;
+			<xsl:value-of select="$javaPackageName"/>.<xsl:value-of select="$tableDirName"/>.vo --> <xsl:value-of select="$tableName"/>Vo.java</xsl:param>
+		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>package <xsl:value-of select="$javaPackageName"/>.<xsl:value-of select="$tableDirName"/>.vo;
 
 <xsl:if test="column[@dataType='java.sql.Date']">
 import java.sql.Date;
@@ -23,8 +23,21 @@ import java.math.BigDecimal;
 import org.quickbundle.base.vo.RmValueObject;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public class <xsl:value-of select="$TableNameVo"/> extends RmValueObject{
-    
+public class <xsl:value-of select="$tableFormatName"/>Vo extends RmValueObject{
+
+    private static final long serialVersionUID = 1;
+<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+    List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatName(/meta, ./@tableName)" />> body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if> = null;
+	
+	public List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatName(/meta, ./@tableName)" />> getBody<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>() {
+		return body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>;
+	}
+
+	public void setBody<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>(List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatName(/meta, ./@tableName)" />> body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>) {
+		this.body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if> = body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>;
+	}
+</xsl:for-each>
+
     //开始vo的属性
     <xsl:apply-templates mode="field"/>        
     //结束vo的属性
