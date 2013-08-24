@@ -23,11 +23,11 @@
 <xsl:if test="column[@isBuild='true' and (@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox')]">
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
 </xsl:if>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$TableNameVoFullPath"/>" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$ITableNameServiceFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.service.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service" %>
 <xsl:value-of select="$charLt"/>%
-	<xsl:value-of select="$ITableNameService"/> service = (<xsl:value-of select="$ITableNameService"/>)RmBeanFactory.getBean(<xsl:value-of select="$ITableNameConstants"/>.SERVICE_KEY);	
+	I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service service = (I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service)RmBeanFactory.getBean(<xsl:value-of select="$ITableNameConstants"/>.SERVICE_KEY);	
 	List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lResult = null;  //定义结果列表的List变量
 	String queryCondition = request.getParameter("queryCondition");
 	if(request.getParameterValues("export_all") == null) {

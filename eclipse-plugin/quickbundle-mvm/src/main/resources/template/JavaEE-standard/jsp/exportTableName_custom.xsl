@@ -10,7 +10,7 @@
 <xsl:value-of select="$charLt"/>%@page import="java.util.Map"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.util.RmSequenceMap"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.tools.helper.RmJspHelper"%>
-<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
 <xsl:value-of select="$charLt"/>%  //取出List
 	String queryCondition = session.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION).toString();
 	Integer recordCount = Integer.parseInt(session.getAttribute("RECORD_COUNT").toString());
@@ -26,7 +26,7 @@
 <xsl:value-of select="$charLt"/>script type="text/javascript">
 	var rmJspPath = "";
 	function export_onClick(){  //导出Excel
-		form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspFullPath"/>" + rmJspPath + "/<xsl:value-of select="$exportTableName_excelJsp"/>";
+		form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>" + rmJspPath + "/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_excel.jsp";
 		clickAllSelectMultiple(form.custom_column);
 		form.submit();
 	}

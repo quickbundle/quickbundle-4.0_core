@@ -14,7 +14,7 @@
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
 </xsl:if>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.tools.helper.RmStringHelper"%>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
 <xsl:value-of select="$charLt"/>!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <xsl:value-of select="$charLt"/>html>
 <xsl:value-of select="$charLt"/>head>
@@ -211,7 +211,7 @@ Ext.onReady(function(){
 	var store = new Ext.data.JsonStore({
 	    autoDestroy: true,
 	    proxy: new Ext.data.HttpProxy({
-	        url: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$TableNameAjaxAction"/>.do?cmd=simpleQuery'
+	        url: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableFormatNameUpperFirst"/>AjaxAction.do?cmd=simpleQuery'
 	    }),
         remoteSort: true,
 	    root: '<xsl:value-of select="$charLt"/>%=IGlobalConstants.REQUEST_BEANS%>',
@@ -314,7 +314,7 @@ Ext.onReady(function(){
    					}
 <xsl:value-of select="$charLt"/>%}%>
            			Ext.Ajax.request({
-	           			url: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$TableNameAjaxAction"/>.do?cmd=insertUpdateBatch', 
+	           			url: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableFormatNameUpperFirst"/>AjaxAction.do?cmd=insertUpdateBatch', 
 	           			params: params,
 	           			success: function(response) {
 			           		var obj = Ext.decode(response.responseText);
@@ -385,7 +385,7 @@ Ext.onReady(function(){
 							ids = ids.replace(/,$/g, "");
 							if(ids != '') {
 			           			Ext.Ajax.request({
-				           			url: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$TableNameAjaxAction"/>.do?cmd=deleteMulti', 
+				           			url: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableFormatNameUpperFirst"/>AjaxAction.do?cmd=deleteMulti', 
 				           			params: {ids: ids},
 				           			success: function(response) {
 										Ext.Msg.alert("信息", "数据删除成功", function() {

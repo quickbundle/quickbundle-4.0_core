@@ -12,8 +12,8 @@
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
 </xsl:if>
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmVoHelper" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$TableNameVoFullPath"/>" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
 <xsl:value-of select="$charLt"/>%  //判断是否为修改页面
   	<xsl:value-of select="$TableNameVo"/> resultVo = null;  //定义一个临时的vo变量
 	boolean isModify = false;  //定义变量,标识本页面是否修改(或者新增)
@@ -32,7 +32,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-	var rmActionName = "<xsl:value-of select="$TableNameConditionAction"/>";
+	var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>ConditionAction";
 	function insert_onClick(){  //插入单条数据
     	form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/" + rmActionName + ".do?cmd=insert";
 	    form.submit();

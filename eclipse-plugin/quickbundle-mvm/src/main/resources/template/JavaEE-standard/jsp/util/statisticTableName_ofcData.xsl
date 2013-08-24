@@ -13,7 +13,7 @@
 <xsl:value-of select="$charLt"/>%@page import="org.springframework.jdbc.core.RowMapper"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.util.RmKeyCountList"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmProjectHelper"%>
-<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>"%>
+<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>"%>
 <xsl:value-of select="$charLt"/>%
 	final RmKeyCountList<xsl:value-of select="$charLt"/>String> kc = new RmKeyCountList<xsl:value-of select="$charLt"/>String>(); 
 	RmProjectHelper.getCommonServiceInstance().doQuery("select <xsl:value-of select="$statisticColumnFormatLower"/> as rm_key, count(<xsl:value-of select="$statisticColumnFormatLower"/>) as rm_count from <xsl:value-of select="$tableName"/> group by <xsl:value-of select="$statisticColumnFormatLower"/>", new RowMapper() {

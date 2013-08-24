@@ -7,25 +7,25 @@
 	<!--处理table-->
 	<xsl:template match="table">
 <xsl:param name="thisFilePathName">
-			<xsl:value-of select="$TableNameExceptionPackage"/> --> <xsl:value-of select="$TableNameException"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.util.exception --> <xsl:value-of select="$tableFormatNameUpperFirst"/>Exception.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$TableNameExceptionPackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.util.exception;
 
 import org.quickbundle.base.exception.RmRuntimeException;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public class <xsl:value-of select="$TableNameException"/> extends RmRuntimeException {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Exception extends RmRuntimeException {
 	/**
 	 * 构造函数
 	 */
-	public <xsl:value-of select="$TableNameException"/>() {
+	public <xsl:value-of select="$tableFormatNameUpperFirst"/>Exception() {
 		super();
 	}
     /**
      * 构造函数:
      * @param msg
      */
-    public <xsl:value-of select="$TableNameException"/>(String msg) {
+    public <xsl:value-of select="$tableFormatNameUpperFirst"/>Exception(String msg) {
         super(msg);
     }
     
@@ -33,7 +33,7 @@ public class <xsl:value-of select="$TableNameException"/> extends RmRuntimeExcep
      * 构造函数:
      * @param t
      */
-    public <xsl:value-of select="$TableNameException"/>(Throwable t) {
+    public <xsl:value-of select="$tableFormatNameUpperFirst"/>Exception(Throwable t) {
         super(t);
     }
 
@@ -42,7 +42,7 @@ public class <xsl:value-of select="$TableNameException"/> extends RmRuntimeExcep
      * @param msg
      * @param t
      */
-    public <xsl:value-of select="$TableNameException"/>(String msg, Throwable t) {
+    public <xsl:value-of select="$tableFormatNameUpperFirst"/>Exception(String msg, Throwable t) {
         super(msg, t);
     }
     
@@ -52,7 +52,7 @@ public class <xsl:value-of select="$TableNameException"/> extends RmRuntimeExcep
      * @param t
      * @param returnObj
      */
-    public <xsl:value-of select="$TableNameException"/>(String msg, Throwable t, Object returnObj) {
+    public <xsl:value-of select="$tableFormatNameUpperFirst"/>Exception(String msg, Throwable t, Object returnObj) {
         super(msg, t, returnObj);
     }
 }

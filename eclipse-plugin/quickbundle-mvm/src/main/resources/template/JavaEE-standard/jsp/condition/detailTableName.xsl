@@ -12,8 +12,8 @@
 </xsl:if>
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmVoHelper" %>
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmStringHelper" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$TableNameVoFullPath"/>" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
 <xsl:if test="contains(@customBundleCode, 'readonly')">
 <xsl:value-of select="$charLt"/>%  //判断是否只读
 	boolean isReadOnly = false;
@@ -34,7 +34,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-	var rmActionName = "<xsl:value-of select="$TableNameConditionAction"/>";
+	var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>ConditionAction";
 	function find_onClick(){  //直接点到修改页面
 		form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/" + rmActionName + ".do?cmd=find";
 		form.submit();

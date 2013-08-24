@@ -7,9 +7,9 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$ITableNameConstantsPackage"/> --> <xsl:value-of select="$ITableNameConstants"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/> --> <xsl:value-of select="$ITableNameConstants"/>.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$ITableNameConstantsPackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>;
 
 import java.util.Map;
 
@@ -20,7 +20,7 @@ import org.quickbundle.project.IGlobalConstants;
 public interface <xsl:value-of select="$ITableNameConstants"/> extends IGlobalConstants {
 
     //Service的规范化名称
-    public final static String SERVICE_KEY = "<xsl:value-of select="$ITableNameService"/>";
+    public final static String SERVICE_KEY = "I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service";
 
     //Sql语句
     public final static String AFTER_SELECT_ALL   = "<xsl:value-of select="$tableName"/>.<xsl:value-of select="$tablePk"/>, <xsl:apply-templates mode="queryAll_1"/>";

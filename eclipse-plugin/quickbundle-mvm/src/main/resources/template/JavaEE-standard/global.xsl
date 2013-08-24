@@ -10,6 +10,12 @@
 	<xsl:variable name="authorName" select="/meta/project/authorName"/>
 	<xsl:variable name="javaPackageName" select="/meta/project/javaPackageName"/>
 	<xsl:variable name="jspSourcePath" select="/meta/project/jspSourcePath"/>
+	<!--定义java文件的类名-->
+	<xsl:variable name="ITableNameConstants" select="concat('I', $tableFormatNameUpperFirst, 'Constants')"/>
+	<xsl:variable name="TableNameVo" select="concat($tableFormatNameUpperFirst, 'Vo')"/>
+	<!--定义包名/目录名-->
+	<xsl:variable name="javaPackageTableDir" select="concat($tableFormatNameUpperFirst, '.', $tableDirName)"/>
+	<xsl:variable name="jspSourceTableDir" select="concat($jspSourcePath, '/', $tableDirName)"/>
 	<!--自定义函数，获得某个Java文件的非JavaDoc注释，调用java文件或concat字符串实现-->
 	<xsl:function name="str:getJavaFileComment">
 		<xsl:param name="filePathName" as="xs:string"/>
@@ -383,7 +389,7 @@
 		<xsl:variable name="parentChildTable" select="@parentChildTable"/>
 		<xsl:variable name="upperFirstTablePk" select="str:upperFirst($tablePkFormatLower)"/>
 		<xsl:variable name="upperKeyColumnFormatLower" select="str:upperFirst($keyColumnFormatLower)"/>
-		<xsl:variable name="jspFullPath" select="$jspFullPath"/>
+		<xsl:variable name="jspSourceTableDir" select="$jspSourceTableDir"/>
 		<xsl:analyze-string select="$parentChildTable" regex=",">
 			<xsl:non-matching-substring>
 				<xsl:analyze-string select="." regex="^\s*([\w_]+)\.([\w_]+)=([\w_]+).([\w_]+)\s*$">
@@ -396,7 +402,7 @@
 				</xsl:analyze-string>
 				<xsl:analyze-string select="." regex="^\s*([\w_]+)\.([\w_]+)=([\w_]+)\.([\w_]+)\|([\w_]+)=([\w_]+)\.([\w_]+)\(([\w_]+)\.([\w_]+)\)\s*$">
 					<xsl:matching-substring>
-	new Array ('多对多-<xsl:value-of select="regex-group(6)"/>','<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspFullPath"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>.jsp?<xsl:value-of select="lower-case(regex-group(4))"/>=<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="$upperFirstTablePk"/>()%>'),
+	new Array ('多对多-<xsl:value-of select="regex-group(6)"/>','<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>.jsp?<xsl:value-of select="lower-case(regex-group(4))"/>=<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="$upperFirstTablePk"/>()%>'),
 						</xsl:matching-substring>
 				</xsl:analyze-string>
 			</xsl:non-matching-substring>

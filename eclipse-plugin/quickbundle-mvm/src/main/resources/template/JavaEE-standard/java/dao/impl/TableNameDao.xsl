@@ -7,9 +7,9 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$TableNameDaoPackage"/> --> <xsl:value-of select="$TableNameDao"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.dao.impl --> <xsl:value-of select="$tableFormatNameUpperFirst"/>Dao.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$TableNameDaoPackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,12 +21,12 @@ import org.quickbundle.tools.helper.RmPopulateHelper;
 import org.quickbundle.tools.helper.RmStringHelper;
 import org.springframework.jdbc.core.RowMapper;
 
-import <xsl:value-of select="$ITableNameDaoFullPath"/>;
-import <xsl:value-of select="$ITableNameConstantsFullPath"/>;
-import <xsl:value-of select="$TableNameVoFullPath"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.dao.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao;
+import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public class <xsl:value-of select="$TableNameDao"/> extends RmJdbcTemplate implements <xsl:value-of select="$ITableNameDao"/>, <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Dao extends RmJdbcTemplate implements I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao, <xsl:value-of select="$ITableNameConstants"/> {
 
     /**
      * 插入单条记录，从RmIdFactory取id作主键

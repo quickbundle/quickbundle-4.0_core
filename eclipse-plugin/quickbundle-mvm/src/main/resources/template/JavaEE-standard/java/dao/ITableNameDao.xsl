@@ -7,16 +7,16 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$ITableNameDaoPackage"/> --> <xsl:value-of select="$ITableNameDao"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.dao --> I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$ITableNameDaoPackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.dao;
 
 import java.util.List;
 
-import <xsl:value-of select="$TableNameVoFullPath"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public interface <xsl:value-of select="$ITableNameDao"/> {
+public interface I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao {
     
     /**
      * 插入单条记录，用id作主键，把null全替换为""

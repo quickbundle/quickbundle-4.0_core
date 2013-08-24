@@ -37,7 +37,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-	var rmActionName = "<xsl:value-of select="$TableNameAction"/>";
+	var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>Action";
 	function deleteMulti_onClick(){  //从多选框物理删除多条记录
  		var ids = findSelections("checkbox_template","id");  //取得多选框的选择项
 		if(ids == null)	{  //如果ids为空

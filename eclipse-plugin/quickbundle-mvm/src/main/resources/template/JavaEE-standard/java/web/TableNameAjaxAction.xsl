@@ -7,9 +7,9 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$TableNameActionPackage"/> --> <xsl:value-of select="$TableNameAjaxAction"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.web --> <xsl:value-of select="$tableFormatNameUpperFirst"/>AjaxAction.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$TableNameActionPackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.web;
 
 import java.util.List;
 
@@ -22,12 +22,12 @@ import org.apache.struts.action.ActionMapping;
 import org.quickbundle.base.web.page.RmPageVo;
 import org.quickbundle.tools.helper.RmJspHelper;
 
-import <xsl:value-of select="$ITableNameServiceFullPath"/>;
-import <xsl:value-of select="$ITableNameConstantsFullPath"/>;
-import <xsl:value-of select="$TableNameVoFullPath"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.service.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service;
+import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public class <xsl:value-of select="$TableNameAjaxAction"/> extends <xsl:value-of select="$TableNameAction"/> implements <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>AjaxAction extends <xsl:value-of select="$tableFormatNameUpperFirst"/>Action implements <xsl:value-of select="$ITableNameConstants"/> {
     /**
      * 批量保存，没有主键的insert，有主键的update
      * 
@@ -69,7 +69,7 @@ public class <xsl:value-of select="$TableNameAjaxAction"/> extends <xsl:value-of
      * @throws Exception
      */
     public ActionForward simpleQuery(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        <xsl:value-of select="$ITableNameService"/> service = getService();
+        I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service service = getService();
         String queryCondition = getQueryCondition(request);  //从request中获得查询条件
         RmPageVo pageVo = RmJspHelper.transctPageVo(request, getCount(queryCondition));
         String orderStr = RmJspHelper.getOrderStr(request);  //得到排序信息

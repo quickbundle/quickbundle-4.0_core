@@ -7,9 +7,9 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$TableNameActionPackage"/> --> <xsl:value-of select="$TableNameAction"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.web --> <xsl:value-of select="$tableFormatNameUpperFirst"/>Action.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$TableNameActionPackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.web;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,20 +33,20 @@ import org.quickbundle.tools.helper.RmVoHelper;
 import org.quickbundle.tools.support.statistic.RmStatisticHandler;
 </xsl:if>
 
-import <xsl:value-of select="$ITableNameServiceFullPath"/>;
-import <xsl:value-of select="$ITableNameConstantsFullPath"/>;
-import <xsl:value-of select="$TableNameVoFullPath"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.service.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service;
+import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public class <xsl:value-of select="$TableNameAction"/> extends RmDispatchAction implements <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Action extends RmDispatchAction implements <xsl:value-of select="$ITableNameConstants"/> {
 
     /**
      * 得到Service对象
      * 
      * @return Service对象
      */
-    public <xsl:value-of select="$ITableNameService"/> getService() {
-        return (<xsl:value-of select="$ITableNameService"/>) RmBeanFactory.getBean(SERVICE_KEY);  //得到Service对象,受事务控制
+    public I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service getService() {
+        return (I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service) RmBeanFactory.getBean(SERVICE_KEY);  //得到Service对象,受事务控制
     }
 
     /**
@@ -173,7 +173,7 @@ public class <xsl:value-of select="$TableNameAction"/> extends RmDispatchAction 
      * @throws Exception
      */
     public ActionForward simpleQuery(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        <xsl:value-of select="$ITableNameService"/> service = getService();
+        I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service service = getService();
         String queryCondition = getQueryCondition(request);  //从request中获得查询条件
         RmPageVo pageVo = RmJspHelper.transctPageVo(request, getCount(queryCondition));
         String orderStr = RmJspHelper.getOrderStr(request);  //得到排序信息
@@ -254,7 +254,7 @@ public class <xsl:value-of select="$TableNameAction"/> extends RmDispatchAction 
     public ActionForward statistic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String rowKeyField = "<xsl:value-of select="$statisticColumnFormatLower"/>";  //定义行统计关键字
         String columnKeyField = "<xsl:value-of select="$keyColumnFormatLower"/>";  //定义列统计关键字
-        <xsl:value-of select="$ITableNameService"/> service = getService();
+        I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service service = getService();
         String queryCondition = getQueryCondition(request);  //从request中获得查询条件
         List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = service.queryByCondition(queryCondition, null);  //查询出全部结果
         RmStatisticHandler sh = new RmStatisticHandler(beans, rowKeyField, columnKeyField, "<xsl:value-of select="$statisticColumnDisplay"/>\\<xsl:value-of select="$keyColumnDisplay"/>");
@@ -371,7 +371,7 @@ public class <xsl:value-of select="$TableNameAction"/> extends RmDispatchAction 
     	String <xsl:value-of select="lower-case(regex-group(4))"/> = request.getParameter("<xsl:value-of select="lower-case(regex-group(4))"/>");
     	String[] <xsl:value-of select="lower-case(regex-group(5))"/>s = request.getParameter("<xsl:value-of select="lower-case(regex-group(5))"/>s").split(",");
     	int count = getService().insert<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>(<xsl:value-of select="lower-case(regex-group(4))"/>, <xsl:value-of select="lower-case(regex-group(5))"/>s).length;
-    	return RmJspHelper.getForwardInstanceWithAlert("/<xsl:value-of select="$jspFullPath"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>.jsp?<xsl:value-of select="lower-case(regex-group(4))"/>=" + <xsl:value-of select="lower-case(regex-group(4))"/>, "插入了" + count + "条记录!");
+    	return RmJspHelper.getForwardInstanceWithAlert("/<xsl:value-of select="$jspSourceTableDir"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>.jsp?<xsl:value-of select="lower-case(regex-group(4))"/>=" + <xsl:value-of select="lower-case(regex-group(4))"/>, "插入了" + count + "条记录!");
     }
     
     /**
@@ -388,7 +388,7 @@ public class <xsl:value-of select="$TableNameAction"/> extends RmDispatchAction 
     	String <xsl:value-of select="lower-case(regex-group(4))"/> = request.getParameter("<xsl:value-of select="lower-case(regex-group(4))"/>");
     	String[] <xsl:value-of select="lower-case(regex-group(5))"/>s = request.getParameter("<xsl:value-of select="lower-case(regex-group(5))"/>s").split(",");
     	int count = getService().delete<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>(<xsl:value-of select="lower-case(regex-group(4))"/>, <xsl:value-of select="lower-case(regex-group(5))"/>s);
-    	return RmJspHelper.getForwardInstanceWithAlert("/<xsl:value-of select="$jspFullPath"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>.jsp?<xsl:value-of select="lower-case(regex-group(4))"/>=" + <xsl:value-of select="lower-case(regex-group(4))"/>, "删除了" + count + "条记录!");
+    	return RmJspHelper.getForwardInstanceWithAlert("/<xsl:value-of select="$jspSourceTableDir"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>.jsp?<xsl:value-of select="lower-case(regex-group(4))"/>=" + <xsl:value-of select="lower-case(regex-group(4))"/>, "删除了" + count + "条记录!");
     }
 						</xsl:matching-substring>
 					</xsl:analyze-string>

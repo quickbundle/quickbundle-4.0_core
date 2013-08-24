@@ -7,15 +7,15 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$TableNameActionPackage"/> --> <xsl:value-of select="$TableNameReadOnlyAction"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.web --> <xsl:value-of select="$tableFormatNameUpperFirst"/>ReadOnlyAction.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$TableNameActionPackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.web;
 
-import <xsl:value-of select="$ITableNameConstantsFullPath"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public class <xsl:value-of select="$TableNameReadOnlyAction"/> extends <xsl:value-of select="$TableNameAction"/> implements <xsl:value-of select="$ITableNameConstants"/> {
-	//通过<xsl:value-of select="$TableNameReadOnlyAction"/>的struts配置改变跳转
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>ReadOnlyAction extends <xsl:value-of select="$tableFormatNameUpperFirst"/>Action implements <xsl:value-of select="$ITableNameConstants"/> {
+	//通过<xsl:value-of select="$tableFormatNameUpperFirst"/>ReadOnlyAction的struts配置改变跳转
 }
 </xsl:template>
 </xsl:stylesheet>

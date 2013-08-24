@@ -4,11 +4,12 @@
 	<xsl:import href="../../global.xsl"/>
 	<!--忽略xml声明-->
 	<xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
+	<xsl:param name="targetFullPath"></xsl:param>
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
 			<xsl:value-of select="$javaPackageName"/>.<xsl:value-of select="$tableDirName"/>.vo --> <xsl:value-of select="$tableName"/>Vo.java</xsl:param>
-		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>package <xsl:value-of select="$javaPackageName"/>.<xsl:value-of select="$tableDirName"/>.vo;
+		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>package <xsl:value-of select="$javaPackageTableDir"/>.vo;
 
 <xsl:if test="column[@dataType='java.sql.Date']">
 import java.sql.Date;

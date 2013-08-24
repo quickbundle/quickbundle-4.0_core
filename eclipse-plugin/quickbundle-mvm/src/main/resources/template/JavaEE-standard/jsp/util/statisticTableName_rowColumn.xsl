@@ -9,7 +9,7 @@
 <xsl:value-of select="$charLt"/>%@page contentType="text/html; charset=UTF-8" language="java" %>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.tools.helper.RmVoHelper" %>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.tools.support.statistic.RmStatisticHandler"%>
-<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
 <xsl:value-of select="$charLt"/>%  //取出本条记录
 	RmStatisticHandler sh = null;
 	sh = (RmStatisticHandler)request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_STATISTIC_HANDLER);  //从request中取出RmStatisticHandler, 赋值给sh
@@ -21,7 +21,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-	var rmActionName = "<xsl:value-of select="$TableNameAction"/>";
+	var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>Action";
 	function print_onClick(){  //打印
 		window.print();
 	}

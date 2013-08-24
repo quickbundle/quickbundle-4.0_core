@@ -7,9 +7,9 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$TableNameServicePackage"/> --> <xsl:value-of select="$TableNameService"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.service.impl --> <xsl:value-of select="$tableFormatNameUpperFirst"/>Service.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$TableNameServicePackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,25 +27,25 @@ import org.springframework.jdbc.core.RowMapper;
 import org.quickbundle.base.cache.RmSqlCountCache;
 import org.quickbundle.base.service.RmService;
 
-import <xsl:value-of select="$ITableNameDaoFullPath"/>;
-import <xsl:value-of select="$ITableNameServiceFullPath"/>;
-import <xsl:value-of select="$ITableNameConstantsFullPath"/>;
-import <xsl:value-of select="$TableNameVoFullPath"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.dao.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao;
+import <xsl:value-of select="$javaPackageTableDir"/>.service.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service;
+import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public class <xsl:value-of select="$TableNameService"/> extends RmService implements <xsl:value-of select="$ITableNameService"/>, <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service extends RmService implements I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service, <xsl:value-of select="$ITableNameConstants"/> {
     
     /**
      * dao 表示: 数据访问层的实例
      */
-    private <xsl:value-of select="$ITableNameDao"/> dao = null;
+    private I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao dao = null;
 
     /**
      * 设置数据访问接口
      * 
      * @return
      */
-    public <xsl:value-of select="$ITableNameDao"/> getDao() {
+    public I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao getDao() {
         return dao;
     }
 
@@ -54,7 +54,7 @@ public class <xsl:value-of select="$TableNameService"/> extends RmService implem
      * 
      * @param dao
      */
-    public void setDao(<xsl:value-of select="$ITableNameDao"/> dao) {
+    public void setDao(I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao dao) {
         this.dao = dao;
     }
 

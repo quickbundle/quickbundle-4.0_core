@@ -7,31 +7,31 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$ITableNameServicePackage"/> --> <xsl:value-of select="$ITableNameService"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.service --> I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$ITableNameServicePackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.service;
 
 import java.util.List;
 
-import <xsl:value-of select="$ITableNameDaoFullPath"/>;
-import <xsl:value-of select="$TableNameVoFullPath"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.dao.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public interface <xsl:value-of select="$ITableNameService"/> {
+public interface I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service {
 
     /**
      * 设置数据访问接口
      * 
      * @return
      */
-    public <xsl:value-of select="$ITableNameDao"/> getDao();
+    public I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao getDao();
 
     /**
      * 获取数据访问接口
      * 
      * @param dao
      */
-    public void setDao(<xsl:value-of select="$ITableNameDao"/> dao);
+    public void setDao(I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao dao);
 
     /**
      * 插入单条记录

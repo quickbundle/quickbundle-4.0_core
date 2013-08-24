@@ -7,28 +7,28 @@
 	<!--处理table-->
 	<xsl:template match="table">
 <xsl:param name="thisFilePathName">
-			<xsl:value-of select="$TableNameTestCasePackage"/> --> <xsl:value-of select="$TableNameTestCase"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.util.testcase --> <xsl:value-of select="$tableFormatNameUpperFirst"/>TestCase.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$TableNameTestCasePackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.util.testcase;
 
 import org.quickbundle.base.beans.factory.RmBeanFactory;
 import org.quickbundle.base.test.RmTestCase;
 import org.quickbundle.tools.helper.RmVoHelper;
 
-import <xsl:value-of select="$ITableNameServiceFullPath"/>;
-import <xsl:value-of select="$ITableNameConstantsFullPath"/>;
-import <xsl:value-of select="$TableNameVoFullPath"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.service.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service;
+import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public class <xsl:value-of select="$TableNameTestCase"/> extends RmTestCase implements <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>TestCase extends RmTestCase implements <xsl:value-of select="$ITableNameConstants"/> {
     
     /**
      * 得到BS对象
      * 
      * @return BS对象
      */
-    private <xsl:value-of select="$ITableNameService"/> getService() {
-        return (<xsl:value-of select="$ITableNameService"/>) RmBeanFactory.getBean(SERVICE_KEY); //得到Service对象,受事务控制
+    private I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service getService() {
+        return (I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service) RmBeanFactory.getBean(SERVICE_KEY); //得到Service对象,受事务控制
     }
 
     /**

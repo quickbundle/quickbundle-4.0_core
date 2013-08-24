@@ -14,8 +14,8 @@
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
 </xsl:if>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.base.web.page.RmPageVo"%>
-<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$TableNameVoFullPath"/>" %>
-<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
+<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
 <xsl:value-of select="$charLt"/>%
 	String referenceInputType = String.valueOf(request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_REFERENCE_INPUT_TYPE));
 	if(referenceInputType == null || referenceInputType.length() == 0 || (!"checkbox".equals(referenceInputType.toLowerCase()) <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> !"radio".equals(referenceInputType.toLowerCase()))) {
@@ -34,7 +34,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-	var rmActionName = "<xsl:value-of select="$TableNameAction"/>";
+	var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>Action";
 	function simpleQuery_onClick(){  //简单的模糊查询
     	form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/" + rmActionName + ".do?cmd=queryReference";
     	form.submit();

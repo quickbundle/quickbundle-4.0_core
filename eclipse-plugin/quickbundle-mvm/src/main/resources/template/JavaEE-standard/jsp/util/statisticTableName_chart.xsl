@@ -20,7 +20,7 @@
 <xsl:value-of select="$charLt"/>%@page import="org.springframework.jdbc.core.RowMapper"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.tools.support.report.jfreechart.WebChart"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmProjectHelper"%>
-<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>"%>
+<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>"%>
 <xsl:value-of select="$charLt"/>%
 	WebChart chart = new WebChart();
 	List<xsl:value-of select="$charLt"/>String[]> lResult = RmProjectHelper.getCommonServiceInstance().doQuery("select <xsl:value-of select="$statisticColumnFormatLower"/> as rm_key, count(<xsl:value-of select="$statisticColumnFormatLower"/>) as rm_count from <xsl:value-of select="$tableName"/> group by <xsl:value-of select="$statisticColumnFormatLower"/>", new RowMapper() {
@@ -35,7 +35,7 @@
 	//饼图的链接定制
 	PieURLGenerator pug = new PieURLGenerator() {
 		public String generateURL(PieDataset dataset, Comparable key, int pieIndex) {
-			return contextPath + "/<xsl:choose><xsl:when test="contains(@customBundleCode, 'condition')"><xsl:value-of select="$TableNameConditionAction"/></xsl:when><xsl:otherwise><xsl:value-of select="$TableNameAction"/></xsl:otherwise></xsl:choose>.do?cmd=queryAll<xsl:value-of select="$charAmp"/><xsl:value-of select="$statisticColumnFormatLower"/>=" + key;
+			return contextPath + "/<xsl:choose><xsl:when test="contains(@customBundleCode, 'condition')"><xsl:value-of select="$tableFormatNameUpperFirst"/>ConditionAction</xsl:when><xsl:otherwise><xsl:value-of select="$tableFormatNameUpperFirst"/>Action</xsl:otherwise></xsl:choose>.do?cmd=queryAll<xsl:value-of select="$charAmp"/><xsl:value-of select="$statisticColumnFormatLower"/>=" + key;
 		}
 	};
 	//饼图2D
@@ -45,7 +45,7 @@
 	//柱图的链接定制
 	CategoryURLGenerator cug = new CategoryURLGenerator() {
 	    public String generateURL(CategoryDataset dataset, int series, int category) {
-	    	return contextPath + "/<xsl:choose><xsl:when test="contains(@customBundleCode, 'condition')"><xsl:value-of select="$TableNameConditionAction"/></xsl:when><xsl:otherwise><xsl:value-of select="$TableNameAction"/></xsl:otherwise></xsl:choose>.do?cmd=queryAll<xsl:value-of select="$charAmp"/><xsl:value-of select="$statisticColumnFormatLower"/>=" + dataset.getColumnKey(series);
+	    	return contextPath + "/<xsl:choose><xsl:when test="contains(@customBundleCode, 'condition')"><xsl:value-of select="$tableFormatNameUpperFirst"/>ConditionAction</xsl:when><xsl:otherwise><xsl:value-of select="$tableFormatNameUpperFirst"/>Action</xsl:otherwise></xsl:choose>.do?cmd=queryAll<xsl:value-of select="$charAmp"/><xsl:value-of select="$statisticColumnFormatLower"/>=" + dataset.getColumnKey(series);
 	    }
 	};
 	//柱图

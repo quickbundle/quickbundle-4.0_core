@@ -14,8 +14,8 @@
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
 </xsl:if>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.base.web.page.RmPageVo"%>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$TableNameVoFullPath"/>" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
 <xsl:if test="contains(@customBundleCode, 'readonly')">
 <xsl:value-of select="$charLt"/>%  //判断是否只读
 	boolean isReadOnly = false;
@@ -36,7 +36,7 @@
 		session.setAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION, request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION).toString());  //把查询条件放到session中
 		RmPageVo pageVo = (RmPageVo)request.getAttribute("RM_PAGE_VO");
 		session.setAttribute("RECORD_COUNT", String.valueOf(pageVo.getRecordCount()));
-		response.sendRedirect(request.getContextPath() + "/<xsl:value-of select="$jspFullPath"/>/<xsl:value-of select="$exportTableName_customJsp"/>");  //跳转到定制导出页面
+		response.sendRedirect(request.getContextPath() + "/<xsl:value-of select="$jspSourceTableDir"/>/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_custom.jsp");  //跳转到定制导出页面
 		return;
 	}
 %>
@@ -48,7 +48,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-	var rmActionName = "<xsl:value-of select="$TableNameAction"/>";
+	var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>Action";
 	var rmJspPath = "";
 	function findCheckbox_onClick() {  //从多选框到修改页面
 		var ids = findSelections("checkbox_template","id");  //取得多选框的选择项
@@ -81,7 +81,7 @@
   	}
   	<xsl:if test="contains(@customBundleCode, 'importExport')">
 	function toImport_onClick() {  //到导入页面
-		window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspFullPath"/>" + rmJspPath + "/<xsl:value-of select="$importTableNameJsp"/>";
+		window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>" + rmJspPath + "/import<xsl:value-of select="$tableFormatNameUpperFirst"/>.jsp";
 	}
 	function export_onClick(){  //导出
     	form.isExport.value="1";
@@ -92,7 +92,7 @@
    	}
    	</xsl:if>
 	function toAdd_onClick() {  //到增加记录页面
-		window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspFullPath"/>" + rmJspPath + "/<xsl:value-of select="$insertTableNameJsp"/>";
+		window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>" + rmJspPath + "/insert<xsl:value-of select="$tableFormatNameUpperFirst"/>.jsp";
 	}
 	function refresh_onClick() {  //刷新本页
 		form.submit();
@@ -184,19 +184,19 @@
 <xsl:value-of select="$charLt"/>%--begin 生成页面汇总，正式部署前删除以下代码 --%>
 <xsl:value-of select="$charLt"/>div id="div_funcNode" style="padding:20px 10px 10px 0px; display:none" align="right">
 	<xsl:if test="contains(@customBundleCode, 'ajax')">
-	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspAjaxFullPath"/>/<xsl:value-of select="$listTableNameJsp"/>">Ajax<xsl:value-of select="$charLt"/>/a>
+	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>/ajax/list<xsl:value-of select="$tableFormatNameUpperFirst"/>.jsp">Ajax<xsl:value-of select="$charLt"/>/a>
 	</xsl:if>
 	<xsl:if test="contains(@customBundleCode, 'statistic')">
-	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspUtilFullPath"/>/<xsl:value-of select="$statisticTableName_chartJsp"/>">图表统计<xsl:value-of select="$charLt"/>/a>
-	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspUtilFullPath"/>/<xsl:value-of select="$statisticTableName"/>_ofc.jsp">Flash图表<xsl:value-of select="$charLt"/>/a>
-	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$TableNameAction"/>.do?cmd=statistic">交叉统计<xsl:value-of select="$charLt"/>/a>
+	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_chart.jsp">图表统计<xsl:value-of select="$charLt"/>/a>
+	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_ofc.jsp">Flash图表<xsl:value-of select="$charLt"/>/a>
+	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableFormatNameUpperFirst"/>Action.do?cmd=statistic">交叉统计<xsl:value-of select="$charLt"/>/a>
 	</xsl:if>
 	<xsl:if test="contains(@customBundleCode, 'readonly')">
-	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$TableNameReadOnlyAction"/>.do?cmd=queryAll">只读模式<xsl:value-of select="$charLt"/>/a>
+	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableFormatNameUpperFirst"/>ReadOnlyAction.do?cmd=queryAll">只读模式<xsl:value-of select="$charLt"/>/a>
 	</xsl:if>
 	<xsl:if test="contains(@customBundleCode, 'condition')">
-	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$TableNameConditionAction"/>.do?cmd=queryAll<xsl:value-of select="$charAmp"/><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.DEFAULT_CONDITION_KEY_ARRAY[0]%>=1">带条件模式<xsl:value-of select="$charLt"/>/a>
-	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$TableNameConditionAction"/>.do?cmd=queryAll<xsl:value-of select="$charAmp"/><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.DEFAULT_CONDITION_KEY_ARRAY[0]%>=1<xsl:value-of select="$charAmp"/><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY%>=1">带条件只读<xsl:value-of select="$charLt"/>/a>
+	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableFormatNameUpperFirst"/>ConditionAction.do?cmd=queryAll<xsl:value-of select="$charAmp"/><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.DEFAULT_CONDITION_KEY_ARRAY[0]%>=1">带条件模式<xsl:value-of select="$charLt"/>/a>
+	<xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableFormatNameUpperFirst"/>ConditionAction.do?cmd=queryAll<xsl:value-of select="$charAmp"/><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.DEFAULT_CONDITION_KEY_ARRAY[0]%>=1<xsl:value-of select="$charAmp"/><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY%>=1">带条件只读<xsl:value-of select="$charLt"/>/a>
 	</xsl:if>
 <xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>%-- end --%>
@@ -211,7 +211,7 @@
 %>
 <xsl:if test="contains(@customBundleCode, 'readonly')">
 <xsl:value-of select="$charLt"/>%if(isReadOnly) {%>
-	rmActionName = "<xsl:value-of select="$TableNameReadOnlyAction"/>";
+	rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>ReadOnlyAction";
 	rmJspPath = "/readonly";
 	rmHiddenFormElement(document.all["button_toAdd"]);
 	rmHiddenFormElement(document.all["button_deleteMulti"]);

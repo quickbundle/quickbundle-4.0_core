@@ -21,9 +21,9 @@
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.tools.helper.io.RmZipHelper"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.tools.helper.RmVoHelper"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.base.beans.factory.RmBeanFactory"%>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$TableNameVoFullPath"/>" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$ITableNameServiceFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.service.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service" %>
 <xsl:value-of select="$charLt"/>%
 	boolean isSubmit = false;
 	if("1".equals(request.getParameter("isSubmit"))) {
@@ -52,7 +52,7 @@
 		    });
 		    if(rtVo.getErrorMsg() == null) {
 		        <xsl:value-of select="$TableNameVo"/>[] diseaseVos = (<xsl:value-of select="$TableNameVo"/>[])rtVo.getLData().toArray(new <xsl:value-of select="$TableNameVo"/>[0]);
-		        <xsl:value-of select="$ITableNameService"/> service = (<xsl:value-of select="$ITableNameService"/>)RmBeanFactory.getBean(<xsl:value-of select="$ITableNameConstants"/>.SERVICE_KEY);
+		        I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service service = (I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service)RmBeanFactory.getBean(<xsl:value-of select="$ITableNameConstants"/>.SERVICE_KEY);
 		        insertSum = service.insert(diseaseVos).length;
 	    if(rtVo.getRecordSum()-rtVo.getLData().size() > 0) {
 	        File errorExcel2 = new File(zipFile.getParent() + RmUploadHelper.SYSTEM_FILE_SEPARATOR + RmUploadHelper.getUniqueString() + rtVo.getErrorExcel().getName());
@@ -81,7 +81,7 @@
     	if(!getConfirm()) {  //如果用户在确认对话框中点"取消"
   			return false;
 		}
-	    form.action="<xsl:value-of select="$importTableNameJsp"/>";
+	    form.action="import<xsl:value-of select="$tableFormatNameUpperFirst"/>.jsp";
     	form.submit();
 	}
 <xsl:value-of select="$charLt"/>/script>

@@ -7,9 +7,9 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$TableNameActionPackage"/> --> <xsl:value-of select="$TableNameConditionAction"/>.java</xsl:param>
+			<xsl:value-of select="$javaPackageTableDir"/>.web --> <xsl:value-of select="$tableFormatNameUpperFirst"/>ConditionAction.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
-package <xsl:value-of select="$TableNameActionPackage"/>;
+package <xsl:value-of select="$javaPackageTableDir"/>.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,11 +21,11 @@ import org.apache.struts.action.ActionMapping;
 import org.quickbundle.tools.helper.RmJspHelper;
 import org.quickbundle.tools.helper.RmVoHelper;
 
-import <xsl:value-of select="$ITableNameConstantsFullPath"/>;
-import <xsl:value-of select="$TableNameExceptionFullPath"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.util.exception.<xsl:value-of select="$tableFormatNameUpperFirst"/>Exception;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
-public class <xsl:value-of select="$TableNameConditionAction"/> extends <xsl:value-of select="$TableNameAction"/> implements <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>ConditionAction extends <xsl:value-of select="$tableFormatNameUpperFirst"/>Action implements <xsl:value-of select="$ITableNameConstants"/> {
     
     /**
      * 从页面表单获取信息注入vo，并插入单条记录
@@ -110,7 +110,7 @@ public class <xsl:value-of select="$TableNameConditionAction"/> extends <xsl:val
     public ActionForward queryAll(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String condition = request.getParameter(DEFAULT_CONDITION_KEY_ARRAY[0]);
         if(condition == null) {
-            throw new <xsl:value-of select="$TableNameException"/>(MESSAGE_NO_CONDITION_KEY);
+            throw new <xsl:value-of select="$tableFormatNameUpperFirst"/>Exception(MESSAGE_NO_CONDITION_KEY);
         }
         String queryCondition = " " + DEFAULT_CONDITION_KEY_ARRAY[0] + "='" + condition + "'";
         request.setAttribute(REQUEST_QUERY_CONDITION, queryCondition);

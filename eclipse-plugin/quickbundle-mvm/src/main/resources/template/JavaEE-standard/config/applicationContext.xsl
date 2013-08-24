@@ -7,10 +7,10 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:value-of select="$charLt"/>!--配置<xsl:value-of select="$tableFormatNameUpperFirst"/>的bean-->
-	<xsl:value-of select="$charLt"/>bean id="<xsl:value-of select="$ITableNameService"/>" class="<xsl:value-of select="$TableNameServiceFullPath"/>">
-		<xsl:value-of select="$charLt"/>property name="dao" ref="<xsl:value-of select="$ITableNameDao"/>"/>
+	<xsl:value-of select="$charLt"/>bean id="I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service" class="<xsl:value-of select="$javaPackageTableDir"/>.service.impl.<xsl:value-of select="$tableFormatNameUpperFirst"/>Service">
+		<xsl:value-of select="$charLt"/>property name="dao" ref="I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao"/>
 	<xsl:value-of select="$charLt"/>/bean>
-	<xsl:value-of select="$charLt"/>bean id="<xsl:value-of select="$ITableNameDao"/>" class="<xsl:value-of select="$TableNameDaoFullPath"/>">
+	<xsl:value-of select="$charLt"/>bean id="I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao" class="<xsl:value-of select="$javaPackageTableDir"/>.dao.impl.<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao">
 		<xsl:value-of select="$charLt"/>property name="dataSource" ref="dataSource"/>
 	<xsl:value-of select="$charLt"/>/bean>
 	</xsl:template>

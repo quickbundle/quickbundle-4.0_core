@@ -14,8 +14,8 @@
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
 </xsl:if>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.base.web.page.RmPageVo"%>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$TableNameVoFullPath"/>" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$ITableNameConstantsFullPath"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
 <xsl:if test="contains(@customBundleCode, 'readonly')">
 <xsl:value-of select="$charLt"/>%  //判断是否只读
 	boolean isReadOnly = false;
@@ -36,7 +36,7 @@
 		session.setAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION, request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION).toString());  //把查询条件放到session中
 		RmPageVo pageVo = (RmPageVo)request.getAttribute("RM_PAGE_VO");
 		session.setAttribute("RECORD_COUNT", String.valueOf(pageVo.getRecordCount()));
-		response.sendRedirect(request.getContextPath() + "/<xsl:value-of select="$jspFullPath"/>/<xsl:value-of select="$exportTableName_customJsp"/>");  //跳转到定制导出页面
+		response.sendRedirect(request.getContextPath() + "/<xsl:value-of select="$jspSourceTableDir"/>/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_custom.jsp");  //跳转到定制导出页面
 		return;
 	}
 %>
@@ -48,7 +48,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-	var rmActionName = "<xsl:value-of select="$TableNameConditionAction"/>";
+	var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>ConditionAction";
 	var rmJspPath = "/condition";
 	function findCheckbox_onClick() {  //从多选框到修改页面
 		var ids = findSelections("checkbox_template","id");  //取得多选框的选择项
@@ -89,7 +89,7 @@
    	}
    	</xsl:if>
 	function toAdd_onClick() {  //到增加记录页面
-		form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspFullPath"/>" + rmJspPath + "/<xsl:value-of select="$insertTableNameJsp"/>";
+		form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>" + rmJspPath + "/insert<xsl:value-of select="$tableFormatNameUpperFirst"/>.jsp";
 		form.submit();
 	}
 	function refresh_onClick() {  //刷新本页

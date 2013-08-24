@@ -29,7 +29,6 @@
 	<xsl:variable name="tableComment" select="str:getTableComment(/meta, $tableName)"/>
 	<!--定义mainTable(默认主表)的处理过的表名全局变量-->
 	<xsl:variable name="tableFormatName" select="str:getTableFormatName(/meta, $tableName)"/>
-	<xsl:variable name="tableFormatNameLower" select="str:getTableFormatNameLower(/meta, $tableName)"/>
 	<xsl:variable name="tableFormatNameUpperFirst" select="str:getTableFormatNameUpperFirst(/meta, $tableName)"/>
 	<!--定义mainTable(默认主表)的处理过的主键和外键-->
 	<xsl:variable name="tablePkFormat" select="str:getTablePkFormat(/meta, $tableName)"/>
@@ -210,12 +209,6 @@
 		<xsl:param name="meta"/>
 		<xsl:param name="tableNameVar" as="xs:string"/>
 		<xsl:sequence select="str:filter($tableNameVar, str:getTableFilterKeyword($meta, $tableNameVar), 'specify')"/>
-	</xsl:function>
-	<!--自定义函数，获得指定tableName的tableFormatNameLower-->
-	<xsl:function name="str:getTableFormatNameLower">
-		<xsl:param name="meta"/>
-		<xsl:param name="tableNameVar" as="xs:string"/>
-		<xsl:sequence select="lower-case(str:getTableFormatName($meta, $tableNameVar))"/>
 	</xsl:function>
 	<!--自定义函数，获得指定tableName的tableFormatNameUpperFirst-->
 	<xsl:function name="str:getTableFormatNameUpperFirst">

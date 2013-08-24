@@ -13,9 +13,9 @@
 <xsl:value-of select="$charLt"/>script type="text/javascript" src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/js/swfobject.js"><xsl:value-of select="$charLt"/>/script>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
 	swfobject.embedSWF("<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/third/ofc/open-flash-chart.swf", "my_chart_pie", "400", "400", "9.0.0", 
-		"expressInstall.swf", {"data-file":"<xsl:value-of select="$statisticTableName"/>_ofcData.jsp?type=pie"});
+		"expressInstall.swf", {"data-file":"statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_ofcData.jsp?type=pie"});
 	swfobject.embedSWF("<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/third/ofc/open-flash-chart.swf", "my_chart_bar", "500", "400", "9.0.0", 
-		"expressInstall.swf", {"data-file":"<xsl:value-of select="$statisticTableName"/>_ofcData.jsp?type=bar_3d"});
+		"expressInstall.swf", {"data-file":"statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_ofcData.jsp?type=bar_3d"});
 <xsl:value-of select="$charLt"/>/script>
 <xsl:value-of select="$charLt"/>/head>
 <xsl:value-of select="$charLt"/>body>
