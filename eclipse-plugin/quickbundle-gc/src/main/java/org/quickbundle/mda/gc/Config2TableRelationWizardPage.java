@@ -103,17 +103,39 @@ public class Config2TableRelationWizardPage extends WizardPage implements Listen
 	private void initTableRelationWidget (Composite container, int columns) {
 		boolean needCreateDefault = true;
 		Map<String, Document> mTableDoc = gcRule.getMTableDocs();
+		cleanUnusedRefTable(mTableDoc);
 		for(Map.Entry<String, Document> en : mTableDoc.entrySet()) {
 			Document docMeta = en.getValue();
 			List<Element> lMainTable = docMeta.selectNodes("/meta/relations/mainTable");
 			for(Element mainTable : lMainTable) {
-				needCreateDefault = false;
-				addRelationGroup(container, columns, mainTable);
+				if(mainTable.selectNodes("refTable").size() > 0) {
+					needCreateDefault = false;
+					addRelationGroup(container, columns, mainTable);
+				}
 			}
 		}
         //默认加一组关系
 		if(needCreateDefault) {
 			relations.add(addRelationGroup(container, columns, null));
+		}
+	}
+	
+	private void cleanUnusedRefTable(Map<String, Document> mTableDoc) {
+		for(Map.Entry<String, Document> en : mTableDoc.entrySet()) {
+			Document docMeta = en.getValue();
+			List<Element> lMainTable = docMeta.selectNodes("/meta/relations/mainTable");
+			for(Element mainTable : lMainTable) {
+				if(!mTableDoc.containsKey(mainTable.valueOf("@tableName"))) {
+					mainTable.getParent().remove(mainTable);
+					continue;
+				}
+				List<Element> lRefTable = mainTable.selectNodes("refTable");
+				for(Element refTable : lRefTable) {
+					if(!mTableDoc.containsKey(refTable.valueOf("@tableName"))) {
+						mainTable.remove(refTable);
+					}
+				}
+			}
 		}
 	}
 	

@@ -121,11 +121,11 @@ public class GenerateCodeRule {
                 mTempDisplayName.put((currentTable + thisColumn.getText()).toLowerCase(), defaultInit);
             }
         }
+        Document oldDocTable = null;
         if (currentTableXmlFile.exists()) { //如果已经存在tableXml，取冗余
-            Document oldDocTable = RmXmlHelper.parse(currentTableXmlFile.getPath());
-            java.util.List lColumn = oldDocTable.selectNodes("//column");
-            for (Iterator itLColumn = lColumn.iterator(); itLColumn.hasNext();) {
-                Node thisColumn = (Node) itLColumn.next();
+            oldDocTable = RmXmlHelper.parse(currentTableXmlFile.getPath());
+            java.util.List<Element> lColumn = oldDocTable.selectNodes("//column");
+            for (Element thisColumn : lColumn) {
                 String[] defaultInit = new String[5];  //0，是否构建；1，列显示名称；2，人性化方式；3，人性化方式关键字; 4,是否构建list
                 defaultInit[0] = thisColumn.valueOf("@isBuild");
                 defaultInit[1] = thisColumn.valueOf("@columnNameDisplay");
@@ -149,10 +149,6 @@ public class GenerateCodeRule {
         		mainRule, 
         		pdmParser);
         { 
-            //TODO 回写主子表关系，会不会有问题？
-//            if(mTempOtherConfig.get("parentChildTable") != null) {
-//                docTable.selectSingleNode("/meta/tables/table[1]/@parentChildTable").setText(mTempOtherConfig.get("parentChildTable").toString());                                        
-//            }
             //回写列显示名称(即中文名)
             java.util.List lColumn = docTable.selectNodes("//column");
             for (Iterator itLColumn = lColumn.iterator(); itLColumn.hasNext();) {
@@ -201,6 +197,11 @@ public class GenerateCodeRule {
             if(mTempOtherConfig.get("customBundleCode") != null) {
                 docTable.selectSingleNode("/meta/tables/table[1]/@customBundleCode").setText(mTempOtherConfig.get("customBundleCode").toString());
             }
+        }
+        if(oldDocTable != null && oldDocTable.selectNodes("/meta/relations/mainTable").size() > 0){ //回写表关系
+        	Element eleOldMainTable = (Element)oldDocTable.selectSingleNode("/meta/relations/mainTable");
+        	Element newRelation = (Element)docTable.selectSingleNode("/meta/relations");
+        	newRelation.add(eleOldMainTable.createCopy());
         }
         mTableDocs.put(currentTable, docTable);
     }

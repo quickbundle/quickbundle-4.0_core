@@ -225,9 +225,14 @@ public class TableRelation {
 			for(Element eleRefTableChild : lRefTableChild) {
 				String refTableChild = eleRefTableChild.valueOf("@tableName");
 				Document docRefTableChild = mTableDoc.get(refTableChild);
-				if(docRefTableChild != null && tableDoc.selectSingleNode("/meta/tables/table[@tableName='" + refTableChild + "']") == null){
+				if(docRefTableChild != null){
+					Element redundantRefTableInfo = (Element)tableDoc.selectSingleNode("/meta/tables/table[@tableName='" + refTableChild + "']");
+					if(redundantRefTableInfo != null) { //清理冗余的缓存
+						eleTables.remove(redundantRefTableInfo);
+					}
 					Element largeEleRefTableChild = (Element)docRefTableChild.selectSingleNode("/meta/tables/table[@tableName='" + refTableChild + "']");
 					eleTables.add(largeEleRefTableChild.createCopy());
+					//清理tableTos
 					Element eleTableTos = (Element)gcRule.getMainRule().selectSingleNode("/rules/database/tableTos");
 					Node eleTableTo = eleTableTos.selectSingleNode("tableTo[text()='" + refTableChild + "']");
 					if(eleTableTo != null) {

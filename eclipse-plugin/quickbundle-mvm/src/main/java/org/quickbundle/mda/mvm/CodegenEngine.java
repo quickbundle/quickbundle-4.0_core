@@ -169,7 +169,7 @@ public class CodegenEngine {
         	if(appendPath != null && appendPath.length() > 0) {
         		xpathFiles.append(" and @appendPath='").append(appendPath).append("'");
         	}
-        	baseTargetPath = mainRule.valueOf("/rules/codegen/files[" + appendPath + "]/@baseTargetPath");
+        	baseTargetPath = mainRule.valueOf("/rules/codegen/files[" + xpathFiles.toString() + "]/@baseTargetPath");
         }
         return baseTargetPath;
     }

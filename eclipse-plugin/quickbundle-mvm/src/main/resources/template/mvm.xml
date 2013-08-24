@@ -13,7 +13,7 @@
 			<file xsltPath="JavaEE-standard/java/dao/ITableNameDao.xsl" targetPath="dao/ITableNameDao.java"/>
 			<file xsltPath="JavaEE-standard/java/util/exception/TableNameException.xsl" targetPath="util/exception/TableNameException.java"/>
 			<file xsltPath="JavaEE-standard/java/util/ITableNameConstants.xsl" targetPath="util/ITableNameConstants.java"/>
-			<file xsltPath="JavaEE-standard/java/vo/TableNameVo.xsl" targetPath="vo/TableNameVo.java"/>
+			<file xsltPath="JavaEE-standard/java/vo/TableNameVo.xsl" targetPath="vo/TableNameVo.java" result-document="true"/>
 		</files>
 		<files filesType="jsp">
 			<file xsltPath="JavaEE-standard/jsp/ajax/listTableName.xsl" targetPath="ajax/listTableName.jsp" bundleCode="ajax"/>
@@ -31,7 +31,7 @@
 			<file xsltPath="JavaEE-standard/jsp/importTableName.xsl" targetPath="importTableName.jsp" bundleCode="importExport"/>
 			<file xsltPath="JavaEE-standard/jsp/insertTableName.xsl" targetPath="insertTableName.jsp" bundleCode="main"/>
 			<file xsltPath="JavaEE-standard/jsp/listTableName.xsl" targetPath="listTableName.jsp" bundleCode="main"/>
-			<file xsltPath="JavaEE-standard/jsp/middle/listMiddleTableName.xsl" targetPath="middle/" result-document="true" bundleCode="main"/>
+			<file xsltPath="JavaEE-standard/jsp/middle/listMiddleTableName.xsl" targetPath="middle/" bundleCode="main" result-document="true"/>
 		</files>
 		<files filesType="config" appendPath="WEB-INF/config">
 			<file xsltPath="JavaEE-standard/config/applicationContext.xsl" targetPath="spring/rm.applicationContext.xml" afterKeyWord="&lt;!--startProjectBeans-->"/>
