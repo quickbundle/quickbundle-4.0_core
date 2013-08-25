@@ -5,11 +5,16 @@ import org.quickbundle.tools.helper.xml.RmXmlHelper;
 public class JavaTemplateHelper {
 
     public static String getJavaFileDescComment(String outputFile) {
-        String returnStr = "";
-        returnStr += "//代码生成时,文件路径: " + RmXmlHelper.formatToUrlNoPrefix(outputFile) + "\n";
-        returnStr += "//代码生成时,系统时间: " + RmXmlHelper.getSysDateTime() + "\n";
-        returnStr += "//代码生成时,操作系统用户: " + System.getProperty("user.name") + "\n\n";
-        return returnStr;
+        StringBuilder result = new StringBuilder();
+        result.append("//代码生成时,文件路径: ")
+        	.append(RmXmlHelper.formatToUrlNoPrefix(outputFile))
+        	.append("\n")
+        	.append("//代码生成时,系统时间:")
+        	.append(RmXmlHelper.getSysDateTime())
+        	.append(", 操作系统用户:")
+        	.append(System.getProperty("user.name"))
+        	.append("\n\n");
+        return result.toString();
     }
 
     /**
@@ -21,18 +26,26 @@ public class JavaTemplateHelper {
      * @return
      */
     public static String getJavaFileComment(String filePathName, String projectName, String authorName) {
-        String returnStr = "";
-        returnStr += "/*\n";
-        returnStr += " * 系统名称:单表模板 --> " + projectName + "\n";
-        returnStr += " * \n";
-        returnStr += " * 文件名称: " + filePathName + "\n";
-        returnStr += " * \n";
-        returnStr += " * 功能描述:\n";
-        returnStr += " * \n";
-        returnStr += " * 版本历史: " + RmXmlHelper.getSysDateTime() + " 创建1.0.0版 (" + authorName + ")\n";
-        returnStr += " *  \n";
-        returnStr += " */\n";
-        return returnStr;
+    	StringBuilder result = new StringBuilder();
+    	result.append("/*\n")
+    		.append(" * 系统名称:单表模板 --> ")
+    		.append(projectName)
+    		.append("\n")
+    		.append(" * \n")
+    		.append(" * 文件名称: ")
+    		.append(filePathName)
+    		.append("\n")
+    		.append(" * \n")
+    		.append(" * 功能描述:\n")
+    		.append(" * \n")
+    		.append(" * 版本历史: ")
+    		.append(RmXmlHelper.getSysDateTime())
+    		.append(" 创建1.0.0版 (")
+    		.append(authorName)
+    		.append(")\n")
+    		.append(" *  \n")
+    		.append(" */\n");
+        return result.toString();
     }
 
     /**
@@ -42,17 +55,16 @@ public class JavaTemplateHelper {
      * @return
      */
     public static String getClassComment(String authorName) {
-        String returnStr = "";
-        returnStr += "/**\n";
-        returnStr += " * 功能、用途、现存BUG:\n";
-        returnStr += " * \n";
-        returnStr += " * @author " + authorName + "\n";
-        returnStr += " * @version 1.0.0\n";
-        returnStr += " * @see 需要参见的其它类\n";
-        returnStr += " * @since 1.0.0\n";
-        returnStr += " */\n";
-
-        return returnStr;
+    	StringBuilder result = new StringBuilder();
+    	result.append("/**\n")
+    		.append(" * 功能、用途、现存BUG:\n")
+    		.append(" * \n")
+    		.append(" * @author " + authorName + "\n")
+    		.append(" * @version 1.0.0\n")
+    		.append(" * @see 需要参见的其它类\n")
+    		.append(" * @since 1.0.0\n")
+    		.append(" */\n");
+        return result.toString();
     }
     
     /**

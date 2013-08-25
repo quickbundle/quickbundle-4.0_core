@@ -50,7 +50,7 @@ public class XsltHelper {
             }
             RmFileHelper.saveFile(context, outputFile);
         } catch (Exception e) {
-        	EclipseLog.logError("xsltPath=" + xsltPath + ", myTableXml=" + myTableXml + "," + e.toString(), e);
+        	EclipseLog.logError("xslt=" + xsltPath + ", metaXml=" + myTableXml + "," + e.toString(), e);
             e.printStackTrace();
         }
     }
@@ -91,7 +91,7 @@ public class XsltHelper {
     			RmFileHelper.saveFile(context, outputFile);
     		}
     	} catch (Exception e) {
-    		EclipseLog.logError("xsltPath=" + xsltPath + ", myTableXml=" + myTableXml + "," + e.toString(), e);
+    		EclipseLog.logError("xslt=" + xsltPath + ", metaXml=" + myTableXml + "," + e.toString(), e);
     		e.printStackTrace();
     	}
     	{//如果目录为空则删除
@@ -130,7 +130,7 @@ public class XsltHelper {
         try {
         	context = RmTransformHelper.getStringFromTransform(xsltPath, myTableXml);
 		} catch (Exception e) {
-			EclipseLog.logError("xsltPath=" + xsltPath + ", myTableXml=" + myTableXml + "," + e.toString(), e);
+			EclipseLog.logError("xslt=" + xsltPath + ", metaXml=" + myTableXml + "," + e.toString(), e);
 			e.printStackTrace();
 		}
         
