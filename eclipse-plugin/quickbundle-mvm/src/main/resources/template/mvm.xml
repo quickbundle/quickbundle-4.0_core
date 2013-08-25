@@ -3,35 +3,28 @@
 	<codegen>
 		<!--定义要生成的文件列表，分java、jsp、配置文件3种-->
 		<files filesType="java">
-			<file xsltPath="JavaEE-standard/java/web/TableNameAction.xsl" outputFile="web/TableNameAction.java" bundleCode="main"/>
-			<file xsltPath="JavaEE-standard/java/web/TableNameAjaxAction.xsl" outputFile="web/TableNameAjaxAction.java" bundleCode="ajax"/>
-			<file xsltPath="JavaEE-standard/java/web/TableNameConditionAction.xsl" outputFile="web/TableNameConditionAction.java" bundleCode="condition"/>
-			<file xsltPath="JavaEE-standard/java/web/TableNameReadOnlyAction.xsl" outputFile="web/TableNameReadOnlyAction.java" bundleCode="readonly"/>
-			<file xsltPath="JavaEE-standard/java/service/impl/TableNameService.xsl" outputFile="service/impl/TableNameService.java"/>
-			<file xsltPath="JavaEE-standard/java/service/ITableNameService.xsl" outputFile="service/ITableNameService.java"/>
-			<file xsltPath="JavaEE-standard/java/dao/impl/TableNameDao.xsl" outputFile="dao/impl/TableNameDao.java"/>
-			<file xsltPath="JavaEE-standard/java/dao/ITableNameDao.xsl" outputFile="dao/ITableNameDao.java"/>
-			<file xsltPath="JavaEE-standard/java/util/exception/TableNameException.xsl" outputFile="util/exception/TableNameException.java"/>
-			<file xsltPath="JavaEE-standard/java/util/ITableNameConstants.xsl" outputFile="util/ITableNameConstants.java"/>
-			<file xsltPath="JavaEE-standard/java/vo/TableNameVo.xsl" outputFile="vo/TableNameVo.java" outputFolder="vo/" result-document="true"/>
+			<file xsltPath="JavaEE-standard/java/web/TableNameController.xsl" outputFile="web/TableNameController.java" bundleCode="main"/>
+			<file xsltPath="JavaEE-standard/java/service/TableNameService.xsl" outputFile="service/TableNameService.java"/>
+			<file xsltPath="JavaEE-standard/java/dao/TableNameDao.xsl" outputFile="dao/TableNameDao.java" result-document="true"/>
+			<file xsltPath="JavaEE-standard/java/dao/TableNameDao.xml.xsl" outputFile="dao/TableNameDao.xml" result-document="true"/>
+			<file xsltPath="JavaEE-standard/java/ITableNameConstants.xsl" outputFile="ITableNameConstants.java"/>
+			<file xsltPath="JavaEE-standard/java/vo/TableNameVo.xsl" outputFile="vo/TableNameVo.java" result-document="true"/>
+			<file xsltPath="JavaEE-standard/java/rest/TableNameRestController.xsl" outputFile="rest/TableNameRestController.java"/>
 		</files>
 		<files filesType="jsp">
 			<file xsltPath="JavaEE-standard/jsp/ajax/listTableName.xsl" outputFile="ajax/listTableName.jsp" bundleCode="ajax"/>
-			<file xsltPath="JavaEE-standard/jsp/condition/detailTableName.xsl" outputFile="condition/detailTableName.jsp" bundleCode="condition"/>
-			<file xsltPath="JavaEE-standard/jsp/condition/insertTableName.xsl" outputFile="condition/insertTableName.jsp" bundleCode="condition"/>
-			<file xsltPath="JavaEE-standard/jsp/condition/listTableName.xsl" outputFile="condition/listTableName.jsp" bundleCode="condition"/>
+			<file xsltPath="JavaEE-standard/jsp/middle/listMiddleTableName.xsl" outputFolder="middle/" bundleCode="main" result-document="true"/>
 			<file xsltPath="JavaEE-standard/jsp/util/referenceTableName.xsl" outputFile="util/referenceTableName.jsp" bundleCode="reference"/>
 			<file xsltPath="JavaEE-standard/jsp/util/statisticTableName_chart.xsl" outputFile="util/statisticTableName_chart.jsp" bundleCode="statistic"/>
-			<file xsltPath="JavaEE-standard/jsp/util/statisticTableName_rowColumn.xsl" outputFile="util/statisticTableName_rowColumn.jsp" bundleCode="statistic"/>
-			<file xsltPath="JavaEE-standard/jsp/util/statisticTableName_ofc.xsl" outputFile="util/statisticTableName_ofc.jsp" bundleCode="statistic"/>
-			<file xsltPath="JavaEE-standard/jsp/util/statisticTableName_ofcData.xsl" outputFile="util/statisticTableName_ofcData.jsp" bundleCode="statistic"/>
+			<file xsltPath="JavaEE-standard/jsp/util/statisticTableName_flash.xsl" outputFile="util/statisticTableName_flash.jsp" bundleCode="statistic"/>
+			<file xsltPath="JavaEE-standard/jsp/util/statisticTableName_flashData.xsl" outputFile="util/statisticTableName_flashData.jsp" bundleCode="statistic"/>
+			<file xsltPath="JavaEE-standard/jsp/util/statisticTableName_table.xsl" outputFile="util/statisticTableName_table.jsp" bundleCode="statistic"/>
 			<file xsltPath="JavaEE-standard/jsp/detailTableName.xsl" outputFile="detailTableName.jsp" bundleCode="main"/>
 			<file xsltPath="JavaEE-standard/jsp/exportTableName_custom.xsl" outputFile="exportTableName_custom.jsp" bundleCode="importExport"/>
 			<file xsltPath="JavaEE-standard/jsp/exportTableName_excel.xsl" outputFile="exportTableName_excel.jsp" bundleCode="importExport"/>
 			<file xsltPath="JavaEE-standard/jsp/importTableName.xsl" outputFile="importTableName.jsp" bundleCode="importExport"/>
 			<file xsltPath="JavaEE-standard/jsp/insertTableName.xsl" outputFile="insertTableName.jsp" bundleCode="main"/>
 			<file xsltPath="JavaEE-standard/jsp/listTableName.xsl" outputFile="listTableName.jsp" bundleCode="main"/>
-			<file xsltPath="JavaEE-standard/jsp/middle/listMiddleTableName.xsl" outputFolder="middle/" bundleCode="main" result-document="true"/>
 		</files>
 		<files filesType="config" appendPath="WEB-INF/config">
 			<file xsltPath="JavaEE-standard/config/jdbc.xsl" outputFile="jdbc/jdbc.properties" afterKeyWord="NOT_EXIST_POSITION"/>
