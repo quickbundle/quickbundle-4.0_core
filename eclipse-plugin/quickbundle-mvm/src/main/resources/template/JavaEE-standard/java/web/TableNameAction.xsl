@@ -352,7 +352,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Action extends R
 	<!--生成多对多表Action定义-->
 	<xsl:template name="buildMiddleAction">
 		<xsl:variable name="parentChildTable" select="@parentChildTable"/>
-		<xsl:variable name="jspFullPath" select="$jspFullPath"/>
+		<xsl:variable name="jspSourceTableDir" select="$jspSourceTableDir"/>
 			<xsl:analyze-string select="$parentChildTable" regex=",">
 				<xsl:non-matching-substring>
 					<xsl:analyze-string select="." regex='^\s*([\w_]+)\.([\w_]+)=([\w_]+)\.([\w_]+)\|([\w_]+)=([\w_]+)\.([\w_]+)\(([\w_]+)\.([\w_]+)\)\s*$'>

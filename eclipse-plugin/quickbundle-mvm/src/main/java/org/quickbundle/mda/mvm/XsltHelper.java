@@ -20,11 +20,16 @@ import org.quickbundle.tools.helper.xml.RmXmlHelper;
 public class XsltHelper {
 
     public static String getJavaFileDescComment(String outputFile) {
-        String returnStr = "";
-        returnStr += "//代码生成时,文件路径: " + RmXmlHelper.formatToUrlNoPrefix(outputFile) + "\n";
-        returnStr += "//代码生成时,系统时间: " + RmXmlHelper.getSysDateTime() + "\n";
-        returnStr += "//代码生成时,操作系统用户: " + System.getProperty("user.name") + "\n\n";
-        return returnStr;
+        StringBuilder result = new StringBuilder();
+        result.append("//代码生成时,文件路径: ")
+        	.append(RmXmlHelper.formatToUrlNoPrefix(outputFile))
+        	.append("\n")
+        	.append("//代码生成时,系统时间:")
+        	.append(RmXmlHelper.getSysDateTime())
+        	.append(", 操作系统用户:")
+        	.append(System.getProperty("user.name"))
+        	.append("\n\n");
+        return result.toString();
     }
 
     /**

@@ -11,6 +11,9 @@
 			<xsl:value-of select="$javaPackageName"/>.<xsl:value-of select="$tableDirName"/>.vo --> <xsl:value-of select="$tableName"/>Vo.java</xsl:param>
 		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>package <xsl:value-of select="$javaPackageTableDir"/>.vo;
 
+<xsl:if test="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+import java.util.List;
+</xsl:if>
 <xsl:if test="column[@dataType='java.sql.Date']">
 import java.sql.Date;
 </xsl:if>
@@ -27,14 +30,25 @@ public class <xsl:value-of select="$tableFormatName"/>Vo extends RmValueObject{
 
     private static final long serialVersionUID = 1;
 <xsl:for-each select="//table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
-    List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatName(/meta, ./@tableName)" />> body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if> = null;
-	
-	public List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatName(/meta, ./@tableName)" />> getBody<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>() {
-		return body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>;
-	}
+    /**
+     * <xsl:value-of select="str:getTableNameDisplay(/meta, ./@tableName)"/>:<xsl:value-of select="@tableName"/>
+     */
+    List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatName(/meta, ./@tableName)"/>Vo> body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if> = null;
 
-	public void setBody<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>(List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatName(/meta, ./@tableName)" />> body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>) {
-		this.body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if> = body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>;
+    /**
+     * 获得<xsl:value-of select="str:getTableNameDisplay(/meta, ./@tableName)"/>
+     * @return <xsl:value-of select="str:getTableNameDisplay(/meta, ./@tableName)"/>
+     */
+	public List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatName(/meta, ./@tableName)"/>Vo> getBody<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>() {
+		return body<xsl:if test="position()>1"><xsl:value-of select="position()"/></xsl:if>;
+	}
+	
+    /**
+     * 设置<xsl:value-of select="str:getTableNameDisplay(/meta, ./@tableName)"/>
+     * @param body<xsl:if test="position()>1"><xsl:value-of select="position()"/></xsl:if> <xsl:value-of select="str:getTableNameDisplay(/meta, ./@tableName)"/>
+     */
+	public void setBody<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>(List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatName(/meta, ./@tableName)" />Vo> body<xsl:if test="position()>1"><xsl:value-of select="position()"/></xsl:if>) {
+		this.body<xsl:if test="position()>1"><xsl:value-of select="position()"/></xsl:if> = body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>;
 	}
 			<xsl:result-document href="{$targetFullPath}/{str:getTableFormatName(/meta, ./@tableName)}Vo.java">
 				<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>package <xsl:value-of select="$javaPackageName"/>.<xsl:value-of select="$tableDirName"/>.vo;

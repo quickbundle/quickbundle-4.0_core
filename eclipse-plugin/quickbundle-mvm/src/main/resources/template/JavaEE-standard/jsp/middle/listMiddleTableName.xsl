@@ -12,7 +12,7 @@
 	<!--生成多对多表list页面定义-->
 	<xsl:template name="buildMiddleListJsp">
 		<xsl:variable name="parentChildTable" select="@parentChildTable"/>
-		<xsl:variable name="TableNameAction" select="$TableNameAction"/>
+		<xsl:variable name="TableNameAction" select="concat($tableFormatNameUpperFirst, 'Action')"/>
 			<xsl:analyze-string select="$parentChildTable" regex=",">
 				<xsl:non-matching-substring>
 					<xsl:analyze-string select="." regex='^\s*([\w_]+)\.([\w_]+)=([\w_]+)\.([\w_]+)\|([\w_]+)=([\w_]+)\.([\w_]+)\(([\w_]+)\.([\w_]+)\)\s*$'>
