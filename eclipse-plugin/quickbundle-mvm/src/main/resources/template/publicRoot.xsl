@@ -291,6 +291,19 @@
 		<xsl:variable name="keyColumnVar" select="str:getKeyColumn($meta, $tableNameVar)"/>
 		<xsl:sequence select="$meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$keyColumnVar]/@columnNameDisplay"/>
 	</xsl:function>
+	<!--自定义函数，获得指定子表tableName针对mainTable的外键-->
+	<xsl:function name="str:getRefColumn">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="$meta/relation/mainTable/refTable[@tableName=$tableNameVar]/@refColumn"/>
+	</xsl:function>
+	<!--自定义函数，获得指定子表tableName针对mainTable的外键的FormatLower-->
+	<xsl:function name="str:getRefColumnFormatLower">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:variable name="refColumnVar" select="str:getRefColumn($meta, $tableNameVar)"/>
+		<xsl:sequence select="lower-case((str:filter($refColumnVar, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$refColumnVar]/@filterKeyword, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$refColumnVar]/@filterType))"/>
+	</xsl:function>
 	<!--处理根元素-->
 	<xsl:template match="/">
 		<xsl:apply-templates/>

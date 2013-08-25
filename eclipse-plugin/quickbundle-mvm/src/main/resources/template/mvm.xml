@@ -34,8 +34,6 @@
 			<file xsltPath="JavaEE-standard/jsp/middle/listMiddleTableName.xsl" outputFolder="middle/" bundleCode="main" result-document="true"/>
 		</files>
 		<files filesType="config" appendPath="WEB-INF/config">
-			<file xsltPath="JavaEE-standard/config/applicationContext.xsl" outputFile="spring/rm.applicationContext.xml" afterKeyWord="&lt;!--startProjectBeans-->"/>
-			<file xsltPath="JavaEE-standard/config/struts-config.xsl" outputFile="struts/rm.struts-config.xml" afterKeyWord="&lt;action-mappings>"/>
 			<file xsltPath="JavaEE-standard/config/jdbc.xsl" outputFile="jdbc/jdbc.properties" afterKeyWord="NOT_EXIST_POSITION"/>
 			<file xsltPath="JavaEE-standard/config/id.xsl" outputFile="jdbc/id.xml" afterKeyWord="&lt;!--generateFromHere-->"/>
 			<file xsltPath="JavaEE-standard/config/initCodeTypeData.xsl" outputFile="rm/initCodeTypeData.xml" afterKeyWord="&lt;codes>" rowIsUnique="true"/>

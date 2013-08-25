@@ -106,6 +106,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
 			<xsl:when test="@dataType='java.sql.Date'">Date <xsl:value-of select="$columnNameFormatLower"/>;</xsl:when>
 			<xsl:when test="@dataType='java.math.BigDecimal'">BigDecimal <xsl:value-of select="$columnNameFormatLower"/>;</xsl:when>
 			<xsl:when test="@dataType='java.lang.Integer'">int <xsl:value-of select="$columnNameFormatLower"/>;</xsl:when>
+			<xsl:when test="@dataType='java.lang.Long'">Long <xsl:value-of select="$columnNameFormatLower"/>;</xsl:when>
 			<xsl:otherwise>String <xsl:value-of select="$columnNameFormatLower"/>;</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -126,6 +127,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
 			<xsl:when test="@dataType='java.sql.Date'">Date</xsl:when>
 			<xsl:when test="@dataType='java.math.BigDecimal'">BigDecimal</xsl:when>
 			<xsl:when test="@dataType='java.lang.Integer'">int</xsl:when>
+			<xsl:when test="@dataType='java.lang.Long'">Long</xsl:when>
 			<xsl:otherwise>String</xsl:otherwise>
 		</xsl:choose> get<xsl:value-of select="str:upperFirst($columnNameFormatLower)"/>(){
 		return <xsl:value-of select="$columnNameFormatLower"/>;
@@ -143,6 +145,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
 			<xsl:when test="@dataType='java.sql.Date'">Date</xsl:when>
 			<xsl:when test="@dataType='java.math.BigDecimal'">BigDecimal</xsl:when>
 			<xsl:when test="@dataType='java.lang.Integer'">int</xsl:when>
+			<xsl:when test="@dataType='java.lang.Long'">Long</xsl:when>
 			<xsl:otherwise>String</xsl:otherwise>
 		</xsl:choose>
 		<xsl:value-of select="concat(' ', $columnNameFormatLower)"/>){

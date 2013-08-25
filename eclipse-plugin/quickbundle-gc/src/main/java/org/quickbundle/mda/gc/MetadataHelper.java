@@ -221,10 +221,10 @@ public class MetadataHelper {
 			String columnName = rsColumns4JavaDataType.getColumnName(i);
 			Element column = (Element) table.selectSingleNode("column[@columnName='" + columnName + "']");
 			column.addAttribute("dataType", rsColumns4JavaDataType.getColumnClassName(i));
-			{// 针对number(19)，将其强制转化为String
+			{// 针对number(19)，将其强制转化为Long
 				if ((BigDecimal.class.getName().equals(column.valueOf("@dataType")) || Long.class.getName().equals(column.valueOf("@dataType")))
 						&& "19".equals(column.valueOf("@maxLength")) && "0".equals(column.valueOf("@decimalDigits"))) {
-					column.addAttribute("dataType", "java.lang.String");
+					column.addAttribute("dataType", "java.lang.Long");
 				}
 			}
 		}
