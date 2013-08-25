@@ -6,9 +6,7 @@
 	<xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
 	<!--处理table-->
 	<xsl:template match="table">
-		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$javaPackageTableDir"/> --> <xsl:value-of select="$ITableNameConstants"/>.java</xsl:param>
-		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
+		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
 package <xsl:value-of select="$javaPackageTableDir"/>;
 
 import java.util.Map;
@@ -17,6 +15,7 @@ import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.quickbundle.project.IGlobalConstants;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
+
 public interface <xsl:value-of select="$ITableNameConstants"/> extends IGlobalConstants {
 
     //Service的规范化名称

@@ -18,16 +18,14 @@
 	<xsl:variable name="jspSourceTableDir" select="concat($jspSourcePath, '/', $tableDirName)"/>
 	<!--自定义函数，获得某个Java文件的非JavaDoc注释，调用java文件或concat字符串实现-->
 	<xsl:function name="str:getJavaFileComment">
-		<xsl:param name="filePathName" as="xs:string"/>
-		<xsl:param name="projectName" as="xs:string"/>
 		<xsl:param name="authorName" as="xs:string"/>
 		<xsl:choose>
 			<xsl:when test="$debug='true'">
-				<xsl:sequence select="concat('/*', $charBr, ' * 系统名称:单表模板 - - > ', $projectName, $charBr, ' *', $charBr, ' * 文件名称: ', $filePathName, $charBr, ' *', $charBr, ' * 功能描述:', $charBr, ' *', $charBr, ' * 版本历史: ', format-dateTime(current-dateTime(),'[Y0001]-[M01]-[D01] [H01]:[m01]:[s01]'), ' 创建1.0.0版 (', $authorName ,')', $charBr, ' *', $charBr,' */', $charBr)"/>
+				<xsl:sequence select="concat('/*', $charBr, ' * 功能描述:', $charBr, ' * 版本历史: ', format-dateTime(current-dateTime(),'[Y0001]-[M01]-[D01] [H01]:[m01]:[s01]'), ' 创建1.0.0版 (', $authorName ,')', $charBr, ' */', $charBr)"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<!--
-				<xsl:sequence xmlns:XsltHelper="java:org.quickbundle.mda.template.JavaTemplateHelper" select="XsltHelper:getJavaFileComment($filePathName, $projectName, $authorName)"/>
+				<xsl:sequence xmlns:XsltHelper="java:org.quickbundle.mda.template.JavaTemplateHelper" select="XsltHelper:getJavaFileComment($authorName)"/>
 			-->
 			</xsl:otherwise>
 		</xsl:choose>
@@ -37,7 +35,7 @@
 		<xsl:param name="authorName" as="xs:string"/>
 		<xsl:choose>
 			<xsl:when test="$debug='true'">
-				<xsl:sequence select="concat('/**', $charBr, ' * 功能、用途、现存BUG:', $charBr, ' *', $charBr, ' * @author: ', $authorName, $charBr, ' * @version: 1.0.0', $charBr, ' * @see 需要参见的其它类', $charBr, ' * @since 1.0.0', $charBr,' */', $charBr)"/>
+				<xsl:sequence select="concat('/**', $charBr, ' * 功能、用途、现存BUG:', $charBr, ' *', $charBr, ' * @author: ', $authorName, $charBr, ' * @version: 1.0.0', $charBr, ' * @see 需要参见的其它类', $charBr, ' * @since 1.0.0', $charBr,' */')"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<!--

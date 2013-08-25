@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <meta>
   <project>
     <projectName>abc123</projectName>
@@ -12,7 +11,7 @@
     <driver>com.mysql.jdbc.Driver</driver>
     <url>jdbc:mysql://localhost/rmdemo?jdbcCompliantTruncation=false</url>
     <userName>root</userName>
-    <password>manager0</password>
+    <password></password>
     <dbProductName>MySQL</dbProductName>
   </database>
   <relations>

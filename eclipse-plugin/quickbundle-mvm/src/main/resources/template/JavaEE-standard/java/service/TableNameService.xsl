@@ -6,9 +6,7 @@
 	<xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
 	<!--处理table-->
 	<xsl:template match="table">
-		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$javaPackageTableDir"/>.service.impl --> <xsl:value-of select="$tableFormatNameUpperFirst"/>Service.java</xsl:param>
-		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>
+		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
 package <xsl:value-of select="$javaPackageTableDir"/>.service.impl;
 
 import java.util.ArrayList;
@@ -33,6 +31,7 @@ import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITab
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
+
 public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service extends RmService implements I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service, <xsl:value-of select="$ITableNameConstants"/> {
     
     /**

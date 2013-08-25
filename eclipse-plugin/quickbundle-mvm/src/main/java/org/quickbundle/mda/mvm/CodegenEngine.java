@@ -26,12 +26,7 @@ import org.quickbundle.tools.helper.xml.RmTransformHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 /**
- * 功能、用途、现存BUG:
- * 
  * @author 白小勇
- * @version 1.0.0
- * @see 需要参见的其它类
- * @since 1.0.0
  */
 public class CodegenEngine {
 	

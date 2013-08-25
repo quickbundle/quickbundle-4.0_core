@@ -7,9 +7,8 @@
 	<xsl:param name="targetFullPath"/>
 	<!--处理table-->
 	<xsl:template match="table[1]">
-		<xsl:param name="thisFilePathName">
-			<xsl:value-of select="$javaPackageName"/>.<xsl:value-of select="$tableDirName"/>.vo --> <xsl:value-of select="$tableName"/>Vo.java</xsl:param>
-		<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>package <xsl:value-of select="$javaPackageTableDir"/>.vo;
+		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
+package <xsl:value-of select="$javaPackageTableDir"/>.vo;
 
 <xsl:if test="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
 import java.util.List;
@@ -26,6 +25,7 @@ import java.math.BigDecimal;
 import org.quickbundle.base.vo.RmValueObject;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
+
 public class <xsl:value-of select="$tableFormatName"/>Vo extends RmValueObject{
 
     private static final long serialVersionUID = 1;
@@ -51,7 +51,7 @@ public class <xsl:value-of select="$tableFormatName"/>Vo extends RmValueObject{
 		this.body<xsl:if test="position()>1"><xsl:value-of select="position()"/></xsl:if> = body<xsl:if test="position()>1"><xsl:value-of select="position()" /></xsl:if>;
 	}
 			<xsl:result-document href="{$targetFullPath}/{str:getTableFormatNameUpperFirst(/meta, @tableName)}Vo.java">
-				<xsl:value-of select="str:getJavaFileComment($thisFilePathName, $projectName, $authorName)"/>package <xsl:value-of select="$javaPackageName"/>.<xsl:value-of select="$tableDirName"/>.vo;
+				<xsl:value-of select="str:getJavaFileComment($authorName)"/>package <xsl:value-of select="$javaPackageName"/>.<xsl:value-of select="$tableDirName"/>.vo;
 
 <xsl:if test="column[@dataType='java.sql.Date']">
 import java.sql.Date;
@@ -65,6 +65,7 @@ import java.math.BigDecimal;
 import org.quickbundle.base.vo.RmValueObject;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
+
 public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo extends RmValueObject{
 
     private static final long serialVersionUID = 1;

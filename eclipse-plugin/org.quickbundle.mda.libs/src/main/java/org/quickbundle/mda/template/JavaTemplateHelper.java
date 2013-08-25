@@ -25,26 +25,16 @@ public class JavaTemplateHelper {
      * @param authorName
      * @return
      */
-    public static String getJavaFileComment(String filePathName, String projectName, String authorName) {
+    public static String getJavaFileComment(String authorName) {
     	StringBuilder result = new StringBuilder();
     	result.append("/*\n")
-    		.append(" * 系统名称:单表模板 --> ")
-    		.append(projectName)
-    		.append("\n")
-    		.append(" * \n")
-    		.append(" * 文件名称: ")
-    		.append(filePathName)
-    		.append("\n")
-    		.append(" * \n")
     		.append(" * 功能描述:\n")
-    		.append(" * \n")
     		.append(" * 版本历史: ")
     		.append(RmXmlHelper.getSysDateTime())
     		.append(" 创建1.0.0版 (")
     		.append(authorName)
     		.append(")\n")
-    		.append(" *  \n")
-    		.append(" */\n");
+    		.append(" */");
         return result.toString();
     }
 
@@ -57,13 +47,10 @@ public class JavaTemplateHelper {
     public static String getClassComment(String authorName) {
     	StringBuilder result = new StringBuilder();
     	result.append("/**\n")
-    		.append(" * 功能、用途、现存BUG:\n")
+    		.append(" * 功能、现存BUG:\n")
     		.append(" * \n")
     		.append(" * @author " + authorName + "\n")
-    		.append(" * @version 1.0.0\n")
-    		.append(" * @see 需要参见的其它类\n")
-    		.append(" * @since 1.0.0\n")
-    		.append(" */\n");
+    		.append(" */");
         return result.toString();
     }
     
