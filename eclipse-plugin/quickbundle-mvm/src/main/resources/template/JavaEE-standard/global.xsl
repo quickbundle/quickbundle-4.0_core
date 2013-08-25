@@ -14,7 +14,7 @@
 	<xsl:variable name="ITableNameConstants" select="concat('I', $tableFormatNameUpperFirst, 'Constants')"/>
 	<xsl:variable name="TableNameVo" select="concat($tableFormatNameUpperFirst, 'Vo')"/>
 	<!--定义包名/目录名-->
-	<xsl:variable name="javaPackageTableDir" select="concat($tableFormatNameUpperFirst, '.', $tableDirName)"/>
+	<xsl:variable name="javaPackageTableDir" select="concat($javaPackageName, '.', $tableDirName)"/>
 	<xsl:variable name="jspSourceTableDir" select="concat($jspSourcePath, '/', $tableDirName)"/>
 	<!--自定义函数，获得某个Java文件的非JavaDoc注释，调用java文件或concat字符串实现-->
 	<xsl:function name="str:getJavaFileComment">

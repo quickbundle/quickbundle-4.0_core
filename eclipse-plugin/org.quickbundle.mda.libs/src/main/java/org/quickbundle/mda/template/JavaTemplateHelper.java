@@ -4,9 +4,9 @@ import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 public class JavaTemplateHelper {
 
-    public static String getJavaFileDescComment(String targetPath) {
+    public static String getJavaFileDescComment(String outputFile) {
         String returnStr = "";
-        returnStr += "//代码生成时,文件路径: " + RmXmlHelper.formatToUrlNoPrefix(targetPath) + "\n";
+        returnStr += "//代码生成时,文件路径: " + RmXmlHelper.formatToUrlNoPrefix(outputFile) + "\n";
         returnStr += "//代码生成时,系统时间: " + RmXmlHelper.getSysDateTime() + "\n";
         returnStr += "//代码生成时,操作系统用户: " + System.getProperty("user.name") + "\n\n";
         return returnStr;

@@ -21,6 +21,7 @@ import org.dom4j.Element;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.quickbundle.tools.helper.RmStringHelper;
+import org.quickbundle.tools.helper.io.RmFileHelper;
 import org.quickbundle.tools.helper.xml.RmTransformHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
@@ -94,70 +95,104 @@ public class CodegenEngine {
     public Object[] generateFiles(IProgressMonitor monitor) throws DocumentException, MalformedURLException {
         Object[] aObj = new Object[2];
         int index = 0; //统计文件数
-        String returnLog = "";
-        String toTableNameKeyword = mainRule.valueOf("/rules/codegen/@toTableNameKeyword");
+        StringBuilder returnLog = new StringBuilder();
         List<Element> lTableXmls = mainRule.selectNodes("/rules/database/tableTos/tableTo");
         if(monitor != null) {
             monitor.beginTask("begin generate code......", mainRule.selectNodes(".//file").size() * lTableXmls.size());
         }
         for (Element thisTableTo : lTableXmls) {
-            String originalTableName = thisTableTo.getText();
-            String currentTableXmlPath = RmXmlHelper.formatToUrl(quickbundleHome + FILE_CONCAT + thisTableTo.valueOf("@xmlName"));
-            Document docCurrentTable = RmXmlHelper.parse(currentTableXmlPath);
-            String filterTableName = getFilterTableName(currentTableXmlPath);
-            String tableDirName = docCurrentTable.valueOf("/meta/tables/table[1]/@tableDirName");
-            List<Element> lFile = mvmDoc.selectNodes(".//file");
-            for (Element eleFile : lFile) {
-                //取出当前rule的组件编码
-                String bundleCode = eleFile.valueOf("@bundleCode");
-                if(bundleCode != null && bundleCode.length() > 0 && docCurrentTable != null) {
-                	String customBundleCode = docCurrentTable.valueOf("/meta/tables/table[@tableName='" + originalTableName + "']/@customBundleCode");
-                	//如果定制编码不包含当前rule的组件编码，跳过
-                	if(!customBundleCode.matches("^[\\w,]*" + bundleCode + "[\\w,]*$")) {
-                		continue;
-                	}
-                }
-                //得到当前这组的基本路径
-                String baseTargetPath = getBaseTargetPath(eleFile);
-                //得到最终路径
-                String xsltPath = templatePath + eleFile.valueOf("@xsltPath");
-                String targetPath = eleFile.valueOf("@targetPath");
-                if (toTableNameKeyword != null && toTableNameKeyword.length() > 0) { //把TableName替换成表名
-                    targetPath = RmStringHelper.replaceFirst(targetPath, toTableNameKeyword, filterTableName);
-                }
-                if ("java".equals(eleFile.valueOf("../@filesType")) || "jsp".equals(eleFile.valueOf("../@filesType"))) {
-                    targetPath = tableDirName + FILE_CONCAT + targetPath;
-                } else if ("config".equals(eleFile.valueOf("../@filesType"))) {
-
-                }
-                targetPath = baseProjectPath + FILE_CONCAT + baseTargetPath + FILE_CONCAT + targetPath;
-                String afterKeyWord = eleFile.valueOf("@afterKeyWord");
-                if (afterKeyWord.length() == 0) { //java和jsp文件
-                	if("true".equals(eleFile.valueOf("@result-document"))) {
-                		XsltHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, targetPath);
-                	} else {
-                		XsltHelper.outPutFile(xsltPath, currentTableXmlPath, targetPath);
-                	}
-                } else { //配置文件
-                	XsltHelper.outPutFile(xsltPath, currentTableXmlPath, targetPath, afterKeyWord, "true".equals(eleFile.valueOf("@rowIsUnique")));                        
-                }
-                returnLog += "\r\nxslt模板路径=" + xsltPath + "\r\n表的xml来源" + currentTableXmlPath + "\r\n生成文件的目标路径=" + targetPath + "\r\n位置关键词=" + afterKeyWord + "\r\n\r\n";
-                index++;
-                if(monitor != null) {
-                    monitor.worked(1);
-                    String tempStr = null;
-                    targetPath = RmXmlHelper.formatToUrlNoPrefix(targetPath);
-                    if(targetPath.length() > 75) {
-                        tempStr = targetPath.substring(0,12) + "..." + targetPath.substring(targetPath.length()-60);
-                    }
-                    monitor.setTaskName(tempStr);
-                }
-            }
+        	int result = doGenerate(monitor, thisTableTo, returnLog);
+        	index += result;
         }
-        log(returnLog);
+        log(returnLog.toString());
         aObj[0] = String.valueOf(index);
         aObj[1] = returnLog;
         return aObj;
+    }
+    
+    private int doGenerate(IProgressMonitor monitor, Element thisTableTo, StringBuilder returnLog) throws MalformedURLException, DocumentException {
+    	int result = 0;
+    	String toTableNameKeyword = mainRule.valueOf("/rules/codegen/@toTableNameKeyword");
+        String originalTableName = thisTableTo.getText();
+        String currentTableXmlPath = RmXmlHelper.formatToUrl(quickbundleHome + FILE_CONCAT + thisTableTo.valueOf("@xmlName"));
+        Document docCurrentTable = RmXmlHelper.parse(currentTableXmlPath);
+        String filterTableName = getFilterTableName(currentTableXmlPath);
+        String tableDirName = docCurrentTable.valueOf("/meta/tables/table[1]/@tableDirName");
+        List<Element> lFile = mvmDoc.selectNodes(".//file");
+        for (Element eleFile : lFile) {
+            //取出当前rule的组件编码
+            String bundleCode = eleFile.valueOf("@bundleCode");
+            if(bundleCode != null && bundleCode.length() > 0 && docCurrentTable != null) {
+            	String customBundleCode = docCurrentTable.valueOf("/meta/tables/table[@tableName='" + originalTableName + "']/@customBundleCode");
+            	//如果定制编码不包含当前rule的组件编码，跳过
+            	if(!customBundleCode.matches("^[\\w,]*" + bundleCode + "[\\w,]*$")) {
+            		continue;
+            	}
+            }
+            //得到当前这组的基本路径
+            String baseTargetPath = getBaseTargetPath(eleFile);
+            //得到最终路径
+            String xsltPath = templatePath + eleFile.valueOf("@xsltPath");
+            String outputFile = eleFile.valueOf("@outputFile");
+            outputFile = fillUpOutput(outputFile, toTableNameKeyword, eleFile, filterTableName, tableDirName, baseTargetPath);
+            String afterKeyWord = eleFile.valueOf("@afterKeyWord");
+            if (afterKeyWord.length() == 0) { //java和jsp文件
+            	if("true".equals(eleFile.valueOf("@result-document"))) {
+            		String outputFolder = eleFile.valueOf("@outputFolder");
+            		outputFolder = fillUpOutput(outputFolder, toTableNameKeyword, eleFile, filterTableName, tableDirName, baseTargetPath);
+            		if("".equals(eleFile.valueOf("@outputFile"))) {
+            			XsltHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, outputFolder);
+            		} else {
+            			if("".equals(outputFolder)) {
+            				outputFolder = new File(RmFileHelper.formatToFile(outputFile)).getParent();
+            			}
+            			XsltHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, outputFolder, outputFile);
+            		}
+            	} else {
+            		XsltHelper.outPutFile(xsltPath, currentTableXmlPath, outputFile);
+            	}
+            } else { //配置文件
+            	XsltHelper.outPutFile(xsltPath, currentTableXmlPath, outputFile, afterKeyWord, "true".equals(eleFile.valueOf("@rowIsUnique")));                        
+            }
+            returnLog.append("\r\nxslt模板路径=")
+            	.append(xsltPath)
+            	.append("\r\n表的xml来源")
+            	.append(currentTableXmlPath)
+            	.append("\r\n生成文件的目标路径=")
+            	.append(outputFile)
+            	.append("\r\n位置关键词=")
+            	.append(afterKeyWord)
+            	.append("\r\n\r\n");
+            result++;
+            if(monitor != null) {
+                monitor.worked(1);
+                String tempStr = null;
+                String displayOutputFile = RmXmlHelper.formatToUrlNoPrefix(outputFile);
+                if(displayOutputFile.length() > 75) {
+                    tempStr = displayOutputFile.substring(0,12) + "..." + displayOutputFile.substring(displayOutputFile.length()-60);
+                }
+                monitor.setTaskName(tempStr);
+            }
+        }
+        return result;
+    }
+    
+    private String fillUpOutput(String output, String toTableNameKeyword, Element eleFile, String filterTableName, String tableDirName, String baseTargetPath) {
+    	StringBuilder result = new StringBuilder();
+        if (toTableNameKeyword != null && toTableNameKeyword.length() > 0) { //把TableName替换成表名
+            output = RmStringHelper.replaceFirst(output, toTableNameKeyword, filterTableName);
+        }
+        if ("java".equals(eleFile.valueOf("../@filesType")) || "jsp".equals(eleFile.valueOf("../@filesType"))) {
+            output = tableDirName + FILE_CONCAT + output;
+        } else if ("config".equals(eleFile.valueOf("../@filesType"))) {
+
+        }
+        result.append(baseProjectPath)
+        	.append(FILE_CONCAT)
+        	.append(baseTargetPath)
+        	.append(FILE_CONCAT)
+        	.append(output);
+        return result.toString();
     }
     
     private String getBaseTargetPath(Element eleFile) {

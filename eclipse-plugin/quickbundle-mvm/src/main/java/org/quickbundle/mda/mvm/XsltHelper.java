@@ -19,9 +19,9 @@ import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 public class XsltHelper {
 
-    public static String getJavaFileDescComment(String targetPath) {
+    public static String getJavaFileDescComment(String outputFile) {
         String returnStr = "";
-        returnStr += "//代码生成时,文件路径: " + RmXmlHelper.formatToUrlNoPrefix(targetPath) + "\n";
+        returnStr += "//代码生成时,文件路径: " + RmXmlHelper.formatToUrlNoPrefix(outputFile) + "\n";
         returnStr += "//代码生成时,系统时间: " + RmXmlHelper.getSysDateTime() + "\n";
         returnStr += "//代码生成时,操作系统用户: " + System.getProperty("user.name") + "\n\n";
         return returnStr;
@@ -32,18 +32,18 @@ public class XsltHelper {
      * 
      * @param xsltPath
      * @param myTableDoc
-     * @param targetPath
+     * @param outputFile
      * @throws TransformerException
      */
-    public static void outPutFile(String xsltPath, String myTableXml, String targetPath) {
-        targetPath = RmXmlHelper.formatToFile(targetPath);
-        RmFileHelper.initParentDir(targetPath); //创建父目录
+    public static void outPutFile(String xsltPath, String myTableXml, String outputFile) {
+        outputFile = RmXmlHelper.formatToFile(outputFile);
+        RmFileHelper.initParentDir(outputFile); //创建父目录
         try {
             String context = RmTransformHelper.getStringFromTransform(xsltPath, myTableXml);
-            if (targetPath.endsWith(".java")) {
-                context = getJavaFileDescComment(targetPath) + context;
+            if (outputFile.endsWith(".java")) {
+                context = getJavaFileDescComment(outputFile) + context;
             }
-            RmFileHelper.saveFile(context, targetPath);
+            RmFileHelper.saveFile(context, outputFile);
         } catch (Exception e) {
         	EclipseLog.logError("xsltPath=" + xsltPath + ", myTableXml=" + myTableXml + "," + e.toString(), e);
             e.printStackTrace();
@@ -55,25 +55,59 @@ public class XsltHelper {
      * 
      * @param xsltPath
      * @param myTableXml
-     * @param targetPath
+     * @param outputFile
      * @param mAttribute
      */
-    public static void outPutFile4ResultDocument(String xsltPath, String myTableXml, String targetPath) {
-    	RmFileHelper.initSelfDir(RmXmlHelper.formatToFile(targetPath)); //创建目录
-    	Map<String, Object> mAttribute = new HashMap();
-    	mAttribute.put("targetFullPath", RmXmlHelper.formatToUrl(targetPath));
-        try {
-            RmTransformHelper.getStringFromTransform(xsltPath, myTableXml, mAttribute);
-        } catch (Exception e) {
-        	EclipseLog.logError("xsltPath=" + xsltPath + ", myTableXml=" + myTableXml + "," + e.toString(), e);
-            e.printStackTrace();
-        }
-        {//如果目录为空则删除
-        	File fTargetFolder = new File(RmXmlHelper.formatToFile(targetPath));
-        	if(fTargetFolder.isDirectory() && fTargetFolder.list().length == 0) {
-        		fTargetFolder.delete();
-        	}
-        }
+    public static void outPutFile4ResultDocument(String xsltPath, String myTableXml, String outputFolder) {
+    	outPutFile4ResultDocument(xsltPath, myTableXml, outputFolder, null);
+    }
+    /**
+     * 功能:转化文件，模板有初始化参数
+     * 
+     * @param xsltPath
+     * @param myTableXml
+     * @param outputFile
+     * @param mAttribute
+     */
+    public static void outPutFile4ResultDocument(String xsltPath, String myTableXml, String outputFolder, String outputFile) {
+    	RmFileHelper.initSelfDir(RmXmlHelper.formatToFile(outputFolder));
+    	if(outputFile != null && outputFile.length() > 0) {
+    		outputFile = RmXmlHelper.formatToFile(outputFile);
+    		RmFileHelper.initParentDir(outputFile); //创建目录
+    	}
+    	Map<String, Object> mAttribute = new HashMap<String, Object>();
+    	mAttribute.put("targetFullPath", RmXmlHelper.formatToUrl(outputFolder));
+    	try {
+    		String context = RmTransformHelper.getStringFromTransform(xsltPath, myTableXml, mAttribute);
+    		if(outputFile != null) {
+    			if (outputFile.endsWith(".java")) {
+    				context = getJavaFileDescComment(outputFile) + context;
+    			}
+    			RmFileHelper.saveFile(context, outputFile);
+    		}
+    	} catch (Exception e) {
+    		EclipseLog.logError("xsltPath=" + xsltPath + ", myTableXml=" + myTableXml + "," + e.toString(), e);
+    		e.printStackTrace();
+    	}
+    	{//如果目录为空则删除
+    		removeFolderIfEmpty(outputFolder);
+    		if(outputFile != null && outputFile.length() > 0) {
+    			removeParentFolderIfEmpty(outputFile);
+    		}
+    	}
+    }
+    
+    static void removeFolderIfEmpty(String folder) {
+    	File fTargetFolder = new File(RmXmlHelper.formatToFile(folder));
+    	if(fTargetFolder.isDirectory() && fTargetFolder.list().length == 0) {
+    		fTargetFolder.delete();
+    	}
+    }
+    static void removeParentFolderIfEmpty(String file) {
+    	File fTargetFolder = new File(RmXmlHelper.formatToFile(file)).getParentFile();
+    	if(fTargetFolder.isDirectory() && fTargetFolder.list().length == 0) {
+    		fTargetFolder.delete();
+    	}
     }
 
     /**
@@ -81,12 +115,12 @@ public class XsltHelper {
      * 
      * @param xsltPath
      * @param myTableDoc
-     * @param targetPath
+     * @param outputFile
      * @param afterKeyWord
      */
-    public static void outPutFile(String xsltPath, String myTableXml, String targetPath, String afterKeyWord, boolean rowIsUnique) {
-        targetPath = RmXmlHelper.formatToUrl(targetPath);
-        RmFileHelper.initParentDir(targetPath); //创建父目录
+    public static void outPutFile(String xsltPath, String myTableXml, String outputFile, String afterKeyWord, boolean rowIsUnique) {
+        outputFile = RmXmlHelper.formatToUrl(outputFile);
+        RmFileHelper.initParentDir(outputFile); //创建父目录
         String context = "";
         try {
         	context = RmTransformHelper.getStringFromTransform(xsltPath, myTableXml);
@@ -95,45 +129,45 @@ public class XsltHelper {
 			e.printStackTrace();
 		}
         
-        writeToRandomFile(targetPath, context, afterKeyWord, rowIsUnique);
+        writeToRandomFile(outputFile, context, afterKeyWord, rowIsUnique);
     }
 
     /**
      * 功能: 随机访问文件tartetPath,把context插到afterKeyWord后边
      * 
-     * @param targetPath
+     * @param outputFile
      * @param context
      * @param afterKeyWord
      */
-    public static void writeToRandomFile(String targetPath, String content, String afterKeyWord, boolean rowIsUnique) {
+    public static void writeToRandomFile(String outputFile, String content, String afterKeyWord, boolean rowIsUnique) {
         BufferedReader in = null;
         RandomAccessFile rf = null;
-        targetPath = RmXmlHelper.formatToFile(targetPath);
-        StringBuffer targetPathStr = new StringBuffer();
+        outputFile = RmXmlHelper.formatToFile(outputFile);
+        StringBuffer outputFileStr = new StringBuffer();
         try {
-            if (new File(targetPath).exists()) { //检查是否已经存在相同代码
-            	in = new BufferedReader(new InputStreamReader(new FileInputStream(targetPath), "UTF-8"));
+            if (new File(outputFile).exists()) { //检查是否已经存在相同代码
+            	in = new BufferedReader(new InputStreamReader(new FileInputStream(outputFile), "UTF-8"));
                 String s1 = null;
                 while ((s1 = in.readLine()) != null) {
-                    targetPathStr.append(s1 + "\n");
+                    outputFileStr.append(s1 + "\n");
                 }
-                if (targetPathStr.toString().indexOf(content.trim()) >= 0) { //已经存在 （截掉制表符，减少重复写入文件的可能）
+                if (outputFileStr.toString().indexOf(content.trim()) >= 0) { //已经存在 （截掉制表符，减少重复写入文件的可能）
                     return;
                 }
             }
             if(rowIsUnique) { //如果每一行数据不能重复
-                Set sTargetPathRow = new HashSet();
-                String[] aTargetPathRow = targetPathStr.toString().split("\n");
-                for (int i = 0; i < aTargetPathRow.length; i++) {
-                    if(aTargetPathRow[i].trim().length() > 0) {
-                        sTargetPathRow.add(aTargetPathRow[i].trim());
+                Set sOutputFileRow = new HashSet();
+                String[] aOutputFileRow = outputFileStr.toString().split("\n");
+                for (int i = 0; i < aOutputFileRow.length; i++) {
+                    if(aOutputFileRow[i].trim().length() > 0) {
+                    	sOutputFileRow.add(aOutputFileRow[i].trim());
                     }
                 }
-                targetPathStr = null;
+                outputFileStr = null;
                 //开始找位置
                 String line = null;
                 long position = 0;
-                rf = new RandomAccessFile(targetPath, "rw");
+                rf = new RandomAccessFile(outputFile, "rw");
                 while (true) {
                     line = rf.readLine();
                     if (line != null) {
@@ -155,12 +189,12 @@ public class XsltHelper {
                 String[] aContentRow = content.split("\n");
                 for (int i = 0; i < aContentRow.length; i++) {
                     String tempContentRow = null;
-                    if(sTargetPathRow.contains(aContentRow[i].trim())) { //如果出现重复行
-                        if(targetPath.endsWith("xml")) {
+                    if(sOutputFileRow.contains(aContentRow[i].trim())) { //如果出现重复行
+                        if(outputFile.endsWith("xml")) {
                             tempContentRow = "<!--" + aContentRow[i] + "-->";
-                        } else if(targetPath.endsWith("java")) {
+                        } else if(outputFile.endsWith("java")) {
                             tempContentRow = "//" + aContentRow[i];
-                        } else if(targetPath.endsWith("properties")) {
+                        } else if(outputFile.endsWith("properties")) {
                             tempContentRow = "#" + aContentRow[i];
                         }
                     } else {
@@ -174,7 +208,7 @@ public class XsltHelper {
                 //开始找位置
                 String line = null;
                 long position = 0;
-                rf = new RandomAccessFile(targetPath, "rw");
+                rf = new RandomAccessFile(outputFile, "rw");
                 while (true) {
                     line = rf.readLine();
                     if (line != null) {
