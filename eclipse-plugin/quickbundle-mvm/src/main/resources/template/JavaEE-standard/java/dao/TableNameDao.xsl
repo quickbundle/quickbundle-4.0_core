@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:str="http://www.quickbundle.org">
 	<!--导入全局定义-->
-	<xsl:import href="../../../global.xsl"/>
+	<xsl:import href="../../global.xsl"/>
 	<!--忽略xml声明-->
 	<xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
 	<!--处理table-->
-	<xsl:template match="table">
+	<xsl:template match="table[1]">
 		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
 package <xsl:value-of select="$javaPackageTableDir"/>.dao;
 

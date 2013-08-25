@@ -44,21 +44,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	<!--自定义函数，分解parentChildTable="RmCodeType.ID=RmCodeData.CODE_TYPE_ID"，将其变为引用子表的html代码-->
-	<xsl:function name="str:getParentChildHtmlCode">
-		<xsl:param name="parentChildTable" as="xs:string"/>
-		<xsl:param name="upperFirstTablePk" as="xs:string"/>
-		<xsl:choose>
-			<xsl:when test="$debug='true'">
-				<xsl:sequence select="concat('new Array(',$charApos,'子表',$charApos,',',$charApos,$charApos,')')"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<!--
-				<xsl:sequence xmlns:XsltHelper="java:org.quickbundle.mda.template.JavaTemplateHelper" select="XsltHelper:getParentChildHtmlCode($parentChildTable, $upperFirstTablePk)"/>
--->
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:function>
 	<!--开始各种可复用的列循环处理-->
 	<!--处理各列的循环新增输入框，用于condition/insertTableName.jsp,insertTableName.jsp-->
 	<xsl:template match="column" mode="buildTableColumn_insertInput">

@@ -5,7 +5,7 @@
 	<!--忽略xml声明-->
 	<xsl:output method="text" encoding="UTF-8" escape-uri-attributes="yes"/>
 	<!--处理table-->
-	<xsl:template match="table">
+	<xsl:template match="table[1]">
 <xsl:value-of select="$charLt"/>%@ page contentType="application/json; charset=UTF-8" language="java" %><xsl:value-of select="$charLt"/>%
     final RmKeyCountList<xsl:value-of select="$charLt"/>String> kc = new RmKeyCountList<xsl:value-of select="$charLt"/>String>(); 
     RmProjectHelper.getCommonServiceInstance().doQuery("select <xsl:value-of select="@statisticColumnFormatLower"/>  as rm_key, count(*) as rm_count from <xsl:value-of select="@tableName"/> group by <xsl:value-of select="@statisticColumnFormatLower"/> ", new RowMapper() {

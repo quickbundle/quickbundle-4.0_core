@@ -5,7 +5,7 @@
 	<!--忽略xml声明-->
 	<xsl:output method="text" encoding="UTF-8" escape-uri-attributes="yes"/>
 	<!--处理table-->
-	<xsl:template match="table">
+	<xsl:template match="table[1]">
 <xsl:value-of select="$charLt"/>%@page contentType="text/html;charset=UTF-8"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.third.jfreechart.WebChart"%>
 <xsl:value-of select="$charLt"/>%@page import="java.io.PrintWriter" %>

@@ -6,18 +6,9 @@
 	<xsl:output method="text" encoding="UTF-8" escape-uri-attributes="yes" name="rm-text"/>
 <xsl:param name="targetFullPath"></xsl:param>
 	<!--处理table-->
-	<xsl:template match="table">
-<xsl:call-template name="buildMiddleListJsp"/>
-</xsl:template>
-	<!--生成多对多表list页面定义-->
-	<xsl:template name="buildMiddleListJsp">
-		<xsl:variable name="parentChildTable" select="@parentChildTable"/>
-		<xsl:variable name="TableNameAction" select="concat($tableFormatNameUpperFirst, 'Action')"/>
-			<xsl:analyze-string select="$parentChildTable" regex=",">
-				<xsl:non-matching-substring>
-					<xsl:analyze-string select="." regex='^\s*([\w_]+)\.([\w_]+)=([\w_]+)\.([\w_]+)\|([\w_]+)=([\w_]+)\.([\w_]+)\(([\w_]+)\.([\w_]+)\)\s*$'>
-						<xsl:matching-substring>
-							<xsl:result-document href="{$targetFullPath}/list{str:upperFirst(lower-case(regex-group(3)))}.jsp" format="rm-text">
+	<xsl:template match="table[1]">
+<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0]">
+    <xsl:result-document href="{$targetFullPath}/list{str:upperFirst(lower-case(middleTable/@tableName))}.jsp" format="rm-text">
 <xsl:value-of select="$charLt"/>%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <xsl:value-of select="$charLt"/>%@ page import="java.util.List" %>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.base.web.page.RmPageVo"%>
@@ -107,10 +98,7 @@
 <xsl:value-of select="$charLt"/>/form>
 <xsl:value-of select="$charLt"/>/body>
 <xsl:value-of select="$charLt"/>/html>
-							</xsl:result-document>
-						</xsl:matching-substring>
-					</xsl:analyze-string>
-				</xsl:non-matching-substring>
-			</xsl:analyze-string>
-	</xsl:template>
+    </xsl:result-document>
+</xsl:for-each>
+</xsl:template>
 </xsl:stylesheet>

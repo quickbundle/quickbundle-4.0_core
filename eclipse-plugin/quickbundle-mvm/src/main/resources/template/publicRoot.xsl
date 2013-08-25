@@ -302,7 +302,7 @@
 		<xsl:param name="meta"/>
 		<xsl:param name="tableNameVar" as="xs:string"/>
 		<xsl:variable name="refColumnVar" select="str:getRefColumn($meta, $tableNameVar)"/>
-		<xsl:sequence select="lower-case((str:filter($refColumnVar, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$refColumnVar]/@filterKeyword, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$refColumnVar]/@filterType))"/>
+		<xsl:sequence select="lower-case((str:filter($refColumnVar, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$refColumnVar]/@filterKeyword, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$refColumnVar]/@filterType)))"/>
 	</xsl:function>
 	<!--处理根元素-->
 	<xsl:template match="/">

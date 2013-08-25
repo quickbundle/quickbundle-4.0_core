@@ -149,22 +149,24 @@ public class CodegenEngine {
             } else { //配置文件
             	XsltHelper.outPutFile(xsltPath, currentTableXmlPath, outputFile, afterKeyWord, "true".equals(eleFile.valueOf("@rowIsUnique")));                        
             }
-            returnLog.append("\r\nxslt模板路径=")
-            	.append(xsltPath)
-            	.append("\r\n表的xml来源")
-            	.append(currentTableXmlPath)
-            	.append("\r\n生成文件的目标路径=")
-            	.append(outputFile)
-            	.append("\r\n位置关键词=")
-            	.append(afterKeyWord)
-            	.append("\r\n\r\n");
+            returnLog.append("\r\nxslt = ")
+            	.append(RmFileHelper.formatToFile(xsltPath))
+            	.append("\r\nmetaXml = ")
+            	.append(RmFileHelper.formatToFile(currentTableXmlPath))
+            	.append("\r\noutput=")
+            	.append(RmFileHelper.formatToFile(outputFile));
+            if(afterKeyWord != null && afterKeyWord.length() > 0) {
+            	returnLog.append("\r\nposition = ")
+            	.append(afterKeyWord);
+            }
+            returnLog.append("\r\n");
             result++;
             if(monitor != null) {
                 monitor.worked(1);
                 String tempStr = null;
                 String displayOutputFile = RmXmlHelper.formatToUrlNoPrefix(outputFile);
-                if(displayOutputFile.length() > 75) {
-                    tempStr = displayOutputFile.substring(0,12) + "..." + displayOutputFile.substring(displayOutputFile.length()-60);
+                if(displayOutputFile.length() > 140) {
+                    tempStr = displayOutputFile.substring(0,12) + "..." + displayOutputFile.substring(displayOutputFile.length()-125);
                 }
                 monitor.setTaskName(tempStr);
             }

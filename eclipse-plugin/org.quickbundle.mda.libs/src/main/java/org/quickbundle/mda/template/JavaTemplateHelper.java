@@ -53,29 +53,4 @@ public class JavaTemplateHelper {
     		.append(" */");
         return result.toString();
     }
-    
-    /**
-     * 功能: 为xslt创建引用子表的html代码
-     * 
-     * @param authorName
-     * @return
-     */
-    public static String getParentChildHtmlCode(String parentChildTable, String upperFirstTablePk) {
-    	StringBuilder sb = new StringBuilder();
-    	parentChildTable = parentChildTable.trim();
-    	parentChildTable = parentChildTable.replaceAll("[\\s,]+$", "");
-    	String[] aStr = parentChildTable.split(",");
-    	for (int i = 0; i < aStr.length; i++) {
-    		if(aStr[i].trim().length() > 0 && aStr[i].indexOf("=") > -1 && aStr[i].indexOf(".") > -1) {
-				String pcr = aStr[i].substring(aStr[i].indexOf("=") + 1).trim();
-				String childTableFormatName = pcr.substring(0, pcr.indexOf("."));
-				String childFkField = pcr.substring(pcr.indexOf(".")+1, pcr.indexOf("|") > -1 ? pcr.indexOf("|") : pcr.length()).toLowerCase();
-				sb.append("new Array ('子表" + childTableFormatName + "','<%=request.getContextPath()%>/" + childTableFormatName + "ConditionAction.do?cmd=queryAll&" + childFkField + "=<%=resultVo.get" + upperFirstTablePk + "()%><%=isReadOnly ? \"&\" + org.quickbundle.project.IGlobalConstants.REQUEST_IS_READ_ONLY + \"=1\" : \"\"%>')");
-				if(i < aStr.length-1) {
-					sb.append(",\n");
-				}
-    		}
-		}
-        return sb.toString();
-    }
 }

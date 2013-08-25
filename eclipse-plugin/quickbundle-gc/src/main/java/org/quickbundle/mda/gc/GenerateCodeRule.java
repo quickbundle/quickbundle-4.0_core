@@ -139,7 +139,6 @@ public class GenerateCodeRule {
             mTempOtherConfig.put("tableNameDisplay", oldDocTable.valueOf("/meta/tables/table[1]/@tableNameDisplay"));
             mTempOtherConfig.put("statisticColumn", oldDocTable.valueOf("/meta/tables/table[1]/@statisticColumn"));
             mTempOtherConfig.put("keyColumn", oldDocTable.valueOf("/meta/tables/table[1]/@keyColumn"));
-            //mTempOtherConfig.put("parentChildTable", oldDocTable.valueOf("/meta/tables/table[1]/@parentChildTable"));
             mTempOtherConfig.put("customBundleCode", oldDocTable.valueOf("/meta/tables/table[1]/@customBundleCode"));
         }
         Document docTable = MetadataHelper.getMetaDataXml(getConnection(), 
