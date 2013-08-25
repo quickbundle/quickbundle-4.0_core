@@ -12,18 +12,18 @@
 <xsl:value-of select="$charLt"/>%@ include file="/jsp/include/rmGlobal.jsp" %>
 <xsl:value-of select="$charLt"/>script type="text/javascript" src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/js/swfobject.js"><xsl:value-of select="$charLt"/>/script>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-	swfobject.embedSWF("<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/third/ofc/open-flash-chart.swf", "my_chart_pie", "400", "400", "9.0.0", 
-		"expressInstall.swf", {"data-file":"statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_ofcData.jsp?type=pie"});
-	swfobject.embedSWF("<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/third/ofc/open-flash-chart.swf", "my_chart_bar", "500", "400", "9.0.0", 
-		"expressInstall.swf", {"data-file":"statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_ofcData.jsp?type=bar_3d"});
+    swfobject.embedSWF("<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/third/ofc/open-flash-chart.swf", "my_chart_pie", "400", "400", "9.0.0", 
+        "expressInstall.swf", {"data-file":"<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/statistic/flash/data?type=pie"});
+    swfobject.embedSWF("<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/third/ofc/open-flash-chart.swf", "my_chart_bar", "500", "400", "9.0.0", 
+        "expressInstall.swf", {"data-file":"<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/statistic/flash/data?type=bar_3d"});
 <xsl:value-of select="$charLt"/>/script>
 <xsl:value-of select="$charLt"/>/head>
 <xsl:value-of select="$charLt"/>body>
 <xsl:value-of select="$charLt"/>div align="center" style="padding:5px 0px 0px 3px">
-	<xsl:value-of select="$charLt"/>div id="my_chart_pie"><xsl:value-of select="$charLt"/>/div>
+    <xsl:value-of select="$charLt"/>div id="my_chart_pie"><xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>div align="center" style="padding:5px 0px 0px 3px">
-	<xsl:value-of select="$charLt"/>div id="my_chart_bar"><xsl:value-of select="$charLt"/>/div>
+    <xsl:value-of select="$charLt"/>div id="my_chart_bar"><xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>/body>
 <xsl:value-of select="$charLt"/>/html>

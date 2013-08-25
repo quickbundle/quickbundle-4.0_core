@@ -7,204 +7,221 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
-package <xsl:value-of select="$javaPackageTableDir"/>.dao.impl;
+<xsl:value-of select="$charLt"/>?xml version="1.0" encoding="UTF-8"?>
+<xsl:value-of select="$charLt"/>!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
+<xsl:value-of select="$charLt"/>mapper namespace="<xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="tableFormatNameUpperFirst"/>Dao">
 
-import org.quickbundle.base.beans.factory.RmIdFactory;
-import org.quickbundle.base.dao.RmJdbcTemplate;
-import org.quickbundle.tools.helper.RmPopulateHelper;
-import org.quickbundle.tools.helper.RmStringHelper;
-import org.springframework.jdbc.core.RowMapper;
-
-import <xsl:value-of select="$javaPackageTableDir"/>.dao.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao;
-import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
-import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
-
-<xsl:value-of select="str:getClassComment($authorName)"/>
-
-public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Dao extends RmJdbcTemplate implements I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao, <xsl:value-of select="$ITableNameConstants"/> {
-
-    /**
-     * 插入单条记录，从RmIdFactory取id作主键
-     * 
-     * @param vo 用于添加的VO对象
-     * @return 若添加成功，返回新生成的Oid
-     */
-    public String insert(<xsl:value-of select="$TableNameVo"/> vo) {
-    	if(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() == null || vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>().length() == 0) {
-    		vo.set<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(RmIdFactory.requestId(TABLE_NAME)); //获得id
-    	}
-        Object[] obj = { vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(), <xsl:apply-templates select="column" mode="buildGetCircle"/> };
-        update(SQL_INSERT, obj);
-        return vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>();
-    }
-
-    /**
-     * 批量更新插入多条记录，用id作主键
-     * 
-     * @param vos 添加的VO对象数组
-     * @return 若添加成功，返回新生成的id数组
-     */
-	public String[] insert(final <xsl:value-of select="$TableNameVo"/>[] vos) {
-		String[] ids = RmIdFactory.requestId(TABLE_NAME, vos.length); //获得id
-		for(int i=0; i<xsl:value-of select="$charLt"/>vos.length; i++) {
-			vos[i].set<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(ids[i]);
-		}
-		batchUpdate(SQL_INSERT, vos, new RmJdbcTemplate.CircleVoArray() {
-			public Object[] getArgs(Object obj) {
-				<xsl:value-of select="$TableNameVo"/> vo = (<xsl:value-of select="$TableNameVo"/>)obj;
-				return new Object[]{ vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(), <xsl:apply-templates select="column" mode="buildGetCircle"/> };
-			}
-		});
-		return ids;
-	}
-	
-    /**
-     * 删除单条记录
-     * 
-     * @param id 用于删除的记录的id
-     * @return 成功删除的记录数
-     */
-    public int delete(String id) {
-        return update(SQL_DELETE_BY_ID, new Object[] { id });
-    }
-
-    /**
-     * 删除多条记录
-     * 
-     * @param id 用于删除的记录的id
-     * @return 成功删除的记录数
-     */
-    public int delete(String id[]) {
-        if (id == null || id.length == 0)
-            return 0;
-        StringBuilder sql = new StringBuilder(SQL_DELETE_MULTI_BY_IDS);
-        sql.append(" WHERE <xsl:value-of select="$tablePk"/> IN (");
-        sql.append(RmStringHelper.parseToSQLStringApos(id)); //把id数组转换为id1,id2,id3
-        sql.append(")");
-        return update(sql.toString());
-    }
-
-    /**
-     * 根据id进行查询
-     * 
-     * @param id 用于查找的id
-     * @return 查询到的VO对象
-     */
-    public <xsl:value-of select="$TableNameVo"/> find(String id) {
-        return (<xsl:value-of select="$TableNameVo"/>) queryForObject(SQL_FIND_BY_ID, new Object[] { id }, new RowMapper() {
-            public Object mapRow(ResultSet rs, int i) throws SQLException {
-                <xsl:value-of select="$TableNameVo"/> vo = new <xsl:value-of select="$TableNameVo"/>();
-                RmPopulateHelper.populate(vo, rs);
-                return vo;
-            }
-        });
-    }
-
-    /**
-     * 更新单条记录
-     * 
-     * @param vo 用于更新的VO对象
-     * @return 成功更新的记录数
-     */
-    public int update(<xsl:value-of select="$TableNameVo"/> vo) {
-        Object[] obj = { <xsl:apply-templates select="column" mode="buildGetCircle_update"/>, vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() };
-        return update(SQL_UPDATE_BY_ID, obj);
-    }
-
-    /**
-     * 批量更新修改多条记录
-     * 
-     * @param vos 添加的VO对象数组
-     * @return 成功更新的记录数组
-     */
-	public int[] update(final <xsl:value-of select="$TableNameVo"/>[] vos) {
-		return batchUpdate(SQL_UPDATE_BY_ID, vos, new RmJdbcTemplate.CircleVoArray() {
-			public Object[] getArgs(Object obj) {
-				<xsl:value-of select="$TableNameVo"/> vo = (<xsl:value-of select="$TableNameVo"/>)obj;
-				return new Object[]{ <xsl:apply-templates select="column" mode="buildGetCircle_update"/>, vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() };
-			}
-		});
-	}
-
-    /**
-     * 查询总记录数，带查询条件
-     * 
-     * @param queryCondition 查询条件
-     * @return 总记录数
-     */
-    public int getRecordCount(String queryCondition) {
-    	StringBuilder sql = new StringBuilder(SQL_COUNT + DEFAULT_SQL_WHERE_USABLE);
-        if (queryCondition != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> queryCondition.trim().length() > 0) {
-        	sql.append(DEFAULT_SQL_CONTACT_KEYWORD); //where后加上查询条件
-        	sql.append(queryCondition);
-        }
-        return queryForInt(sql.toString());
-    }
-
-    /**
-     * 功能: 通过查询条件获得所有的VO对象列表，带翻页，带排序字符
-     *
-     * @param queryCondition 查询条件, queryCondition等于null或""时查询全部
-     * @param orderStr 排序字符
-     * @param startIndex 开始位置(第一条是1，第二条是2...)
-     * @param size 查询多少条记录(size小于等于0时,忽略翻页查询全部)
-     * @param selectAllClumn 是否查询所有列，即 SELECT * FROM ...(适用于导出)
-     * @return 查询到的VO列表
-     */
-    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> queryByCondition(String queryCondition, String orderStr, int startIndex, int size, boolean selectAllClumn) {
-    	StringBuilder sql = new StringBuilder();
-        if(selectAllClumn) {
-        	sql.append(SQL_QUERY_ALL_EXPORT + DEFAULT_SQL_WHERE_USABLE);
-        } else {
-        	sql.append(SQL_QUERY_ALL + DEFAULT_SQL_WHERE_USABLE);
-        }
-        if (queryCondition != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> queryCondition.trim().length() > 0) {
-        	sql.append(DEFAULT_SQL_CONTACT_KEYWORD); //where后加上查询条件
-        	sql.append(queryCondition);
-        }
-        if(orderStr != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> orderStr.trim().length() > 0) {
-        	sql.append(ORDER_BY_SYMBOL);
-        	sql.append(orderStr);
-        } else {
-        	sql.append(DEFAULT_ORDER_BY_CODE);
-        }
-        return queryByCondition(sql.toString(), startIndex, size);
-    }
+  <xsl:value-of select="$charLt"/>insert id="insert" parameterType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+    insert into <xsl:value-of select="@tableName"/> ( 
+      ID, BIZ_KEYWORD, SENDER_ID, PARENT_MESSAGE_ID, OWNER_ORG_ID, TEMPLATE_ID, IS_AFFIX, RECORD_ID, 
+      MESSAGE_XML_CONTEXT, USABLE_STATUS, MODIFY_DATE, MODIFY_IP, MODIFY_USER_ID ) 
+    values ( 
+      #{id}, #{biz_keyword}, #{sender_id}, #{parent_message_id}, #{owner_org_id}, #{template_id}, #{is_affix}, #{record_id}, 
+      #{message_xml_context}, #{usable_status}, #{modify_date}, #{modify_ip}, #{modify_user_id} )
+  <xsl:value-of select="$charLt"/>/insert>
     
-    /**
-     * 通过传入的sql，查询所有的VO对象列表
-     * 
-     * @param sql 完整的查询sql语句
-     * @param startIndex 开始位置(第一条是1，第二条是2...)
-     * @param size  查询多少条记录(size小于等于0时,忽略翻页查询全部)
-     * @return 查询到的VO列表
-     */
-    @SuppressWarnings("unchecked")
-    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> queryByCondition(String sql, int startIndex, int size) {
-        if(size <xsl:value-of select="$charLt"/>= 0) {
-            return query(sql.toString(), new RowMapper() {
-                public Object mapRow(ResultSet rs, int i) throws SQLException {
-                    <xsl:value-of select="$TableNameVo"/> vo = new <xsl:value-of select="$TableNameVo"/>();
-                    RmPopulateHelper.populate(vo, rs);
-                    return vo;
-                }
-            });
-        } else {
-            return query(sql.toString(), new RowMapper() {
-                public Object mapRow(ResultSet rs, int i) throws SQLException {
-                    <xsl:value-of select="$TableNameVo"/> vo = new <xsl:value-of select="$TableNameVo"/>();
-                    RmPopulateHelper.populate(vo, rs);
-                    return vo;
-                }
-            }, startIndex, size); 
-        }
-    }
-}
+  <xsl:value-of select="$charLt"/>delete id="delete" parameterType="int">
+    delete from <xsl:value-of select="@tableName"/> where ID=#{id}
+  <xsl:value-of select="$charLt"/>/delete>
+  
+  <xsl:value-of select="$charLt"/>delete id="deleteMulti" parameterType="int">
+    delete from <xsl:value-of select="@tableName"/> where ID in 
+    <xsl:value-of select="$charLt"/>foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
+      #{item}   
+    <xsl:value-of select="$charLt"/>/foreach>
+  <xsl:value-of select="$charLt"/>/delete>
+
+  <xsl:value-of select="$charLt"/>update id="update" parameterType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+    update <xsl:value-of select="@tableName"/> set 
+      BIZ_KEYWORD=#{biz_keyword}, SENDER_ID=#{sender_id}, PARENT_MESSAGE_ID=#{parent_message_id}, OWNER_ORG_ID=#{owner_org_id}, 
+      TEMPLATE_ID=#{template_id}, IS_AFFIX=#{is_affix}, RECORD_ID=#{record_id}, MESSAGE_XML_CONTEXT=#{message_xml_context}, 
+      USABLE_STATUS=#{usable_status}, MODIFY_DATE=#{modify_date}, MODIFY_IP=#{modify_ip}, MODIFY_USER_ID=#{modify_user_id}  
+      where ID=#{id}
+  <xsl:value-of select="$charLt"/>/update>
+
+  <xsl:value-of select="$charLt"/>select id="get" parameterType="string" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+    select 
+      <xsl:value-of select="@tableName"/>.ID, <xsl:value-of select="@tableName"/>.BIZ_KEYWORD, <xsl:value-of select="@tableName"/>.SENDER_ID, <xsl:value-of select="@tableName"/>.PARENT_MESSAGE_ID, 
+      <xsl:value-of select="@tableName"/>.OWNER_ORG_ID, <xsl:value-of select="@tableName"/>.TEMPLATE_ID, <xsl:value-of select="@tableName"/>.IS_AFFIX, <xsl:value-of select="@tableName"/>.RECORD_ID, 
+      <xsl:value-of select="@tableName"/>.MESSAGE_XML_CONTEXT, <xsl:value-of select="@tableName"/>.USABLE_STATUS, <xsl:value-of select="@tableName"/>.MODIFY_DATE, <xsl:value-of select="@tableName"/>.MODIFY_IP, 
+      <xsl:value-of select="@tableName"/>.MODIFY_USER_ID
+    from <xsl:value-of select="@tableName"/> 
+    where <xsl:value-of select="@tableName"/>.ID=#{id}
+  <xsl:value-of select="$charLt"/>/select>
+
+  <xsl:value-of select="$charLt"/>select id="getCount" parameterType="string" resultType="int" useCache="true">
+    select count(<xsl:value-of select="@tableName"/>.ID) from <xsl:value-of select="@tableName"/>
+    <xsl:value-of select="$charLt"/>if test="value != null and value.length > 0">
+        where ${value}
+    <xsl:value-of select="$charLt"/>/if>
+  <xsl:value-of select="$charLt"/>/select>
+  
+  <xsl:value-of select="$charLt"/>select id="list" parameterType="map" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+    select
+      <xsl:value-of select="@tableName"/>.ID, <xsl:value-of select="@tableName"/>.BIZ_KEYWORD, <xsl:value-of select="@tableName"/>.SENDER_ID, <xsl:value-of select="@tableName"/>.PARENT_MESSAGE_ID, 
+      <xsl:value-of select="@tableName"/>.OWNER_ORG_ID, <xsl:value-of select="@tableName"/>.TEMPLATE_ID, <xsl:value-of select="@tableName"/>.IS_AFFIX, <xsl:value-of select="@tableName"/>.RECORD_ID
+    from <xsl:value-of select="@tableName"/>
+    <xsl:value-of select="$charLt"/>if test="queryCondition != null and queryCondition != ''">
+        where ${queryCondition}
+    <xsl:value-of select="$charLt"/>/if>
+    <xsl:value-of select="$charLt"/>if test="orderStr != null and orderStr != ''">
+        order by ${orderStr}
+    <xsl:value-of select="$charLt"/>/if>
+  <xsl:value-of select="$charLt"/>/select>
+  
+  <xsl:value-of select="$charLt"/>select id="listAllColumn" parameterType="map" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+    select
+      <xsl:value-of select="@tableName"/>.ID, <xsl:value-of select="@tableName"/>.BIZ_KEYWORD, <xsl:value-of select="@tableName"/>.SENDER_ID, <xsl:value-of select="@tableName"/>.PARENT_MESSAGE_ID, 
+      <xsl:value-of select="@tableName"/>.OWNER_ORG_ID, <xsl:value-of select="@tableName"/>.TEMPLATE_ID, <xsl:value-of select="@tableName"/>.IS_AFFIX, <xsl:value-of select="@tableName"/>.RECORD_ID, 
+      <xsl:value-of select="@tableName"/>.MESSAGE_XML_CONTEXT, <xsl:value-of select="@tableName"/>.USABLE_STATUS, <xsl:value-of select="@tableName"/>.MODIFY_DATE, <xsl:value-of select="@tableName"/>.MODIFY_IP, 
+      <xsl:value-of select="@tableName"/>.MODIFY_USER_ID
+    from <xsl:value-of select="@tableName"/>
+    <xsl:value-of select="$charLt"/>if test="queryCondition != null and queryCondition != ''">
+        where ${queryCondition}
+    <xsl:value-of select="$charLt"/>/if>
+    <xsl:value-of select="$charLt"/>if test="orderStr != null and orderStr != ''">
+        order by ${orderStr}
+    <xsl:value-of select="$charLt"/>/if>
+  <xsl:value-of select="$charLt"/>/select>
+
+  <xsl:value-of select="$charLt"/>select id="search" parameterType="map" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+    select
+      <xsl:value-of select="@tableName"/>.ID, <xsl:value-of select="@tableName"/>.BIZ_KEYWORD, <xsl:value-of select="@tableName"/>.SENDER_ID, <xsl:value-of select="@tableName"/>.PARENT_MESSAGE_ID, 
+      <xsl:value-of select="@tableName"/>.OWNER_ORG_ID, <xsl:value-of select="@tableName"/>.TEMPLATE_ID, <xsl:value-of select="@tableName"/>.IS_AFFIX, <xsl:value-of select="@tableName"/>.RECORD_ID, 
+      <xsl:value-of select="@tableName"/>.MESSAGE_XML_CONTEXT, <xsl:value-of select="@tableName"/>.USABLE_STATUS, <xsl:value-of select="@tableName"/>.MODIFY_DATE, <xsl:value-of select="@tableName"/>.MODIFY_IP, 
+      <xsl:value-of select="@tableName"/>.MODIFY_USER_ID
+    from <xsl:value-of select="@tableName"/>
+    <xsl:value-of select="$charLt"/>trim prefix="where" prefixOverrides="and|or">  
+      <xsl:value-of select="$charLt"/>if test="biz_keyword != null and biz_keyword != ''">
+        <xsl:value-of select="@tableName"/>.BIZ_KEYWORD like '%${biz_keyword}%'
+      <xsl:value-of select="$charLt"/>/if>
+      <xsl:value-of select="$charLt"/>if test="sender_id != null and sender_id != ''">
+        and <xsl:value-of select="@tableName"/>.SENDER_ID=#{sender_id}
+      <xsl:value-of select="$charLt"/>/if>
+      <xsl:value-of select="$charLt"/>if test="parent_message_id != null and parent_message_id != ''">
+        and <xsl:value-of select="@tableName"/>.PARENT_MESSAGE_ID=#{parent_message_id}
+      <xsl:value-of select="$charLt"/>/if>
+      <xsl:value-of select="$charLt"/>if test="owner_org_id != null and owner_org_id != ''">
+        and <xsl:value-of select="@tableName"/>.OWNER_ORG_ID=#{owner_org_id}
+      <xsl:value-of select="$charLt"/>/if>
+      <xsl:value-of select="$charLt"/>if test="template_id != null and template_id != ''">
+        and <xsl:value-of select="@tableName"/>.TEMPLATE_ID=#{template_id}
+      <xsl:value-of select="$charLt"/>/if>
+      <xsl:value-of select="$charLt"/>if test="is_affix != null and is_affix != ''">
+        and <xsl:value-of select="@tableName"/>.IS_AFFIX=#{is_affix}
+      <xsl:value-of select="$charLt"/>/if>
+      <xsl:value-of select="$charLt"/>if test="record_id != null and record_id != ''">
+        and <xsl:value-of select="@tableName"/>.RECORD_ID=#{record_id}
+      <xsl:value-of select="$charLt"/>/if>
+    <xsl:value-of select="$charLt"/>/trim>
+    <xsl:value-of select="$charLt"/>if test="orderStr != null and orderStr != ''">
+        order by ${orderStr}
+    <xsl:value-of select="$charLt"/>/if>
+  <xsl:value-of select="$charLt"/>/select>
+  
+<xsl:value-of select="$charLt"/>/mapper>
 	</xsl:template>
+	
+    <!--处理insert语句的前半部分-->
+    <xsl:template match="column" mode="insert_1">
+        <xsl:param name="columnName" select="@columnName"/>
+        <xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>
+        <xsl:param name="columnNameFormatLower" select="lower-case($columnNameFormat)"/>
+        <xsl:if test="not($columnName=$tablePk)">
+            <xsl:choose>
+                <xsl:when test="position()=last() or (position()=(last()-1) and (../column[position()=last() and @columnName=../@tablePk]))">
+                    <xsl:value-of select="$columnName"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$columnName"/>, </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
+    </xsl:template>
+    <!--处理insert语句的后半部分-->
+    <xsl:template match="column" mode="insert_2">
+        <xsl:param name="columnName" select="@columnName"/>
+        <xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>
+        <xsl:param name="columnNameFormatLower" select="lower-case($columnNameFormat)"/>
+        <xsl:if test="not($columnName=$tablePk)">
+            <xsl:choose>
+                <xsl:when test="@dataType='java.lang.String'">?</xsl:when>
+                <!--标准的jdbc一律为?-->
+                <xsl:otherwise>?</xsl:otherwise>
+            </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="position()=last() or (position()=(last()-1) and (../column[position()=last() and @columnName=../@tablePk]))"/>
+                <xsl:otherwise>, </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
+    </xsl:template>
+    <!--处理queryAll语句的循环部分-->
+    <xsl:template match="column" mode="queryAll_1">
+        <xsl:param name="columnName" select="@columnName"/>
+        <xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>
+        <xsl:param name="columnNameFormatLower" select="lower-case($columnNameFormat)"/>
+        <xsl:if test="not($columnName=$tablePk)">
+            <xsl:choose>
+                <xsl:when test="@dataType='java.lang.String'">
+                    <xsl:value-of select="$tableName"/>.<xsl:value-of select="$columnName"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$tableName"/>.<xsl:value-of select="$columnName"/>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="position()=last() or (position()=(last()-1) and (../column[position()=last() and @columnName=../@tablePk]))"/>
+                <xsl:otherwise>, </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
+    </xsl:template>
+    <!--处理queryAll_list语句的循环部分-->
+    <xsl:template match="column" mode="queryAll_list">
+        <xsl:param name="columnName" select="@columnName"/>
+        <xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>
+        <xsl:param name="columnNameFormatLower" select="lower-case($columnNameFormat)"/>
+        <xsl:if test="not($columnName=$tablePk) and @isBuild_list='true'">
+            <xsl:choose>
+                <xsl:when test="@dataType='java.lang.String'">
+                    <xsl:value-of select="$tableName"/>.<xsl:value-of select="$columnName"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$tableName"/>.<xsl:value-of select="$columnName"/>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="position()=last() or (position()=(last()-1) and (../column[position()=last() and @columnName=../@tablePk]))"/>
+                <xsl:when test="@columnName=(../column[@isBuild_list='true'][position()=last()]/@columnName)"/>
+                <xsl:otherwise>, </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
+    </xsl:template>
+    <!--处理update语句的循环部分-->
+    <xsl:template match="column" mode="update_1">
+        <xsl:param name="columnName" select="@columnName"/>
+        <xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>
+        <xsl:param name="columnNameFormatLower" select="lower-case($columnNameFormat)"/>
+        <xsl:if test="not($columnName=$tablePk)">
+            <xsl:choose>
+                <xsl:when test="$columnNameFormatLower='create_date' or $columnNameFormatLower='create_ip' or $columnNameFormatLower='create_user_id' or $columnNameFormatLower='create_user_id_name'"/>
+                <xsl:when test="@dataType='java.lang.String'">
+                    <xsl:value-of select="concat($columnName,'=?')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="concat($columnName,'=?')"/>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="position()=last() or (position()=(last()-1) and (../column[position()=last() and @columnName=../@tablePk]))"/>
+                <xsl:when test="$columnNameFormatLower='create_date' or $columnNameFormatLower='create_ip' or $columnNameFormatLower='create_user_id' or $columnNameFormatLower='create_user_id_name'"/>                
+                <xsl:otherwise>, </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
+    </xsl:template>
+    
+    
+    
 	<!--处理取vo各属性的循环部分-->
 	<xsl:template match="column" mode="buildGetCircle">
 		<xsl:param name="columnName" select="@columnName"/>

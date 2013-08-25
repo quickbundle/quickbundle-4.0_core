@@ -7,242 +7,181 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
-package <xsl:value-of select="$javaPackageTableDir"/>.dao.impl;
+package <xsl:value-of select="$javaPackageTableDir"/>.rest;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.quickbundle.base.beans.factory.RmIdFactory;
-import org.quickbundle.base.dao.RmJdbcTemplate;
-import org.quickbundle.tools.helper.RmPopulateHelper;
-import org.quickbundle.tools.helper.RmStringHelper;
-import org.springframework.jdbc.core.RowMapper;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
-import <xsl:value-of select="$javaPackageTableDir"/>.dao.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao;
+import org.quickbundle.base.web.page.RmPageVo;
 import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="tableFormatNameUpperFirst"/>Service;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.web.<xsl:value-of select="tableFormatNameUpperFirst"/>Controller;
+import org.quickbundle.third.spring.http.RmResponseEntityFactory;
+import org.quickbundle.tools.helper.RmJspHelper;
+import org.quickbundle.tools.helper.RmPopulateHelper;
+import org.quickbundle.tools.helper.RmVoHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.util.UriComponentsBuilder;
+
+/**
+ * list                 GET     /api/<xsl:value-of select="@tableDirName"/>
+ * get                  GET     /api/<xsl:value-of select="@tableDirName"/>/{id}
+ * insert action        POST    /api/<xsl:value-of select="@tableDirName"/>
+ * update action        PUT     /api/<xsl:value-of select="@tableDirName"/>/{id}
+ * delete action        DELETE  /api/<xsl:value-of select="@tableDirName"/>/{id}
+ * delete multi action  POST    /api/<xsl:value-of select="@tableDirName"/>/delete
+ * batch insert update  POST    /api/<xsl:value-of select="@tableDirName"/>/batch
+ */
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
 
-public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Dao extends RmJdbcTemplate implements I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao, <xsl:value-of select="$ITableNameConstants"/> {
+@Controller
+@RequestMapping(value = "/api/<xsl:value-of select="@tableDirName"/>")
+public class <xsl:value-of select="tableFormatNameUpperFirst"/>RestController implements <xsl:value-of select="$ITableNameConstants"/> {
+
+    @Autowired
+    private <xsl:value-of select="tableFormatNameUpperFirst"/>Service <xsl:value-of select="tableFormatNameLowerFirst"/>Service;
+
+    @Autowired
+    private Validator validator;
 
     /**
-     * 插入单条记录，从RmIdFactory取id作主键
-     * 
-     * @param vo 用于添加的VO对象
-     * @return 若添加成功，返回新生成的Oid
+     * 获取多条记录
+     * @param request
+     * @return
      */
-    public String insert(<xsl:value-of select="$TableNameVo"/> vo) {
-    	if(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() == null || vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>().length() == 0) {
-    		vo.set<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(RmIdFactory.requestId(TABLE_NAME)); //获得id
-    	}
-        Object[] obj = { vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(), <xsl:apply-templates select="column" mode="buildGetCircle"/> };
-        update(SQL_INSERT, obj);
-        return vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>();
-    }
-
-    /**
-     * 批量更新插入多条记录，用id作主键
-     * 
-     * @param vos 添加的VO对象数组
-     * @return 若添加成功，返回新生成的id数组
-     */
-	public String[] insert(final <xsl:value-of select="$TableNameVo"/>[] vos) {
-		String[] ids = RmIdFactory.requestId(TABLE_NAME, vos.length); //获得id
-		for(int i=0; i<xsl:value-of select="$charLt"/>vos.length; i++) {
-			vos[i].set<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(ids[i]);
-		}
-		batchUpdate(SQL_INSERT, vos, new RmJdbcTemplate.CircleVoArray() {
-			public Object[] getArgs(Object obj) {
-				<xsl:value-of select="$TableNameVo"/> vo = (<xsl:value-of select="$TableNameVo"/>)obj;
-				return new Object[]{ vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(), <xsl:apply-templates select="column" mode="buildGetCircle"/> };
-			}
-		});
-		return ids;
-	}
-	
-    /**
-     * 删除单条记录
-     * 
-     * @param id 用于删除的记录的id
-     * @return 成功删除的记录数
-     */
-    public int delete(String id) {
-        return update(SQL_DELETE_BY_ID, new Object[] { id });
-    }
-
-    /**
-     * 删除多条记录
-     * 
-     * @param id 用于删除的记录的id
-     * @return 成功删除的记录数
-     */
-    public int delete(String id[]) {
-        if (id == null || id.length == 0)
-            return 0;
-        StringBuilder sql = new StringBuilder(SQL_DELETE_MULTI_BY_IDS);
-        sql.append(" WHERE <xsl:value-of select="$tablePk"/> IN (");
-        sql.append(RmStringHelper.parseToSQLStringApos(id)); //把id数组转换为id1,id2,id3
-        sql.append(")");
-        return update(sql.toString());
-    }
-
-    /**
-     * 根据id进行查询
-     * 
-     * @param id 用于查找的id
-     * @return 查询到的VO对象
-     */
-    public <xsl:value-of select="$TableNameVo"/> find(String id) {
-        return (<xsl:value-of select="$TableNameVo"/>) queryForObject(SQL_FIND_BY_ID, new Object[] { id }, new RowMapper() {
-            public Object mapRow(ResultSet rs, int i) throws SQLException {
-                <xsl:value-of select="$TableNameVo"/> vo = new <xsl:value-of select="$TableNameVo"/>();
-                RmPopulateHelper.populate(vo, rs);
-                return vo;
-            }
-        });
-    }
-
-    /**
-     * 更新单条记录
-     * 
-     * @param vo 用于更新的VO对象
-     * @return 成功更新的记录数
-     */
-    public int update(<xsl:value-of select="$TableNameVo"/> vo) {
-        Object[] obj = { <xsl:apply-templates select="column" mode="buildGetCircle_update"/>, vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() };
-        return update(SQL_UPDATE_BY_ID, obj);
-    }
-
-    /**
-     * 批量更新修改多条记录
-     * 
-     * @param vos 添加的VO对象数组
-     * @return 成功更新的记录数组
-     */
-	public int[] update(final <xsl:value-of select="$TableNameVo"/>[] vos) {
-		return batchUpdate(SQL_UPDATE_BY_ID, vos, new RmJdbcTemplate.CircleVoArray() {
-			public Object[] getArgs(Object obj) {
-				<xsl:value-of select="$TableNameVo"/> vo = (<xsl:value-of select="$TableNameVo"/>)obj;
-				return new Object[]{ <xsl:apply-templates select="column" mode="buildGetCircle_update"/>, vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() };
-			}
-		});
-	}
-
-    /**
-     * 查询总记录数，带查询条件
-     * 
-     * @param queryCondition 查询条件
-     * @return 总记录数
-     */
-    public int getRecordCount(String queryCondition) {
-    	StringBuilder sql = new StringBuilder(SQL_COUNT + DEFAULT_SQL_WHERE_USABLE);
-        if (queryCondition != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> queryCondition.trim().length() > 0) {
-        	sql.append(DEFAULT_SQL_CONTACT_KEYWORD); //where后加上查询条件
-        	sql.append(queryCondition);
-        }
-        return queryForInt(sql.toString());
-    }
-
-    /**
-     * 功能: 通过查询条件获得所有的VO对象列表，带翻页，带排序字符
-     *
-     * @param queryCondition 查询条件, queryCondition等于null或""时查询全部
-     * @param orderStr 排序字符
-     * @param startIndex 开始位置(第一条是1，第二条是2...)
-     * @param size 查询多少条记录(size小于等于0时,忽略翻页查询全部)
-     * @param selectAllClumn 是否查询所有列，即 SELECT * FROM ...(适用于导出)
-     * @return 查询到的VO列表
-     */
-    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> queryByCondition(String queryCondition, String orderStr, int startIndex, int size, boolean selectAllClumn) {
-    	StringBuilder sql = new StringBuilder();
-        if(selectAllClumn) {
-        	sql.append(SQL_QUERY_ALL_EXPORT + DEFAULT_SQL_WHERE_USABLE);
-        } else {
-        	sql.append(SQL_QUERY_ALL + DEFAULT_SQL_WHERE_USABLE);
-        }
-        if (queryCondition != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> queryCondition.trim().length() > 0) {
-        	sql.append(DEFAULT_SQL_CONTACT_KEYWORD); //where后加上查询条件
-        	sql.append(queryCondition);
-        }
-        if(orderStr != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> orderStr.trim().length() > 0) {
-        	sql.append(ORDER_BY_SYMBOL);
-        	sql.append(orderStr);
-        } else {
-        	sql.append(DEFAULT_ORDER_BY_CODE);
-        }
-        return queryByCondition(sql.toString(), startIndex, size);
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<xsl:value-of select="$charLt"/>String, Object> list(HttpServletRequest request) {
+        String queryCondition = <xsl:value-of select="tableFormatNameUpperFirst"/>Controller.getQueryCondition(request);  //从request中获得查询条件
+        RmPageVo pageVo = RmJspHelper.transctPageVo(request, <xsl:value-of select="tableFormatNameLowerFirst"/>Service.getCount(queryCondition));
+        String orderStr = RmJspHelper.getOrderStr(request);  //得到排序信息
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.list(queryCondition, orderStr, pageVo.getStartIndex(), pageVo.getPageSize());  //按条件查询全部,带排序
+        Map<xsl:value-of select="$charLt"/>String, Object> result = new HashMap<xsl:value-of select="$charLt"/>String, Object>();
+        result.put(RM_JSON_TOTAL_COUNT, pageVo.getRecordCount());
+        result.put(REQUEST_BEANS, beans);
+        return result;
     }
     
     /**
-     * 通过传入的sql，查询所有的VO对象列表
-     * 
-     * @param sql 完整的查询sql语句
-     * @param startIndex 开始位置(第一条是1，第二条是2...)
-     * @param size  查询多少条记录(size小于等于0时,忽略翻页查询全部)
-     * @return 查询到的VO列表
+     * 获得单条记录
+     * @param id
+     * @return
      */
-    @SuppressWarnings("unchecked")
-    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> queryByCondition(String sql, int startIndex, int size) {
-        if(size <xsl:value-of select="$charLt"/>= 0) {
-            return query(sql.toString(), new RowMapper() {
-                public Object mapRow(ResultSet rs, int i) throws SQLException {
-                    <xsl:value-of select="$TableNameVo"/> vo = new <xsl:value-of select="$TableNameVo"/>();
-                    RmPopulateHelper.populate(vo, rs);
-                    return vo;
-                }
-            });
-        } else {
-            return query(sql.toString(), new RowMapper() {
-                public Object mapRow(ResultSet rs, int i) throws SQLException {
-                    <xsl:value-of select="$TableNameVo"/> vo = new <xsl:value-of select="$TableNameVo"/>();
-                    RmPopulateHelper.populate(vo, rs);
-                    return vo;
-                }
-            }, startIndex, size); 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<xsl:value-of select="$charLt"/>?> get(@PathVariable("id") Long id) {
+        <xsl:value-of select="$TableNameVo"/> task = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.get(id);
+        if (task == null) {
+            return new ResponseEntity<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>(task, HttpStatus.OK);
+    }
+    
+    /**
+     * 插入单条记录，使用服务端管理的ID号
+     * @param vo
+     * @param uriBuilder
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<xsl:value-of select="$charLt"/>?> insert(@RequestBody <xsl:value-of select="$TableNameVo"/> vo, UriComponentsBuilder uriBuilder) {
+        //调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
+        Set<xsl:value-of select="$charLt"/>ConstraintViolation<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>> failures = validator.validate(vo);
+        if (!failures.isEmpty()) {
+            return RmResponseEntityFactory.build(failures, HttpStatus.BAD_REQUEST);
+        }
+        <xsl:value-of select="tableFormatNameLowerFirst"/>Service.insert(vo);
+        //按照Restful风格约定，创建指向新任务的url, 也可以直接返回id或对象.
+        Long id = vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>();
+        URI uri = uriBuilder.path("/api/<xsl:value-of select="@tableDirName"/>/" + id).build().toUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(uri);
+        return new ResponseEntity<xsl:value-of select="$charLt"/>HttpHeaders>(headers, HttpStatus.CREATED);
+    }
+
+    /**
+     * 修改单条记录
+     * @param vo
+     * @return
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<xsl:value-of select="$charLt"/>?> update(@RequestBody <xsl:value-of select="$TableNameVo"/> vo) {
+        //调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
+        Set<xsl:value-of select="$charLt"/>ConstraintViolation<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>> failures = validator.validate(vo);
+        if (!failures.isEmpty()) {
+            return RmResponseEntityFactory.build(failures, HttpStatus.BAD_REQUEST);
+        }
+        //保存
+        <xsl:value-of select="tableFormatNameLowerFirst"/>Service.update(vo);
+        //按Restful约定，返回204状态码, 无内容. 也可以返回200状态码.
+        return new ResponseEntity<xsl:value-of select="$charLt"/>String>(HttpStatus.NO_CONTENT);
+    }
+    
+    /**
+     * 删除单条记录
+     * @param id
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") Long id) {
+        <xsl:value-of select="tableFormatNameLowerFirst"/>Service.delete(id);
+    }
+    
+    /**
+     * 删除单条记录
+     * @param id
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public int delete(HttpServletRequest request) {
+        Long[] ids = RmJspHelper.getLongArrayFromRequest(request, REQUEST_IDS); //从request获取多条记录id
+        if (ids != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> ids.length != 0) {
+            return <xsl:value-of select="tableFormatNameLowerFirst"/>Service.delete(ids); //删除多条记录
+        }
+        return 0;
+    }
+    
+    /**
+     * 批量保存，没有主键的insert，有主键的update
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "batch", method = RequestMethod.POST)
+    public ResponseEntity<xsl:value-of select="$charLt"/>Map<xsl:value-of select="$charLt"/>String, int[]>> batchInsertUpdate(HttpServletRequest request) {
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lvo = RmPopulateHelper.populateAjax(<xsl:value-of select="$TableNameVo"/>.class, request);
+        for(<xsl:value-of select="$TableNameVo"/> vo : lvo) {
+            if(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() != null) {
+                RmVoHelper.markModifyStamp(request, vo);
+            } else {
+                RmVoHelper.markCreateStamp(request, vo);
+            }
+        }
+        int[] sum_insert_update = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.insertUpdateBatch(lvo.toArray(new <xsl:value-of select="$TableNameVo"/>[0]));
+        Map<xsl:value-of select="$charLt"/>String, int[]> result = new HashMap<xsl:value-of select="$charLt"/>String, int[]>();
+        result.put(EXECUTE_ROW_COUNT, sum_insert_update);
+        return new ResponseEntity<xsl:value-of select="$charLt"/>Map<xsl:value-of select="$charLt"/>String, int[]>>(result, HttpStatus.OK);
     }
 }
-	</xsl:template>
-	<!--处理取vo各属性的循环部分-->
-	<xsl:template match="column" mode="buildGetCircle">
-		<xsl:param name="columnName" select="@columnName"/>
-		<xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>
-		<xsl:param name="columnNameFormatLower" select="lower-case($columnNameFormat)"/>
-		<xsl:if test="not($columnName=$tablePk)">
-			<xsl:choose>
-				<xsl:when test="@dataType='not_exist_java_data_type'"/>
-				<xsl:otherwise>
-					<xsl:value-of select="concat('vo.get', str:upperFirst($columnNameFormatLower),'()')"/>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="position()=last() or (position()=(last()-1) and (../column[position()=last() and @columnName=../@tablePk]))"/>
-				<xsl:otherwise>,<xsl:value-of select="$charBr"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:if>
-	</xsl:template>
-	<!--处理取vo各属性的循环部分 update-->
-	<xsl:template match="column" mode="buildGetCircle_update">
-		<xsl:param name="columnName" select="@columnName"/>
-		<xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>
-		<xsl:param name="columnNameFormatLower" select="lower-case($columnNameFormat)"/>
-		<xsl:if test="not($columnName=$tablePk)">
-			<xsl:choose>
-				<xsl:when test="@dataType='not_exist_java_data_type'"/>
-				<xsl:when test="$columnNameFormatLower='create_date' or $columnNameFormatLower='create_ip' or $columnNameFormatLower='create_user_id' or $columnNameFormatLower='create_user_id_name'"/>
-				<xsl:otherwise>
-					<xsl:value-of select="concat('vo.get', str:upperFirst($columnNameFormatLower),'()')"/>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="position()=last() or (position()=(last()-1) and (../column[position()=last() and @columnName=../@tablePk]))"/>
-				<xsl:when test="$columnNameFormatLower='create_date' or $columnNameFormatLower='create_ip' or $columnNameFormatLower='create_user_id' or $columnNameFormatLower='create_user_id_name'"/>
-				<xsl:otherwise>,<xsl:value-of select="$charBr"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

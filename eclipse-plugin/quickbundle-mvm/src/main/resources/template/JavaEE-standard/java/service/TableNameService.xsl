@@ -7,68 +7,60 @@
 	<!--处理table-->
 	<xsl:template match="table">
 		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
-package <xsl:value-of select="$javaPackageTableDir"/>.service.impl;
+package <xsl:value-of select="$javaPackageTableDir"/>.service;
 
-import java.util.ArrayList;
-import java.util.List;
-		<xsl:if test="fn:matches(@parentChildTable, '\s*([\w_]+)\.([\w_]+)=([\w_]+)\.([\w_]+)\|([\w_]+)=([\w_]+)\.([\w_]+)\(([\w_]+)\.([\w_]+)\)\s*')">
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
+import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="tableFormatNameUpperFirst"/>Dao;
+import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Dao;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 import org.quickbundle.project.RmProjectHelper;
 import org.quickbundle.project.common.service.IRmCommonService;
 import org.quickbundle.tools.helper.RmStringHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
-		</xsl:if>
-import org.quickbundle.base.cache.RmSqlCountCache;
-import org.quickbundle.base.service.RmService;
-
-import <xsl:value-of select="$javaPackageTableDir"/>.dao.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao;
-import <xsl:value-of select="$javaPackageTableDir"/>.service.I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service;
-import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
-import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
 
-public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service extends RmService implements I<xsl:value-of select="$tableFormatNameUpperFirst"/>Service, <xsl:value-of select="$ITableNameConstants"/> {
+@Service
+//默认将类中的所有public函数纳入事务管理
+@Transactional(readOnly = true)
+public class <xsl:value-of select="tableFormatNameUpperFirst"/>Service implements <xsl:value-of select="$ITableNameConstants"/> {
+
+    @Autowired
+    private <xsl:value-of select="tableFormatNameUpperFirst"/>Dao <xsl:value-of select="tableFormatNameLowerFirst"/>Dao;
     
-    /**
-     * dao 表示: 数据访问层的实例
-     */
-    private I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao dao = null;
-
-    /**
-     * 设置数据访问接口
-     * 
-     * @return
-     */
-    public I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao getDao() {
-        return dao;
-    }
-
-    /**
-     * 获取数据访问接口
-     * 
-     * @param dao
-     */
-    public void setDao(I<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao dao) {
-        this.dao = dao;
-    }
-
-
+    @Autowired
+    private <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Dao <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao;
+    
     /**
      * 插入单条记录
      * 
      * @param vo 用于添加的VO对象
      * @return 若添加成功，返回新生成的Oid
      */
-    public String insert(<xsl:value-of select="$TableNameVo"/> vo) {
-        String id = getDao().insert(vo);
-        //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "插入了1条记录,id=" + String.valueOf(id));
-        RmSqlCountCache.clearCount(TABLE_NAME);  //清除count记录数缓存
-		return id;
+    public Long insert(<xsl:value-of select="$TableNameVo"/> vo) {
+        Long id = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.insert(vo);
+        if(vo.getBody() != null) {
+            for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo: vo.getBody()) {
+                bodyVo.set<xsl:value-of select="str:upperFirst(str:getRefColumnFormatLower(/meta, @tableName))"/> (vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
+            }
+            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert(vo.getBody().toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
+        }
+        RmProjectHelper.log(LOG_TYPE_NAME, "插入了1条记录,id={},子记录{}条", id, vo.getBody() == null ? 0 : vo.getBody().size());
+        return id;
     }
     
     /**
@@ -77,11 +69,20 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service extends 
      * @param vos 用于添加的VO对象数组
      * @return 返回新生成的id数组
      */
-    public String[] insert(<xsl:value-of select="$TableNameVo"/>[] vos) {
-        String[] aId = getDao().insert(vos);
-        //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "插入了" + vos.length + "条记录,id=" + RmStringHelper.ArrayToString(aId, ","));
-        RmSqlCountCache.clearCount(TABLE_NAME);  //清除count记录数缓存
-        return aId;
+    public Long[] insert(<xsl:value-of select="$TableNameVo"/>[] vos) {
+        Long[] ids = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.insert(vos);
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> bodyVoToInsert = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+        for(<xsl:value-of select="$TableNameVo"/> vo : vos) {
+            if(vo.getBody() != null) {
+                for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo: vo.getBody()) {
+                    bodyVo.set<xsl:value-of select="str:upperFirst(str:getRefColumnFormatLower(/meta, @tableName))"/> (vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
+                    bodyVoToInsert.add(bodyVo);
+                }
+            }
+        }
+        <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert(bodyVoToInsert.toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
+        RmProjectHelper.log(LOG_TYPE_NAME, "插入了{}条记录,id={},子记录共{}条", vos.length, Arrays.toString(ids), bodyVoToInsert.size());
+        return ids;
     }
 
     /**
@@ -90,11 +91,20 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service extends 
      * @param id 用于删除的记录的id
      * @return 成功删除的记录数
      */
-    public int delete(String id) {
-		int sum = getDao().delete(id);
-		//RmLogHelper.log(TABLE_LOG_TYPE_NAME, "删除了" + sum + "条记录,id=" + String.valueOf(id));
-		RmSqlCountCache.clearCount(TABLE_NAME);  //清除count记录数缓存
-		return sum;
+    public int delete(Long id) {
+        List<xsl:value-of select="$charLt"/>Long> bodyIdToDelete = new ArrayList<xsl:value-of select="$charLt"/>Long>();
+        <xsl:value-of select="$TableNameVo"/> vo = get(id);
+        if(vo.getBody() != null) {
+            for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo : vo.getBody()) {
+                bodyIdToDelete.add(bodyVo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>());
+            }
+        }
+        if(bodyIdToDelete.size() > 0) {
+            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(bodyIdToDelete.toArray(new Long[0]));
+        }
+        int sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.delete(id);
+        RmProjectHelper.log(LOG_TYPE_NAME, "删除了{}条记录,id={},子记录{}条", sum, id, bodyIdToDelete.size());
+        return sum;
     }
 
     /**
@@ -103,23 +113,22 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service extends 
      * @param ids 用于删除的记录的ids
      * @return 成功删除的记录数
      */
-    public int delete(String ids[]) {
-		int sum = getDao().delete(ids);
-        //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "删除了" + sum + "条记录,id=" + RmStringHelper.ArrayToString(ids, ","));
-        RmSqlCountCache.clearCount(TABLE_NAME);  //清除count记录数缓存
-		return sum;
-    }
-
-    /**
-     * 根据Id进行查询
-     * 
-     * @param id 用于查找的id
-     * @return 查询到的VO对象
-     */
-    public <xsl:value-of select="$TableNameVo"/> find(String id) {
-		<xsl:value-of select="$TableNameVo"/> vo = getDao().find(id);
-        //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "察看了1条记录,id=" + id);
-		return vo;
+    public int delete(Long ids[]) {
+        List<xsl:value-of select="$charLt"/>Long> bodyIdToDelete = new ArrayList<xsl:value-of select="$charLt"/>Long>();
+        for(Long id : ids) {
+            <xsl:value-of select="$TableNameVo"/> vo = get(id);
+            if(vo.getBody() != null) {
+                for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo : vo.getBody()) {
+                    bodyIdToDelete.add(bodyVo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>());
+                }
+            }
+        }
+        if(bodyIdToDelete.size() > 0) {
+            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(bodyIdToDelete.toArray(new Long[0]));
+        }
+        int sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.delete(ids);
+        RmProjectHelper.log(LOG_TYPE_NAME, "删除了{}条记录,ids={},子记录共{}条", sum, Arrays.toString(ids), bodyIdToDelete.size());
+        return sum;
     }
 
     /**
@@ -128,11 +137,17 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service extends 
      * @param vo 用于更新的VO对象
      * @return 成功更新的记录数
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public int update(<xsl:value-of select="$TableNameVo"/> vo) {
-		int sum = getDao().update(vo);
-        //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "更新了" + sum + "条记录,id=" + String.valueOf(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()));
-        RmSqlCountCache.clearCount(TABLE_NAME);  //清除count记录数缓存
-		return sum;
+        if(vo.getBody() != null) {
+            List[] result = mergeVos(vo, <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(), null, 1, Integer.MAX_VALUE, true), vo.getBody());
+            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert((<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[])result[0].toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
+            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete((Long[])result[1].toArray(new Long[0]));
+            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.update((<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[])result[2].toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
+        }
+        int sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.update(vo);
+        RmProjectHelper.log(LOG_TYPE_NAME, "更新了{}条记录,id={}", sum, vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
+        return sum;
     }
 
     /**
@@ -141,97 +156,224 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service extends 
      * @param vos 更新的VO对象数组
      * @return 成功更新的记录最终数量
      */
-	public int update(<xsl:value-of select="$TableNameVo"/>[] vos) {
-		int[] sum = getDao().update(vos);
-		int finalSum = 0;
-		for (int i = 0; i <xsl:value-of select="$charLt"/> sum.length; i++) {
-			finalSum += sum[i];
-		}
-		//RmLogHelper.log(TABLE_LOG_TYPE_NAME, "批量更新了" + finalSum + "条记录);
-        RmSqlCountCache.clearCount(TABLE_NAME);  //清除count记录数缓存
-		return finalSum;
-	}
-	
-	/**
-	 * 批量保存，没有主键的insert，有主键的update
-	 * 
-	 * @param vos 更新的VO对象数组
-	 * @return new int[2]{insert的记录数, update的记录数}	
-	 */
-	public int[] insertUpdateBatch(<xsl:value-of select="$TableNameVo"/>[] vos) {
-		int[] sum_insert_update = new int[2];
-		List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lInsert = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>();
-		List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lUpdate = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>();
-		for (int i = 0; i <xsl:value-of select="$charLt"/> vos.length; i++) {
-			if(vos[i].get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> vos[i].get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>().trim().length() > 0) {
-				lUpdate.add(vos[i]);
-			} else {
-				lInsert.add(vos[i]);
-			}
-		}
-		if(lInsert.size() > 0) {
-			sum_insert_update[0] = insert(lInsert.toArray(new <xsl:value-of select="$TableNameVo"/>[0])).length;
-		}
-		if(lUpdate.size() > 0) {
-			sum_insert_update[1] = update(lUpdate.toArray(new <xsl:value-of select="$TableNameVo"/>[0]));
-		}
-		return sum_insert_update;
-	}
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public int update(<xsl:value-of select="$TableNameVo"/>[] vos) {
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toInsert = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+        List<xsl:value-of select="$charLt"/>Long> toDelete = new ArrayList<xsl:value-of select="$charLt"/>Long>();
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toUpdate = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+        for(<xsl:value-of select="$TableNameVo"/> vo : vos) {
+            if(vo.getBody() != null) {
+                List[] result = mergeVos(vo, <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(), null, 1, Integer.MAX_VALUE, true), vo.getBody());
+                toInsert.addAll(result[0]);
+                toDelete.addAll(result[1]);
+                toUpdate.addAll(result[2]);
+            }
+        }
+        <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert(toInsert.toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
+        <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(toDelete.toArray(new Long[0]));
+        <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.update(toUpdate.toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
+        int[] sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.update(vos);
+        int finalSum = 0;
+        for (int i = 0; i <xsl:value-of select="$charLt"/> sum.length; i++) {
+            finalSum += sum[i];
+        }
+        RmProjectHelper.log(LOG_TYPE_NAME, "批量更新了{}条记录", finalSum);
+        return finalSum;
+    }
+    
+    /**
+     * 比较老数据集与新数据集，得出insert/delete/update的最优序列
+     * 
+     * @param vo
+     * @param oldVos
+     * @param newVos
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+    protected List[] mergeVos(<xsl:value-of select="$TableNameVo"/> headVo, List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> oldVos, List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> newVos) {
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toInsert = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+        List<xsl:value-of select="$charLt"/>Long> toDelete = new ArrayList<xsl:value-of select="$charLt"/>Long>();
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toUpdate = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+        List[] result = new List[]{toInsert, toDelete, toUpdate};
+        Map<xsl:value-of select="$charLt"/>Long, <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> oldVoMap = new HashMap<xsl:value-of select="$charLt"/>Long, <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+        for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo oldVo : oldVos) {
+            oldVoMap.put(oldVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(), oldVo);
+        }
+        for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo newVo : newVos) {
+            if(newVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> oldVoMap.containsKey(newVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>())){
+                toUpdate.add(newVo);
+                oldVoMap.remove(newVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
+            } else {
+                newVo.set<xsl:value-of select="str:upperFirst(str:getRefColumnFormatLower(/meta, @tableName))"/> (headVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
+                toInsert.add(newVo);
+            }
+        }
+        for(Map.Entry<xsl:value-of select="$charLt"/>Long, <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> en : oldVoMap.entrySet()) {
+            toDelete.add(en.getKey());
+        }
+        return result;
+    }
 
+    /**
+     * 批量保存，没有主键的insert，有主键的update
+     * 
+     * @param vos 更新的VO对象数组
+     * @return new int[2]{insert的记录数, update的记录数}   
+     */
+    public int[] insertUpdateBatch(<xsl:value-of select="$TableNameVo"/>[] vos) {
+        int[] sum_insert_update = new int[2];
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lInsert = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>();
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lUpdate = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>();
+        for (int i = 0; i <xsl:value-of select="$charLt"/> vos.length; i++) {
+            if(vos[i].get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() != null) {
+                lUpdate.add(vos[i]);
+            } else {
+                lInsert.add(vos[i]);
+            }
+        }
+        if(lInsert.size() > 0) {
+            sum_insert_update[0] = insert(lInsert.toArray(new <xsl:value-of select="$TableNameVo"/>[0])).length;
+        }
+        if(lUpdate.size() > 0) {
+            sum_insert_update[1] = update(lUpdate.toArray(new <xsl:value-of select="$TableNameVo"/>[0]));
+        }
+        return sum_insert_update;
+    }
+
+    /**
+     * 根据Id进行查询
+     * 
+     * @param id 用于查找的id
+     * @return 查询到的VO对象
+     */
+    public <xsl:value-of select="$TableNameVo"/> get(Long id) {
+        <xsl:value-of select="$TableNameVo"/> vo = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.get(id);
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> body = <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + String.valueOf(id), null, 1, Integer.MAX_VALUE, true);
+        vo.setBody(body);
+        return vo;
+    }
+    
     /**
      * 查询总记录数，带查询条件
      * 
      * @param queryCondition 查询条件
      * @return 总记录数
      */
-    public int getRecordCount(String queryCondition) {
-		int sum = getDao().getRecordCount(queryCondition);
-		//RmLogHelper.log(TABLE_LOG_TYPE_NAME, "查询到了总记录数,count=" + sum + ", queryCondition=" + queryCondition);
-		return sum;
+    public int getCount(String queryCondition) {
+        int sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.getCount(queryCondition);
+        return sum;
     }
 
     /**
-     * 功能: 通过查询条件获得所有的VO对象列表，不带翻页查全部，只查询必要的字段
+     * 通过查询条件获得所有的VO对象列表，不带翻页查全部，只查询必要的字段
      *
      * @param queryCondition 查询条件, queryCondition等于null或""时查询全部
      * @param orderStr 排序字段
      * @return 查询到的VO列表
      */
-    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> queryByCondition(String queryCondition, String orderStr) {
-        return queryByCondition(queryCondition, orderStr, -1, -1);
+    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr) {
+        return list(queryCondition, orderStr, 1, Integer.MAX_VALUE);
     }
 
     /**
-     * 功能: 通过查询条件获得所有的VO对象列表，带翻页，带排序字符，只查询必要的字段
+     * 通过查询条件获得所有的VO对象列表，带翻页，带排序字符，只查询必要的字段
      *
      * @param queryCondition 查询条件, queryCondition等于null或""时查询全部
      * @param orderStr 排序字符
      * @param startIndex 开始位置(第一条是1，第二条是2...)
-     * @param size 查询多少条记录(size小于等于0时,忽略翻页查询全部)
+     * @param size 查询多少条记录
      * @return 查询到的VO列表
      */
-    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> queryByCondition(String queryCondition, String orderStr, int startIndex, int size) {
-        return queryByCondition(queryCondition, orderStr, startIndex, size, false);
+    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr, int startIndex, int size) {
+        return list(queryCondition, orderStr, startIndex, size, false);
     }
     
     /**
-     * 功能: 通过查询条件获得所有的VO对象列表，带翻页，带排序字符，根据selectAllClumn判断是否查询所有字段
+     * 通过查询条件获得所有的VO对象列表，带翻页，带排序字符，根据selectAllClumn判断是否查询所有字段
      *
      * @param queryCondition 查询条件, queryCondition等于null或""时查询全部
      * @param orderStr 排序字符
      * @param startIndex 开始位置(第一条是1，第二条是2...)
-     * @param size 查询多少条记录(size小于等于0时,忽略翻页查询全部)
-     * @param selectAllClumn 是否查询所有列，即 SELECT * FROM ...(适用于导出)
+     * @param size 查询多少条记录
+     * @param allColumn 是否查询所有列，即 SELECT * FROM ...(适用于导出)
      * @return 查询到的VO列表
      */
-    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> queryByCondition(String queryCondition, String orderStr, int startIndex, int size, boolean selectAllClumn) {
-        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lResult = getDao().queryByCondition(queryCondition, orderStr, startIndex, size, selectAllClumn);
-        //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "按条件查询了多条记录,recordCount=" + lResult.size() + ", startIndex=" + startIndex + ", size=" + size + ", queryCondition=" + queryCondition + ", orderStr=" + orderStr + ", selectAllClumn=" + selectAllClumn);
+    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr, int startIndex, int size, boolean allColumn) {
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lResult = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.list(queryCondition, orderStr, startIndex, size, allColumn);
+        if(allColumn) {
+            for(<xsl:value-of select="$TableNameVo"/> vo : lResult) {
+                List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> body = <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + String.valueOf(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()), null, 1, Integer.MAX_VALUE, true);
+                vo.setBody(body);
+            }
+        }
         return lResult;
     }
-    <xsl:call-template name="buildMiddleService"/>
+    
+    /**
+     * 按条件搜索，走MyBatis的XML文件的search
+     * 
+     * @param searchPara 搜索参数的Map
+     * @param orderStr 排序字符
+     * @param startIndex 开始位置(第一条是1，第二条是2...)
+     * @param size 查询多少条记录
+     * @return 查询到的VO列表
+     */
+    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> search(Map<xsl:value-of select="$charLt"/>String, Object> searchPara, String orderStr, int startIndex, int size) {
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lResult = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.search(searchPara, orderStr, startIndex, size);
+        return lResult;
+    }
+    
+    /**
+     * 插入中间表RM_M_MESSAGE_USER数据
+     * 
+     * @param message_id
+     * @param user_ids
+     * @return 插入的user_id列表
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public String[] insertRm_m_message_user(String message_id, String[] user_ids) {
+        if(user_ids.length == 0 || (user_ids.length == 1 <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/>user_ids[0].trim().length() == 0)) {
+            return new String[0];
+        }
+        IRmCommonService cs = RmProjectHelper.getCommonServiceInstance();
+        List<xsl:value-of select="$charLt"/>String> lExistId = cs.doQuery("select * from RM_M_MESSAGE_USER where MESSAGE_ID=" + message_id + " and USER_ID in(" + RmStringHelper.parseToString(user_ids) + ")", new RowMapper() {
+            public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("USER_ID");
+            }
+        });
+        Set<xsl:value-of select="$charLt"/>String> sUser_id = new HashSet<xsl:value-of select="$charLt"/>String>();
+        for(String user_id : user_ids) {
+            if(!lExistId.contains(user_id)) {
+                sUser_id.add(user_id);
+            }
+        }
+        if(sUser_id.size() > 0) {
+            String[][] aaValue = new String[sUser_id.size()][2];
+            int index = 0;
+            for (String user_id : sUser_id) {
+                aaValue[index][0] = message_id;
+                aaValue[index][1] = user_id;
+                index ++;
+            }
+            cs.doUpdateBatch("insert into RM_M_MESSAGE_USER (MESSAGE_ID, USER_ID) VALUES(?, ?)", aaValue);
+        }
+        return sUser_id.toArray(new String[0]);
+    }
+    
+    /**
+     * 删除中间表RM_M_MESSAGE_USER数据
+     * 
+     * @param message_id
+     * @param user_ids
+     * @return 删除的记录数
+     */
+    public int deleteRm_m_message_user(String message_id, String[] user_ids) {
+        IRmCommonService cs = RmProjectHelper.getCommonServiceInstance();
+        return cs.doUpdate("delete from RM_M_MESSAGE_USER where MESSAGE_ID=" + message_id + " and USER_ID in(" + RmStringHelper.parseToString(user_ids) + ")");
+    }
 }
 </xsl:template>
+
 	<!--生成多对多表Service定义-->
 	<xsl:template name="buildMiddleService">
 		<xsl:variable name="parentChildTable" select="@parentChildTable"/>

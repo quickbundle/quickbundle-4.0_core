@@ -70,7 +70,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
 
     private static final long serialVersionUID = 1;
     
-    //开始vo的属性<xsl:apply-templates select="column" mode="field"/>        
+    //开始vo的属性<xsl:apply-templates mode="field"/>        
     //结束vo的属性
         
         
@@ -89,6 +89,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
     
 }
 </xsl:template>
+
 	<!--处理vo属性-->
 	<xsl:template match="column" mode="field">
 		<xsl:param name="columnName" select="@columnName"/>
