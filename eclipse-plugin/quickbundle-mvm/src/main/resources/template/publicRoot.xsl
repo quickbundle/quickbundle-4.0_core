@@ -30,6 +30,7 @@
 	<!--定义mainTable(默认主表)的处理过的表名全局变量-->
 	<xsl:variable name="tableFormatName" select="str:getTableFormatName(/meta, $tableName)"/>
 	<xsl:variable name="tableFormatNameUpperFirst" select="str:getTableFormatNameUpperFirst(/meta, $tableName)"/>
+	<xsl:variable name="tableFormatNameLowerFirst" select="str:getTableFormatNameLowerFirst(/meta, $tableName)"/>
 	<!--定义mainTable(默认主表)的处理过的主键和外键-->
 	<xsl:variable name="tablePkFormat" select="str:getTablePkFormat(/meta, $tableName)"/>
 	<xsl:variable name="tablePkFormatLower" select="str:getTablePkFormatLower(/meta, $tableName)"/>
@@ -109,6 +110,13 @@
 				<xsl:sequence select="str:upperFirst($word)"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:function>
+	<!--（带规则）自定义函数，针对表名操作，把字符串首字母变大写，其余字母采取不同策略-->
+	<xsl:function name="str:lowerFirstTableName">
+		<xsl:param name="word" as="xs:string"/>
+		<xsl:param name="filterKeyword" as="xs:string"/>
+		<xsl:param name="filterType" as="xs:string"/>
+		<xsl:sequence select="str:upperFirst(str:upperFirstTableName($word, $filterKeyword, $filterType))"/>
 	</xsl:function>
 	<!--（带规则）自定义函数，根据指定的规则处理字符串-->
 	<xsl:function name="str:filter">
@@ -215,6 +223,12 @@
 		<xsl:param name="meta"/>
 		<xsl:param name="tableNameVar" as="xs:string"/>
 		<xsl:sequence select="str:upperFirstTableName($tableNameVar, str:getTableFilterKeyword($meta, $tableNameVar), 'specify')"/>
+	</xsl:function>
+	<!--自定义函数，获得指定tableName的tableFormatNameLowerFirst-->
+	<xsl:function name="str:getTableFormatNameLowerFirst">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:sequence select="str:lowerFirstTableName($tableNameVar, str:getTableFilterKeyword($meta, $tableNameVar), 'specify')"/>
 	</xsl:function>
 	<!--************根据指定表名，获得处理过的主键和外键************-->
 	<!--自定义函数，获得指定tableName的tablePkFormat-->
