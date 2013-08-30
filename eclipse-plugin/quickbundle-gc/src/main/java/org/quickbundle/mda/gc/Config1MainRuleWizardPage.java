@@ -576,9 +576,8 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
      */
     private int writeValueIntoXml() {
         int count = 0;
-        java.util.List lNodes = gcRule.getMainRule().selectNodes("//@*|node()");
-        for (Iterator itLNodes = lNodes.iterator(); itLNodes.hasNext();) {
-            Node node = (Node) itLNodes.next();
+        java.util.List<Node> lNode = gcRule.getMainRule().selectNodes("//@*|node()");
+        for (Node node : lNode) {
             if (node.getName() != null && node.getName().length() > 0) {
                 if (getMContainerText(node.getName()) != null && !getMContainerText(node.getName()).equals(node.getText())) {
                     node.setText(getMContainerText(node.getName()));
@@ -632,22 +631,6 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
         }
     }
     
-    private void updateWebAppName() {
-        Text javaFileRealPath = ((Text) getMContainer("javaFileRealPath"));
-        Text jspSourcePath = ((Text) getMContainer("jspSourcePath"));
-        Element baseTargetPath_java = (Element) gcRule.getMainRule().selectSingleNode("/rules/codegen/files[@filesType='java']");
-        Element baseTargetPath_jsp = (Element) gcRule.getMainRule().selectSingleNode("/rules/codegen/files[@filesType='jsp']");
-        baseTargetPath_java.addAttribute("baseTargetPath", javaFileRealPath.getText());
-        baseTargetPath_jsp.addAttribute("baseTargetPath", getMContainerText("webAppName") + "/" + jspSourcePath.getText());
-        {  //循环更新conf类型的baseTargetPath属性
-            java.util.List<Element> lBaseTargetPath_conf = gcRule.getMainRule().selectNodes("/rules/codegen/files[@filesType='config']");
-            for(Element baseTargetPath_conf : lBaseTargetPath_conf) {
-                String appendPath = baseTargetPath_conf.valueOf("./@appendPath");
-                baseTargetPath_conf.addAttribute("baseTargetPath", getMContainerText("webAppName") + "/" + appendPath);
-            }
-        }
-    }
-    
     /**
      * 功能:实现侦听
      * 
@@ -661,17 +644,9 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
             List lTableFrom = ((List) getMContainer("list_tableFrom"));
             List lTableTo = ((List) getMContainer("tableTo"));
             List lTableStatus = ((List) getMContainer("list_tableStatus"));
-
-            Text webAppName = (Text) getMContainer("webAppName");
-            Text javaPackageName = ((Text) getMContainer("javaPackageName"));
-            Text javaFileRealPath = ((Text) getMContainer("javaFileRealPath"));
-            Text jspSourcePath = ((Text) getMContainer("jspSourcePath"));
             this.setErrorMessage(null);
             if (event.type == SWT.Modify) {
-                QbXmlGenerateCodePlugin.log(writeValueIntoXml() + "个对象被更新, " + event.widget.getClass() + ":" + event.widget.getData());
-                if (event.widget == webAppName || event.widget == javaPackageName || event.widget == javaFileRealPath || event.widget == jspSourcePath) {
-                    updateWebAppName();
-                }
+            	writeValueIntoXml();
             }
             
             if ((event.widget == button_right && event.type == SWT.Selection) || (event.widget == lTableFrom && event.type == SWT.MouseDoubleClick)) {
@@ -851,7 +826,6 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
                                     //判断有无WEB-INF/web.xml
                                     if(new File(fProjectChild[i].toString() + System.getProperty("file.separator") + "WEB-INF" + System.getProperty("file.separator") + "web.xml").exists()) {
                                         setMContainerText("webAppName", fProjectChild[i].getName());
-                                        updateWebAppName();
                                     }
                                 }
                             }
@@ -887,7 +861,6 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
                         }
                     }
                     setMContainerText("webAppName", webAppName);
-                    updateWebAppName();
                     setMContainerText("jspSourcePath", jspSourcePath);
                 }
             }

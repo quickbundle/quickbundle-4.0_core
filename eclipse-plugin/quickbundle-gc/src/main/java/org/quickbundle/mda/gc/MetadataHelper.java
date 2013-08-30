@@ -16,10 +16,13 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.Node;
 import org.quickbundle.tools.helper.RmStringHelper;
+import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 public class MetadataHelper {
 
@@ -239,7 +242,7 @@ public class MetadataHelper {
 			}
 		}
 		{ // 初始化默认勾选的组件
-			Set<String> sBundleCode = new HashSet();
+			Set<String> sBundleCode = new HashSet<String>();
 			if (!table.valueOf("@statisticColumn").equals(table.valueOf("@tablePk"))) {
 				sBundleCode.add("condition");
 			}
@@ -264,20 +267,16 @@ public class MetadataHelper {
 
 	private static void initDatabase(Element database, Connection myConn, String catalog, String schemaPattern, String table_name, Document docRules,
 			PdmParser pdmParser) throws SQLException {
-		database.addElement("driver").setText("/rules/database/@driver");
-		database.addElement("url").setText("/rules/database/@url");
-		database.addElement("userName").setText("/rules/database/@userName");
-		database.addElement("password").setText("/rules/database/@password");
+		database.addElement("driver").setText(docRules.valueOf("/rules/database/@driver"));
+		database.addElement("url").setText(docRules.valueOf("/rules/database/@url"));
+		database.addElement("userName").setText(docRules.valueOf("/rules/database/@userName"));
+		database.addElement("password").setText(docRules.valueOf("/rules/database/@password"));
 		database.addElement("dbProductName").setText(myConn.getMetaData().getDatabaseProductName());
 	}
 
 	private static void initProject(Element project, Connection myConn, String catalog, String schemaPattern, String table_name, Document docRules,
 			PdmParser pdmParser) {
-		project.addElement("projectName").setText("/rules/java/@projectName");
-		project.addElement("webAppName").setText("/rules/java/@webAppName");
-		project.addElement("authorName").setText("/rules/java/@authorName");
-		project.addElement("javaPackageName").setText("/rules/java/@javaPackageName");
-		project.addElement("jspSourcePath").setText("/rules/java/@jspSourcePath");
+		RmXmlHelper.deepCopyElementWithClear((Element)docRules.selectSingleNode("/rules/project"), project);
 	}
 
 	/**

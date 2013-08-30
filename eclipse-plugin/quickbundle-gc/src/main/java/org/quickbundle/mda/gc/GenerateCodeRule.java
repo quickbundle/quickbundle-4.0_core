@@ -89,20 +89,18 @@ public class GenerateCodeRule {
                 thisTableDoc.selectSingleNode("/meta/database/userName").setText(getMainRule().valueOf("/rules/database/@userName"));
                 thisTableDoc.selectSingleNode("/meta/database/password").setText(getMainRule().valueOf("/rules/database/@password"));
 
-                thisTableDoc.selectSingleNode("/meta/project/projectName").setText(getMainRule().valueOf("/rules/java/@projectName"));
-                thisTableDoc.selectSingleNode("/meta/project/webAppName").setText(getMainRule().valueOf("/rules/java/@webAppName"));
-                thisTableDoc.selectSingleNode("/meta/project/authorName").setText(getMainRule().valueOf("/rules/java/@authorName"));
-                thisTableDoc.selectSingleNode("/meta/project/javaPackageName").setText(getMainRule().valueOf("/rules/java/@javaPackageName"));
-                thisTableDoc.selectSingleNode("/meta/project/jspSourcePath").setText(getMainRule().valueOf("/rules/java/@jspSourcePath"));
-                QbXmlGenerateCodePlugin.log("save file '" + RmXmlHelper.formatToFile(QbXmlGenerateCodePlugin.qbGenerateCodeHome + "/"
-                        + thisTableTo.valueOf("@xmlName")) + "', do finish");
+                RmXmlHelper.deepCopyElementWithClear((Element)getMainRule().selectSingleNode("/rules/project"), 
+                		(Element)thisTableDoc.selectSingleNode("/meta/project"));
+
                 RmXmlHelper.saveXmlToPath(thisTableDoc, RmXmlHelper.formatToFile(QbXmlGenerateCodePlugin.qbGenerateCodeHome + "/"
                         + thisTableTo.valueOf("@xmlName")));
+                QbXmlGenerateCodePlugin.log("save " + RmXmlHelper.formatToFile(QbXmlGenerateCodePlugin.qbGenerateCodeHome + "/"
+                		+ thisTableTo.valueOf("@xmlName")));
             }
         }
         //回写rule.xml
-        QbXmlGenerateCodePlugin.log("save file '" + mainRulePath + "', do finish");
         RmXmlHelper.saveXmlToPath(getMainRule(), mainRulePath);
+        QbXmlGenerateCodePlugin.log("save '" + mainRulePath);
     }
     
     public void initTableDoc(String currentTable, File currentTableXmlFile, PdmParser pdmParser, Config1MainRuleWizardPage config1MainRuleWizardPage) throws Exception {

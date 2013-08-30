@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rules rulesVersion="4.0.0-20130824">
+<rules rulesVersion="4.0.0-20130830">
 	<database pdmPath="" dbProductName="MySQL" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost/rmdemo?jdbcCompliantTruncation=false" userName="root" password="" catalog="" schemaPattern="" tableNamePattern="">
 		<!--定义目标表名xml的路径-->
 		<tableTos>
 			<tableTo xmlName="RM_FUNCTION_NODE.xml">RM_FUNCTION_NODE</tableTo>
 		</tableTos>
 	</database>
-	<java projectName="" webAppName="" authorName="白小勇" javaPackageName="com.helloworld" javaFileRealPath="src/main/java/com/helloworld" jspSourcePath="WEB-INF/jsp/helloworld"/>
-	<codegen baseProjectPath="" toTableNameKeyword="TableName">
-		<!--定义要生成的文件列表，分java、jsp、配置文件3种-->
-		<files baseTargetPath="src/main/java/org/quickbundle/test/rm" filesType="java" />
-		<files baseTargetPath="webAppName/jsp/test/rm" filesType="jsp" />
-		<files baseTargetPath="webAppName/WEB-INF/config" filesType="config" appendPath="WEB-INF/config" />
-		<files baseTargetPath="webAppName/jsp" filesType="config" appendPath="jsp" />
-		<files baseTargetPath="src/main/java" filesType="other" />
-	</codegen>
+	<project>
+		<projectName>abc123</projectName>
+		<webAppName>webapp</webAppName>
+		<authorName>白小勇</authorName>
+		<javaPackageName>com.helloworld</javaPackageName>
+		<javaFileRealPath>src/main/java/com/helloworld</javaFileRealPath>
+		<jspSourcePath>helloworld</jspSourcePath>
+	</project>
+	<codegen baseProjectPath="" toTableNameKeyword="TableName"/>
 	<dataType>
 		<!--定义数据库类型-->
 		<dbTypes>

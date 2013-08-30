@@ -10,6 +10,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -123,16 +125,16 @@ public class CodegenEngine {
             	}
             }
             //得到当前这组的基本路径
-            String baseTargetPath = getBaseTargetPath(eleFile);
+            String outPutPath = getOutPutPath(eleFile);
             //得到最终路径
             String xsltPath = templatePath + eleFile.valueOf("@xsltPath");
             String outputFile = eleFile.valueOf("@outputFile");
-            outputFile = fillUpOutput(outputFile, toTableNameKeyword, eleFile, filterTableName, tableDirName, baseTargetPath);
+            outputFile = fillUpOutput(outputFile, toTableNameKeyword, eleFile, filterTableName, tableDirName, outPutPath);
             String afterKeyWord = eleFile.valueOf("@afterKeyWord");
             if (afterKeyWord.length() == 0) { //java和jsp文件
             	if("true".equals(eleFile.valueOf("@result-document"))) {
             		String outputFolder = eleFile.valueOf("@outputFolder");
-            		outputFolder = fillUpOutput(outputFolder, toTableNameKeyword, eleFile, filterTableName, tableDirName, baseTargetPath);
+            		outputFolder = fillUpOutput(outputFolder, toTableNameKeyword, eleFile, filterTableName, tableDirName, outPutPath);
             		if("".equals(eleFile.valueOf("@outputFile"))) {
             			XsltHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, outputFolder);
             		} else {
@@ -190,18 +192,22 @@ public class CodegenEngine {
         return result.toString();
     }
     
-    private String getBaseTargetPath(Element eleFile) {
-    	String baseTargetPath = eleFile.valueOf("../@baseTargetPath");
-        if(baseTargetPath == null || baseTargetPath.length() == 0) {
-        	String filesType = eleFile.valueOf("../@filesType");
-        	String appendPath = eleFile.valueOf("../@appendPath");
-        	StringBuilder xpathFiles = new StringBuilder("@filesType='").append(filesType).append("'");
-        	if(appendPath != null && appendPath.length() > 0) {
-        		xpathFiles.append(" and @appendPath='").append(appendPath).append("'");
-        	}
-        	baseTargetPath = mainRule.valueOf("/rules/codegen/files[" + xpathFiles.toString() + "]/@baseTargetPath");
-        }
-        return baseTargetPath;
+    private String getOutPutPath(Element eleFile) {
+    	String outputPath = eleFile.valueOf("../@outputPath");
+		if(outputPath == null || outputPath.trim().length() == 0) {
+			return "";
+		}
+		StringBuffer result = new StringBuffer();
+		Pattern pData = Pattern.compile("$\\{.*?\\}");
+		Matcher mData = pData.matcher(outputPath);
+		while(mData.find()) {
+			//在循环中找出{}的表达式
+			String exp = mData.toMatchResult().group();
+			//处理表达式，添加到结果
+			mData.appendReplacement(result, mainRule.valueOf("/rules/project/" + exp));
+		}
+		mData.appendTail(result);
+		return result.toString();
     }
     
     /**

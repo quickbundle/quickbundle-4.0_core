@@ -34,6 +34,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.dom4j.Text;
 import org.dom4j.io.DocumentSource;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
@@ -238,14 +239,16 @@ public class RmXmlHelper {
     }
 	
 	/**
+	 * 复制from下的所有节点(包括Attribute, Element, Text)到to
+	 * 
 	 * @param from
 	 * @param to
 	 */
 	public static void deepCopyElement(Element from, Element to) {
-		if(from == null) {
+		if(from == null || to == null) {
 			return;
 		}
-		List<Node> lNode = from.selectNodes("/rules/codegen/(@*|node())");
+		List<Node> lNode = from.selectNodes("@*|node()");
 		for(Node node : lNode) {
 			if(node instanceof Attribute) {
 				Attribute attr = (Attribute)node;
@@ -253,7 +256,26 @@ public class RmXmlHelper {
 			} else if(node instanceof Element) {
 				Element ele = (Element)node;
 				to.add(ele.createCopy());
+			} else if(node instanceof Text) {
+				to.setText(node.getText());
 			}
 		}
-	}    
+	}
+	
+	/**
+	 * 先清理to的所有node()和Attribute，在复制from下的所有节点(包括Attribute, Element, Text)到to
+	 * 
+	 * @param from
+	 * @param to
+	 */
+	public static void deepCopyElementWithClear(Element from, Element to) {
+		if(from == null || to == null) {
+			return;
+		}
+		List<Node> lNode = to.selectNodes("@*|node()");
+		for(Node node : lNode) {
+			to.remove(node);
+		}
+		deepCopyElement(from, to);
+	} 
 }
