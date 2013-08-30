@@ -21,7 +21,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-    var rmActionName = "<xsl:value-of select="tableFormatNameUpperFirst"/>Action";
+    var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>Action";
     function print_onClick(){  //打印
         window.print();
     }

@@ -129,7 +129,7 @@ public class GenerateCodeWizard extends Wizard implements INewWizard {
      */
 
     private void doFinish(IProgressMonitor monitor) throws CoreException {
-        // create a sample file
+        //create a sample file
         monitor.beginTask("正在生成代码,请稍候......", 2);
         try {
         	//保存规则文件

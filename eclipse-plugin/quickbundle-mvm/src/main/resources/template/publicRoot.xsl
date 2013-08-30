@@ -295,7 +295,7 @@
 	<xsl:function name="str:getRefColumn">
 		<xsl:param name="meta"/>
 		<xsl:param name="tableNameVar" as="xs:string"/>
-		<xsl:sequence select="$meta/relation/mainTable/refTable[@tableName=$tableNameVar]/@refColumn"/>
+		<xsl:sequence select="$meta/relations/mainTable/refTable[@tableName=$tableNameVar]/@refColumn"/>
 	</xsl:function>
 	<!--自定义函数，获得指定子表tableName针对mainTable的外键的FormatLower-->
 	<xsl:function name="str:getRefColumnFormatLower">

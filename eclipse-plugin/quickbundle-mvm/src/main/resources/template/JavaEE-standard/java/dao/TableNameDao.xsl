@@ -25,7 +25,7 @@ import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$T
 <xsl:value-of select="str:getClassComment($authorName)"/>
 
 @Repository
-public class <xsl:value-of select="tableFormatNameUpperFirst"/>Dao extends RmSqlSessionDaoSupport implements <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Dao extends RmSqlSessionDaoSupport implements <xsl:value-of select="$ITableNameConstants"/> {
 
     /**
      * 插入单条记录，用id作主键

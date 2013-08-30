@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 import org.quickbundle.base.web.page.RmPageVo;
 import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
-import <xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="tableFormatNameUpperFirst"/>Service;
+import <xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="$tableFormatNameUpperFirst"/>Service;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 import org.quickbundle.third.excel.StatisticExport;
@@ -57,10 +57,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(value = "/<xsl:value-of select="@tableDirName"/>")
-public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implements <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller implements <xsl:value-of select="$ITableNameConstants"/> {
 
     @Autowired
-    private <xsl:value-of select="tableFormatNameUpperFirst"/>Service <xsl:value-of select="tableFormatNameLowerFirst"/>Service;
+    private <xsl:value-of select="$tableFormatNameUpperFirst"/>Service <xsl:value-of select="tableFormatNameLowerFirst"/>Service;
     
     /**
      * 简单查询，分页显示，支持表单回写
@@ -75,7 +75,7 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implem
         model.addAttribute(REQUEST_QUERY_CONDITION, queryCondition);
         model.addAttribute(REQUEST_BEANS, beans);  //把结果集放入request
         model.addAttribute(REQUEST_WRITE_BACK_FORM_VALUES, RmVoHelper.getMapFromRequest((HttpServletRequest) request));  //回写表单
-        return "<xsl:value-of select="$jspSourceTableDir"/>/list<xsl:value-of select="tableFormatNameUpperFirst"/>";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/list<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
     
     /**
@@ -85,7 +85,7 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implem
     public String insertForm(Model model) {
         model.addAttribute("bean", new <xsl:value-of select="$TableNameVo"/>());
         model.addAttribute("action", "insert");
-        return "<xsl:value-of select="$jspSourceTableDir"/>/insert<xsl:value-of select="tableFormatNameUpperFirst"/>";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/insert<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
     
     /**
@@ -109,7 +109,7 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implem
         <xsl:value-of select="$TableNameVo"/> bean = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.get(new Long(id));
         model.addAttribute(REQUEST_BEAN, bean);  //把vo放入request
         model.addAttribute("action", "update");
-        return "<xsl:value-of select="$jspSourceTableDir"/>/insert<xsl:value-of select="tableFormatNameUpperFirst"/>";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/insert<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
     
     /**
@@ -154,7 +154,7 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implem
         if(RM_YES.equals(request.getParameter(REQUEST_IS_READ_ONLY))) {
             model.addAttribute(REQUEST_IS_READ_ONLY, request.getParameter(REQUEST_IS_READ_ONLY));
         }
-        return "<xsl:value-of select="$jspSourceTableDir"/>/detail<xsl:value-of select="tableFormatNameUpperFirst"/>";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/detail<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
     
     /**
@@ -164,7 +164,7 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implem
     public String reference(Model model, HttpServletRequest request) {
         list(model, request);
         model.addAttribute(REQUEST_REFERENCE_INPUT_TYPE, request.getParameter(REQUEST_REFERENCE_INPUT_TYPE));  //传送输入方式,checkbox或radio
-        return "<xsl:value-of select="$jspSourceTableDir"/>/util/reference<xsl:value-of select="tableFormatNameUpperFirst"/>";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/util/reference<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
 
     /**
@@ -179,7 +179,7 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implem
         StatisticExport sh = new StatisticExport(beans, rowKeyField, columnKeyField, "父消息ID\\主键");
         model.addAttribute(REQUEST_STATISTIC_HANDLER, sh);  //把结果集放入request
         model.addAttribute(REQUEST_WRITE_BACK_FORM_VALUES, RmVoHelper.getMapFromRequest((HttpServletRequest) request));  //回写表单
-        return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="tableFormatNameUpperFirst"/>_table";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_table";
     }
     
     /**
@@ -196,21 +196,21 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implem
      */
     @RequestMapping(value = "statistic/chart")
     public String statisticChart(Model model) {
-        return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="tableFormatNameUpperFirst"/>_chart";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_chart";
     }
     /**
      * Flash式统计
      */
     @RequestMapping(value = "statistic/flash")
     public String statisticFlash(Model model) {
-        return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="tableFormatNameUpperFirst"/>_flash";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_flash";
     }
     /**
      * Flash式统计
      */
     @RequestMapping(value = "statistic/flash/data")
     public String statisticFlashData(Model model) {
-        return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="tableFormatNameUpperFirst"/>_flashData";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_flashData";
     }
     
     /**
@@ -218,7 +218,7 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implem
      */
     @RequestMapping(value = "import", method = RequestMethod.GET)
     public String importDataForm(Model model) {
-        return "<xsl:value-of select="$jspSourceTableDir"/>/import<xsl:value-of select="tableFormatNameUpperFirst"/>";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/import<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
     /**
      * 执行导入
@@ -226,14 +226,14 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>Controller implem
     @RequestMapping(value = "import", method = RequestMethod.POST)
     public String importData(Model model) {
         model.addAttribute("isSubmit", "1");
-        return "<xsl:value-of select="$jspSourceTableDir"/>/import<xsl:value-of select="tableFormatNameUpperFirst"/>";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/import<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
     /**
      * 跳转到Ajax页
      */
     @RequestMapping(value = "ajax")
     public String ajax(Model model) {
-        return "<xsl:value-of select="$jspSourceTableDir"/>/ajax/list<xsl:value-of select="tableFormatNameUpperFirst"/>";
+        return "<xsl:value-of select="$jspSourceTableDir"/>/ajax/list<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
 
     

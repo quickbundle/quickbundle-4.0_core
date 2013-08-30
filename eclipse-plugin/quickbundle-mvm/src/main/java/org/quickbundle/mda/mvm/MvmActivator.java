@@ -1,12 +1,5 @@
 package org.quickbundle.mda.mvm;
 
-import java.io.File;
-import java.net.URL;
-
-import javax.management.RuntimeErrorException;
-
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 

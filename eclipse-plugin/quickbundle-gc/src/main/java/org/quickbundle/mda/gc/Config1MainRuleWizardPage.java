@@ -640,9 +640,8 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
         baseTargetPath_java.addAttribute("baseTargetPath", javaFileRealPath.getText());
         baseTargetPath_jsp.addAttribute("baseTargetPath", getMContainerText("webAppName") + "/" + jspSourcePath.getText());
         {  //循环更新conf类型的baseTargetPath属性
-            java.util.List lBaseTargetPath_conf = gcRule.getMainRule().selectNodes("/rules/codegen/files[@filesType='config']");
-            for(Iterator itLBaseTargetPath_conf = lBaseTargetPath_conf.iterator(); itLBaseTargetPath_conf.hasNext(); ) {
-                Element baseTargetPath_conf = (Element) itLBaseTargetPath_conf.next();
+            java.util.List<Element> lBaseTargetPath_conf = gcRule.getMainRule().selectNodes("/rules/codegen/files[@filesType='config']");
+            for(Element baseTargetPath_conf : lBaseTargetPath_conf) {
                 String appendPath = baseTargetPath_conf.valueOf("./@appendPath");
                 baseTargetPath_conf.addAttribute("baseTargetPath", getMContainerText("webAppName") + "/" + appendPath);
             }

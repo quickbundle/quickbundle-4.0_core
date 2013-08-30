@@ -53,8 +53,8 @@ public class CopyProjectEngine {
 	public void doFinish(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask("preparing...", 1);
 		String strSource = gpRule.getProjectTemplatePath().toString();
-		Map<String, String> mReplaceInFile = getKeywordReplaceInFile();
-		Map<String, String> mReplacePath = getKeywordReplacePath();
+//		Map<String, String> mReplaceInFile = getKeywordReplaceInFile();
+//		Map<String, String> mReplacePath = getKeywordReplacePath();
 		Set<String> sFileType = getFilterFileType();
 		QbGenerateProjectPlugin.log("strSource:" + RmXmlHelper.formatToFile(strSource));
 		globalTotalFileSum = getFileSum(RmXmlHelper.formatToFile(strSource));
@@ -67,8 +67,9 @@ public class CopyProjectEngine {
 		monitor.done();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Map<String, String> getKeywordReplaceInFile() {
-		Map<String, String> result = new HashMap();
+		Map<String, String> result = new HashMap<String, String>();
 		List<Element> items = gpRule.getProjectRule().selectNodes("/rules/keywordReplace/items/item");
 		for(Element item : items) {
 			result.put(item.valueOf("@keyword"), item.valueOf("text()"));
@@ -76,8 +77,9 @@ public class CopyProjectEngine {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Map<String, String> getKeywordReplacePath() {
-		Map<String, String> result = new HashMap();
+		Map<String, String> result = new HashMap<String, String>();
 		List<Element> items = gpRule.getProjectRule().selectNodes("/rules/keywordReplace/items/item[@replacePath='true']");
 		for(Element item : items) {
 			result.put(item.valueOf("@keyword"), item.valueOf("text()"));
@@ -90,6 +92,7 @@ public class CopyProjectEngine {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private Set<String> getFilterFileType() {
 		Set<String> sFileType = new HashSet<String>();
 		List<Element> lFileAffix = gpRule.getProjectRule().selectNodes("/rules/keywordReplace/fileFilter/fileAffix");
@@ -206,6 +209,7 @@ public class CopyProjectEngine {
 	 * @param monitor
 	 * @param thisReplacedFile
 	 */
+	@SuppressWarnings("unchecked")
 	private void copySingleFile(File sourceFile, String targetFile, Set<String> sFileType, IProgressMonitor monitor,
 			String thisReplacedFile) {
 		FileInputStream input = null;
@@ -230,7 +234,7 @@ public class CopyProjectEngine {
 				}
 				String fileType = thisReplacedFile.substring(dotPos + 1);
 				if (sFileType.contains(fileType) || fileNeedCopyType == 1) {
-					Map<String, String[]> mToBeReplaceKey = new HashMap();
+					Map<String, String[]> mToBeReplaceKey = new HashMap<String, String[]>();
 					String thisFileEncode = RmConfig.defaultEncode();
 					if (fileNeedCopyType == 1) {
 						List<Node> lNotNeedModuleFileKey = gpRule.getProjectRule().selectNodes("/rules/modules/module[@isBuild='false']/file[count(key)>0]");
@@ -364,6 +368,7 @@ public class CopyProjectEngine {
 	 * @param sourceFile
 	 * @return 0 不需要, 1 需要但要过滤未选择模块的key值, 2 Stream方式直接拷贝(文件名可能经过webAppName过滤 )
 	 */
+	@SuppressWarnings("unchecked")
 	private int fileNeedCopy(File sourceFile) {
 		String uriSourceFile = getFileEndPart(sourceFile);
 		RmXmlHelper.formatToUrl(sourceFile.toString());

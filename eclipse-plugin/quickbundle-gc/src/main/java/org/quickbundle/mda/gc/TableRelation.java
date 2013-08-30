@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.eclipse.swt.widgets.Canvas;

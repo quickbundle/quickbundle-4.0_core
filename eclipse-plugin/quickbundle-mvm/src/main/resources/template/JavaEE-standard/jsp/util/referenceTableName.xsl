@@ -30,7 +30,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-    var rmActionName = "<xsl:value-of select="tableFormatNameUpperFirst"/>Action";
+    var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>Action";
     function simpleQuery_onClick(){  //简单的模糊查询
         form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/reference";
         form.submit();

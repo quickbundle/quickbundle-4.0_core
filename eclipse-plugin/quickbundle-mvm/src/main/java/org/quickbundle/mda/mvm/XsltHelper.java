@@ -161,7 +161,7 @@ public class XsltHelper {
                 }
             }
             if(rowIsUnique) { //如果每一行数据不能重复
-                Set sOutputFileRow = new HashSet();
+                Set<String> sOutputFileRow = new HashSet<String>();
                 String[] aOutputFileRow = outputFileStr.toString().split("\n");
                 for (int i = 0; i < aOutputFileRow.length; i++) {
                     if(aOutputFileRow[i].trim().length() > 0) {

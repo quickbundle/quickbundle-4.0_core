@@ -6,7 +6,7 @@
 	<xsl:output method="text" encoding="UTF-8" escape-uri-attributes="yes"/>
 	<!--处理table-->
 	<xsl:template match="table[1]">
-<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="tableFormatNameUpperFirst"/>Service"%>
+<xsl:value-of select="$charLt"/>%@page import="<xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="$tableFormatNameUpperFirst"/>Service"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.third.fileupload.RmUploadHelper"%>
 <xsl:value-of select="$charLt"/>%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <xsl:value-of select="$charLt"/>%@page import="java.io.File"%>
@@ -56,7 +56,7 @@
             });
             if(rtVo.getErrorMsg() == null) {
                 <xsl:value-of select="$TableNameVo"/>[] diseaseVos = (<xsl:value-of select="$TableNameVo"/>[])rtVo.getLData().toArray(new <xsl:value-of select="$TableNameVo"/>[0]);
-                <xsl:value-of select="tableFormatNameUpperFirst"/>Service service = RmBeanFactory.getBean(<xsl:value-of select="tableFormatNameUpperFirst"/>Service.class);
+                <xsl:value-of select="$tableFormatNameUpperFirst"/>Service service = RmBeanFactory.getBean(<xsl:value-of select="$tableFormatNameUpperFirst"/>Service.class);
                 insertSum = service.insert(diseaseVos).length;
         if(rtVo.getRecordSum()-rtVo.getLData().size() > 0) {
             File errorExcel2 = new File(zipFile.getParent() + RmUploadHelper.SYSTEM_FILE_SEPARATOR + RmUploadHelper.getUniqueString() + rtVo.getErrorExcel().getName());
@@ -85,7 +85,7 @@
         if(!getConfirm()) {  //如果用户在确认对话框中点"取消"
             return false;
         }
-        form.action="import<xsl:value-of select="tableFormatNameUpperFirst"/>.jsp";
+        form.action="import<xsl:value-of select="$tableFormatNameUpperFirst"/>.jsp";
         form.submit();
     }
 <xsl:value-of select="$charLt"/>/script>

@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
-import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="tableFormatNameUpperFirst"/>Dao;
+import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao;
 import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Dao;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
@@ -37,10 +37,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 //默认将类中的所有public函数纳入事务管理
 @Transactional(readOnly = true)
-public class <xsl:value-of select="tableFormatNameUpperFirst"/>Service implements <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implements <xsl:value-of select="$ITableNameConstants"/> {
 
     @Autowired
-    private <xsl:value-of select="tableFormatNameUpperFirst"/>Dao <xsl:value-of select="tableFormatNameLowerFirst"/>Dao;
+    private <xsl:value-of select="$tableFormatNameUpperFirst"/>Dao <xsl:value-of select="tableFormatNameLowerFirst"/>Dao;
     
     @Autowired
     private <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Dao <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao;

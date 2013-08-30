@@ -42,6 +42,7 @@ public class CustomProjectWizardPage extends WizardPage {
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
+	@SuppressWarnings("unchecked")
 	public void createControl(Composite parent) {
 		final int columns = 3; // 定义列数
 		Composite container = null;
@@ -135,6 +136,7 @@ public class CustomProjectWizardPage extends WizardPage {
 		setControl(container);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void createKeywordReplace(Composite container) {
 		List<Element> lKeywordReplace = gpRule.getProjectRule().selectNodes("/rules/keywordReplace/items/item");
 		for(Element kp : lKeywordReplace) {

@@ -23,7 +23,7 @@
         session.setAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION, request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION).toString());  //把查询条件放到session中
         RmPageVo pageVo = (RmPageVo)request.getAttribute("RM_PAGE_VO");
         session.setAttribute("RECORD_COUNT", String.valueOf(pageVo.getRecordCount()));
-        response.sendRedirect(request.getContextPath() + "/modules/<xsl:value-of select="@tableDirName"/>/export<xsl:value-of select="tableFormatNameUpperFirst"/>_custom.jsp");  //跳转到定制导出页面
+        response.sendRedirect(request.getContextPath() + "/modules/<xsl:value-of select="@tableDirName"/>/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_custom.jsp");  //跳转到定制导出页面
         return;
     }
 %>

@@ -22,9 +22,9 @@
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmDateHelper"%>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
-<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="tableFormatNameUpperFirst"/>Service" %>
+<xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="$tableFormatNameUpperFirst"/>Service" %>
 <xsl:value-of select="$charLt"/>%
-    <xsl:value-of select="tableFormatNameUpperFirst"/>Service service = RmBeanFactory.getBean(<xsl:value-of select="tableFormatNameUpperFirst"/>Service.class);
+    <xsl:value-of select="$tableFormatNameUpperFirst"/>Service service = RmBeanFactory.getBean(<xsl:value-of select="$tableFormatNameUpperFirst"/>Service.class);
     List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lResult = null;  //定义结果列表的List变量
     String queryCondition = request.getParameter("queryCondition");
     if(request.getParameterValues("export_all") == null) {

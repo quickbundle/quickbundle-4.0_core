@@ -6,7 +6,7 @@
 			<tableTo xmlName="RM_FUNCTION_NODE.xml">RM_FUNCTION_NODE</tableTo>
 		</tableTos>
 	</database>
-	<java projectName="" webAppName="" authorName="白小勇" javaPackageName="com.helloworld" javaFileRealPath="src/main/java/com/helloworld" jspSourcePath="helloworld"/>
+	<java projectName="" webAppName="" authorName="白小勇" javaPackageName="com.helloworld" javaFileRealPath="src/main/java/com/helloworld" jspSourcePath="WEB-INF/jsp/helloworld"/>
 	<codegen baseProjectPath="" toTableNameKeyword="TableName">
 		<!--定义要生成的文件列表，分java、jsp、配置文件3种-->
 		<files baseTargetPath="src/main/java/org/quickbundle/test/rm" filesType="java" />

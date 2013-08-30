@@ -11,7 +11,7 @@
 <xsl:value-of select="$charLt"/>!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<xsl:value-of select="$charLt"/>mapper namespace="<xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="tableFormatNameUpperFirst"/>Dao">
+<xsl:value-of select="$charLt"/>mapper namespace="<xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao">
 
   <xsl:value-of select="$charLt"/>insert id="insert" parameterType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
     insert into <xsl:value-of select="@tableName"/> ( 

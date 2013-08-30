@@ -28,7 +28,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-    var rmActionName = "<xsl:value-of select="tableFormatNameUpperFirst"/>Action";
+    var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>Action";
     function insert_onClick(){  //插入单条数据
         form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/insert";
         form.submit();
@@ -77,7 +77,7 @@
     <xsl:value-of select="$charLt"/>tr>
         <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("parent_message_id")%><xsl:value-of select="$charLt"/>/td>
         <xsl:value-of select="$charLt"/>td>
-            <xsl:value-of select="$charLt"/>input type="text" class="text_field_reference"  hiddenInputId="parent_message_id" name="parent_message_id_name" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("parent_message_id")%>" value="" /><xsl:value-of select="$charLt"/>input type="hidden" name="parent_message_id"><xsl:value-of select="$charLt"/>img class="refButtonClass" src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/images/09.gif" onclick="javascript:getReference(new Array(form.parent_message_id, form.parent_message_id_name), '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/', '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="tableFormatNameUpperFirst"/>Action.do?cmd=queryReference<xsl:value-of select="$charAmp"/>referenceInputType=radio');"/>
+            <xsl:value-of select="$charLt"/>input type="text" class="text_field_reference"  hiddenInputId="parent_message_id" name="parent_message_id_name" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("parent_message_id")%>" value="" /><xsl:value-of select="$charLt"/>input type="hidden" name="parent_message_id"><xsl:value-of select="$charLt"/>img class="refButtonClass" src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/images/09.gif" onclick="javascript:getReference(new Array(form.parent_message_id, form.parent_message_id_name), '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/', '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableFormatNameUpperFirst"/>Action.do?cmd=queryReference<xsl:value-of select="$charAmp"/>referenceInputType=radio');"/>
         <xsl:value-of select="$charLt"/>/td>
         <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>/td>
         <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>/td>

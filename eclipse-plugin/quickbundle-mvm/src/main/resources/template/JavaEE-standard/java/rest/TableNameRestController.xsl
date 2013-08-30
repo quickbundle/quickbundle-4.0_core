@@ -21,9 +21,9 @@ import javax.validation.Validator;
 
 import org.quickbundle.base.web.page.RmPageVo;
 import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
-import <xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="tableFormatNameUpperFirst"/>Service;
+import <xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="$tableFormatNameUpperFirst"/>Service;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
-import <xsl:value-of select="$javaPackageTableDir"/>.web.<xsl:value-of select="tableFormatNameUpperFirst"/>Controller;
+import <xsl:value-of select="$javaPackageTableDir"/>.web.<xsl:value-of select="$tableFormatNameUpperFirst"/>Controller;
 import org.quickbundle.third.spring.http.RmResponseEntityFactory;
 import org.quickbundle.tools.helper.RmJspHelper;
 import org.quickbundle.tools.helper.RmPopulateHelper;
@@ -56,10 +56,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 @RequestMapping(value = "/api/<xsl:value-of select="@tableDirName"/>")
-public class <xsl:value-of select="tableFormatNameUpperFirst"/>RestController implements <xsl:value-of select="$ITableNameConstants"/> {
+public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController implements <xsl:value-of select="$ITableNameConstants"/> {
 
     @Autowired
-    private <xsl:value-of select="tableFormatNameUpperFirst"/>Service <xsl:value-of select="tableFormatNameLowerFirst"/>Service;
+    private <xsl:value-of select="$tableFormatNameUpperFirst"/>Service <xsl:value-of select="tableFormatNameLowerFirst"/>Service;
 
     @Autowired
     private Validator validator;
@@ -72,7 +72,7 @@ public class <xsl:value-of select="tableFormatNameUpperFirst"/>RestController im
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<xsl:value-of select="$charLt"/>String, Object> list(HttpServletRequest request) {
-        String queryCondition = <xsl:value-of select="tableFormatNameUpperFirst"/>Controller.getQueryCondition(request);  //从request中获得查询条件
+        String queryCondition = <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller.getQueryCondition(request);  //从request中获得查询条件
         RmPageVo pageVo = RmJspHelper.transctPageVo(request, <xsl:value-of select="tableFormatNameLowerFirst"/>Service.getCount(queryCondition));
         String orderStr = RmJspHelper.getOrderStr(request);  //得到排序信息
         List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.list(queryCondition, orderStr, pageVo.getStartIndex(), pageVo.getPageSize());  //按条件查询全部,带排序

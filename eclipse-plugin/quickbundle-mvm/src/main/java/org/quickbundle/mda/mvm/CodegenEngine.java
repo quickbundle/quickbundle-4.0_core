@@ -1,8 +1,4 @@
 /*
- * 系统名称:Quickbundle.org --> au
- * 
- * 文件名称: com.use.au.tools.test.tree.bs.impl --> XmlHelperTools.java
- * 
  * 功能描述:
  * 
  * 版本历史: 2005-11-19 19:16:49 创建1.0.0版 (baixiaoyong)
@@ -87,13 +83,14 @@ public class CodegenEngine {
         return filterTableName;
     }
 
-    public Object[] generateFiles(IProgressMonitor monitor) throws DocumentException, MalformedURLException {
+    @SuppressWarnings("unchecked")
+	public Object[] generateFiles(IProgressMonitor monitor) throws DocumentException, MalformedURLException {
         Object[] aObj = new Object[2];
         int index = 0; //统计文件数
         StringBuilder returnLog = new StringBuilder();
         List<Element> lTableXmls = mainRule.selectNodes("/rules/database/tableTos/tableTo");
         if(monitor != null) {
-            monitor.beginTask("begin generate code......", mainRule.selectNodes(".//file").size() * lTableXmls.size());
+            monitor.beginTask("begin generate code......", mvmDoc.selectNodes(".//file").size() * lTableXmls.size());
         }
         for (Element thisTableTo : lTableXmls) {
         	int result = doGenerate(monitor, thisTableTo, returnLog);
@@ -105,7 +102,8 @@ public class CodegenEngine {
         return aObj;
     }
     
-    private int doGenerate(IProgressMonitor monitor, Element thisTableTo, StringBuilder returnLog) throws MalformedURLException, DocumentException {
+    @SuppressWarnings("unchecked")
+	private int doGenerate(IProgressMonitor monitor, Element thisTableTo, StringBuilder returnLog) throws MalformedURLException, DocumentException {
     	int result = 0;
     	String toTableNameKeyword = mainRule.valueOf("/rules/codegen/@toTableNameKeyword");
         String originalTableName = thisTableTo.getText();
@@ -138,7 +136,7 @@ public class CodegenEngine {
             		if("".equals(eleFile.valueOf("@outputFile"))) {
             			XsltHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, outputFolder);
             		} else {
-            			if("".equals(outputFolder)) {
+            			if("".equals(eleFile.valueOf("@outputFolder"))) {
             				outputFolder = new File(RmFileHelper.formatToFile(outputFile)).getParent();
             			}
             			XsltHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, outputFolder, outputFile);
@@ -163,8 +161,8 @@ public class CodegenEngine {
             result++;
             if(monitor != null) {
                 monitor.worked(1);
-                String tempStr = null;
                 String displayOutputFile = RmXmlHelper.formatToUrlNoPrefix(outputFile);
+                String tempStr = displayOutputFile;
                 if(displayOutputFile.length() > 140) {
                     tempStr = displayOutputFile.substring(0,12) + "..." + displayOutputFile.substring(displayOutputFile.length()-125);
                 }

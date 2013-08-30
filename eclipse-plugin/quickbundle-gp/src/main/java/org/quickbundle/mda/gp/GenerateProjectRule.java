@@ -1,6 +1,5 @@
 package org.quickbundle.mda.gp;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.List;
@@ -25,7 +24,8 @@ public class GenerateProjectRule {
     	init();
 	}
     
-    private void init() {
+    @SuppressWarnings("unchecked")
+	private void init() {
         try { //Plugin的静态变量必须由Wizard产生
         	templatePath = RmXmlHelper.formatToUrl(QbGenerateProjectPlugin.getInstallLocation().toOSString()) + "t";
         	mainRule = RmXmlHelper.parse(templatePath + "/generateProject.xml");

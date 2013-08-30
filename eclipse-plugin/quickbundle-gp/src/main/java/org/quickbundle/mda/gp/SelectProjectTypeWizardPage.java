@@ -39,6 +39,7 @@ public class SelectProjectTypeWizardPage extends WizardPage {
 		setDescription("请先选择项目骨架的类型");
 		gpRule = generateProjectWizard.getGpRule();
 	}
+	@SuppressWarnings("unchecked")
 	public void createControl(Composite parent) {
 		int columns = 5; //定义列数
 		

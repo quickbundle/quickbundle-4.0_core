@@ -26,7 +26,7 @@
 <xsl:value-of select="$charLt"/>script type="text/javascript">
     var rmJspPath = "";
     function export_onClick(){  //导出Excel
-        form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/modules/<xsl:value-of select="@tableDirName"/>/<xsl:value-of select="@tableDirName"/>" + rmJspPath + "/export<xsl:value-of select="tableFormatNameUpperFirst"/>_excel.jsp";
+        form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/modules/<xsl:value-of select="@tableDirName"/>/<xsl:value-of select="@tableDirName"/>" + rmJspPath + "/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_excel.jsp";
         clickAllSelectMultiple(form.custom_column);
         form.submit();
     }
