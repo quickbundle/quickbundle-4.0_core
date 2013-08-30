@@ -1,5 +1,7 @@
 package org.quickbundle.mda.template;
 
+import java.sql.Timestamp;
+
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 public class JavaTemplateHelper {
@@ -10,7 +12,7 @@ public class JavaTemplateHelper {
         	.append(RmXmlHelper.formatToUrlNoPrefix(outputFile))
         	.append("\n")
         	.append("//代码生成时,系统时间:")
-        	.append(RmXmlHelper.getSysDateTime())
+        	.append(getSysDateTime())
         	.append(", 操作系统用户:")
         	.append(System.getProperty("user.name"))
         	.append("\n\n");
@@ -30,12 +32,16 @@ public class JavaTemplateHelper {
     	result.append("/*\n")
     		.append(" * 功能描述:\n")
     		.append(" * 版本历史: ")
-    		.append(RmXmlHelper.getSysDateTime())
+    		.append(getSysDateTime())
     		.append(" 创建1.0.0版 (")
     		.append(authorName)
     		.append(")\n")
     		.append(" */");
         return result.toString();
+    }
+    
+    private static String getSysDateTime() {
+    	return new Timestamp(System.currentTimeMillis()).toString().substring(0,19);
     }
 
     /**

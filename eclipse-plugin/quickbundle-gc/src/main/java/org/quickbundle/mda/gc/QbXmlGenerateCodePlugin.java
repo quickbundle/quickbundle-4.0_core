@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.quickbundle.tools.helper.io.RmFileHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 
@@ -31,7 +32,7 @@ public class QbXmlGenerateCodePlugin extends AbstractUIPlugin {
     public static String baseConfigPath = null;
 
     //本插件的工作目录
-    public static String qbGenerateCodeHome = RmXmlHelper.initSelfDir(RmXmlHelper.formatToUrl(System.getProperty("user.home")) + File.separator + ".quickbundle/");
+    public static String qbGenerateCodeHome = RmFileHelper.initSelfDir(RmXmlHelper.formatToUrl(System.getProperty("user.home")) + File.separator + ".quickbundle/");
 
     /**
      * The constructor.

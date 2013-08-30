@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -25,13 +26,17 @@ public class XsltHelper {
         	.append(RmXmlHelper.formatToUrlNoPrefix(outputFile))
         	.append("\n")
         	.append("//代码生成时,系统时间:")
-        	.append(RmXmlHelper.getSysDateTime())
+        	.append(getSysDateTime())
         	.append(", 操作系统用户:")
         	.append(System.getProperty("user.name"))
         	.append("\n\n");
         return result.toString();
     }
 
+    private static String getSysDateTime() {
+    	return new Timestamp(System.currentTimeMillis()).toString().substring(0,19);
+    }
+    
     /**
      * 功能:输出转化文件
      * 
