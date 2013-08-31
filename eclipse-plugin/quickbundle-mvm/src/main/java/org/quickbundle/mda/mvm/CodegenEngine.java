@@ -51,12 +51,12 @@ public class CodegenEngine {
     private String quickbundleHome = null;
     
     private Document mvmDoc = null;
-
+    
     /**
      * 构造函数:
      * 
-     * @param initXml
-     * @param baseXsltSourcePath
+     * @param ruleXml
+     * @param codegenConfig
      */
     public CodegenEngine(String ruleXml) {
         try {
@@ -65,9 +65,14 @@ public class CodegenEngine {
             //初始化java路径
             this.templatePath = RmXmlHelper.formatToUrl(FileLocator.toFileURL(this.getClass().getClassLoader().getResource("template")).toString());
             this.baseProjectPath = RmXmlHelper.formatToUrl(mainRule.getRootElement().valueOf("//rules/codegen//@baseProjectPath"));
-            this.mvmDoc = RmXmlHelper.parse(this.templatePath + "/mvm.xml");
+            String codegenConfig = mainRule.valueOf("/rules/codegen/mvms/mvm[contextName=../@contextName]/@codegenConfig");
+            if(codegenConfig == null || codegenConfig.length() == 0) {
+            	codegenConfig = mainRule.valueOf("/rules/codegen/mvms/mvm[1]/@codegenConfig");
+            }
+            this.mvmDoc = RmXmlHelper.parse(this.templatePath + "/" + codegenConfig);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -80,6 +85,7 @@ public class CodegenEngine {
             filterTableName = tempResultsDoc.valueOf("/results/result[position()=1]/@tableFormatNameUpperFirst");
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return filterTableName;
@@ -220,7 +226,7 @@ public class CodegenEngine {
     }
 
     /**
-     * 功能: java -jar ranminXmlGenerateCode.jar C:\Docume~1\baixiaoyong\LocalS~1\Temp\ranminXmlGenerateCode\rule***.xml
+     * 功能: java -jar ranminXmlGenerateCode.jar C:\Docume~1\Administrator\LocalS~1\Temp\ranminXmlGenerateCode\rule***.xml
      *
      * @param args
      */

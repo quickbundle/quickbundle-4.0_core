@@ -62,11 +62,11 @@ public class RmTransformHelper {
 			transformer.transform(new StreamSource(myTableXml), new StreamResult(outer));
 			returnStr = bytesStream.toString(RmConfig.defaultEncode());
 		} catch (TransformerConfigurationException e) {
-			throw new RuntimeException(e.toString(), e); 
+			throw new RuntimeException(e); 
 		} catch (TransformerException e) {
-			throw new RuntimeException(e.toString(), e); 
+			throw new RuntimeException(e); 
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e.toString(), e); 
+			throw new RuntimeException(e); 
 		} finally {
 			try {
 				if (outer != null) {
@@ -95,11 +95,11 @@ public class RmTransformHelper {
 			transformer.transform(new DocumentSource(xmlDoc), new StreamResult(outer));
 			returnStr = bytesStream.toString(RmConfig.defaultEncode());
 		} catch (TransformerConfigurationException e) {
-			throw new RuntimeException("", e); 
+			throw new RuntimeException(e); 
 		} catch (TransformerException e) {
-			throw new RuntimeException("", e); 
+			throw new RuntimeException(e); 
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("", e); 
+			throw new RuntimeException(e); 
 		} finally {
 			try {
 				if (outer != null) {

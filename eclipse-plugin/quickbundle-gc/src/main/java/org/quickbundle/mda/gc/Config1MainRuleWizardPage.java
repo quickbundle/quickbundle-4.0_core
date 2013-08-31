@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
-import org.quickbundle.tools.helper.RmStringHelper;
 import org.quickbundle.tools.helper.io.RmFileHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
@@ -62,7 +61,7 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
     private ISelection selection;
 
     //定义的容器
-    private Map mContainer = null;
+    private Map<String, Object> mContainer = null;
 
     private GenerateCodeRule gcRule = null;
     private PdmParser pdmParser = null;
@@ -75,11 +74,9 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
         super("mainRuleWizardPage");
         setTitle("生成代码 1/3");
         this.selection = selection;
-        mContainer = new HashMap();
         this.gcRule = currentWizard.getGcRule();
         gcRule.setConfig1MainRuleWizardPage(this);
-        //初始化隐藏变量
-        addMContainer("projectName", "");
+        mContainer = new HashMap<String, Object>();
     }
 
     /**
@@ -110,8 +107,8 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
 
         createListTableArea(container, columns);
 
-        createProjectPropertiesArea(container, columns);
-
+        createBaseProjectPath(container, columns);
+        
         //定义Next事件
         WizardDialog dialog = (WizardDialog) getContainer();  
         dialog.addPageChangingListener(new IPageChangingListener() {  
@@ -425,108 +422,38 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
 		
 	}
 
-    private void createProjectPropertiesArea(Composite container_, int columns) {
-    	GridData gd = null;
-    	
-        //新的1行，列出表的画布
-        Canvas container = new Canvas(container_, SWT.NONE);
-        gd = new GridData();
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.FILL;
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = columns;
-        container.setLayoutData(gd);
-        GridLayout layoutCanvas = new GridLayout();
-        layoutCanvas.numColumns = 7;
-        container.setLayout(layoutCanvas);
-        
-        //新的1行，项目路径
-        new Label(container, SWT.NULL).setText("项目路径");
-        Text baseProjectPath = new Text(container, SWT.BORDER | SWT.SINGLE);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.widthHint = 300;
-        baseProjectPath.setLayoutData(gd);
-        addMContainer("baseProjectPath", baseProjectPath);
-        Button button_baseProjectPath = new Button(container, SWT.PUSH);
-        button_baseProjectPath.setText("浏览...");
-        button_baseProjectPath.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                handleBrowse("baseProjectPath");
-            }
-        });
-
-        new Label(container, SWT.NONE).setText("web应用名");
-        Text webAppName = new Text(container, SWT.SINGLE | SWT.BORDER);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalAlignment = GridData.FILL;
-        webAppName.setLayoutData(gd);
-        addMContainer("webAppName", webAppName);
-
-        Label label_authorName = new Label(container, SWT.NONE);
-        label_authorName.setText("注释作者");
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalAlignment = GridData.END;
-        label_authorName.setLayoutData(gd);
-        
-        Text authorName = new Text(container, SWT.SINGLE | SWT.BORDER);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalAlignment = GridData.FILL;
-        authorName.setLayoutData(gd);
-        addMContainer("authorName", authorName);
-
-        new Label(container, SWT.NULL).setText("java路径");
-        Text javaFileRealPath = new Text(container, SWT.BORDER | SWT.SINGLE);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        javaFileRealPath.setLayoutData(gd);
-        addMContainer("javaFileRealPath", javaFileRealPath);
-        Button button_javaFileRealPath = new Button(container, SWT.PUSH);
-        button_javaFileRealPath.setText("浏览...");
-        button_javaFileRealPath.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                handleBrowse("javaFileRealPath");
-            }
-        });
-        
-        Label labelJavaPackageName = new Label(container, SWT.NULL);
-        labelJavaPackageName.setText("java包名");
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalAlignment = GridData.END;
-        labelJavaPackageName.setLayoutData(gd);
-        
-        Text javaPackageName = new Text(container, SWT.BORDER | SWT.SINGLE);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.widthHint = 150;
-        javaPackageName.setLayoutData(gd);
-        addMContainer("javaPackageName", javaPackageName);
-//        Button button_javaPackageName = new Button(container, SWT.PUSH);
-//        button_javaPackageName.setText("浏览...");
-//        button_javaPackageName.addSelectionListener(new SelectionAdapter() {
-//            public void widgetSelected(SelectionEvent e) {
-//                handleBrowse("javaPackageName");
-//            }
-//        });
-
-        Label labelJspDir = new Label(container, SWT.NULL);
-        labelJspDir.setText("jsp目录");
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalAlignment = GridData.END;
-        labelJspDir.setLayoutData(gd);
-        
-        Text jspSourcePath = new Text(container, SWT.BORDER | SWT.SINGLE);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.widthHint = 150;
-        jspSourcePath.setLayoutData(gd);
-        addMContainer("jspSourcePath", jspSourcePath);
-//        Button button_jspSourcePath = new Button(container, SWT.PUSH);
-//        button_jspSourcePath.setText("浏览...");
-//        button_jspSourcePath.addSelectionListener(new SelectionAdapter() {
-//            public void widgetSelected(SelectionEvent e) {
-//                handleBrowse("jspSourcePath");
-//            }
-//        });
-
+	private void createBaseProjectPath(Composite container, int columns) {
+		GridData gd = null;
+		// 新的1行，项目路径
+		new Label(container, SWT.NULL).setText("项目路径");
+		Text baseProjectPath = new Text(container, SWT.BORDER | SWT.SINGLE);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.widthHint = 600;
+		gd.horizontalSpan = columns - 2;
+		baseProjectPath.setLayoutData(gd);
+		addMContainer("baseProjectPath", baseProjectPath);
+		Button button_baseProjectPath = new Button(container, SWT.PUSH);
+		button_baseProjectPath.setText("浏览...");
+		button_baseProjectPath.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				handleBrowseBaseProjectPath("baseProjectPath");
+			}
+		});
 	}
     
+	protected void handleBrowseBaseProjectPath(String textName) {
+        ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, "请选择目标文件夹");
+        if (dialog.open() == ContainerSelectionDialog.OK) {
+            Object[] result = dialog.getResult();
+            if (result.length == 1) {
+                Path resultPath = (Path) result[0];
+                if ("baseProjectPath".equals(textName)) { //项目根路径
+                    setMContainerText(textName, GcPluginHelper.getProjectRealPath(resultPath.toOSString()));
+                }
+            }
+        }
+	}
+
 	//生成一行分隔线
     public static void createLine(Composite parent, int ncol) {
         Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.BOLD);
@@ -540,7 +467,8 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
      * 初始化，载入相关参数
      */
 
-    private void initialize() {
+    @SuppressWarnings("unchecked")
+	private void initialize() {
         if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
             IStructuredSelection ssel = (IStructuredSelection) selection;
             if (ssel.size() > 1)
@@ -554,27 +482,24 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
                     container = ((IResource) obj).getParent();
                 //自动设置第一个项目路径和项目名
                 setMContainerText("baseProjectPath", GcPluginHelper.getProjectRealPath(container.getFullPath().toString()));
-                setMContainerText("projectName", container.getFullPath().toString().substring(1));
             }
         }
         addCompositeFromXml((Combo) getMContainer("dbProductName"), "/rules/dataType/dbTypes/dbType", gcRule.getMainRule());
-        java.util.List lNodes = gcRule.getMainRule().selectNodes("//@*|node()");
-        int index = 0;
-        for (Iterator itLNodes = lNodes.iterator(); itLNodes.hasNext();) {
-            Node node = (Node) itLNodes.next();
+        java.util.List<Node> lNode = gcRule.getMainRule().selectNodes("//@*|node()");
+        for (Node node : lNode) {
             if (node.getName() != null && node.getName().length() > 0) {
                 setMContainerText(node.getName(), node.getText());
             }
-            index++;
         }
-        addListeners();
+        addSelectTableListeners();
         loadPdm();
     }
 
     /**
      * 功能: 把所有的写回xml中
      */
-    private int writeValueIntoXml() {
+    @SuppressWarnings("unchecked")
+	private int writeValueIntoXml() {
         int count = 0;
         java.util.List<Node> lNode = gcRule.getMainRule().selectNodes("//@*|node()");
         for (Node node : lNode) {
@@ -590,9 +515,9 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
     }
 
     /**
-     * 功能: 添加侦听事件
+     * 功能: 添加选取表的侦听事件
      */
-    private void addListeners() {
+    private void addSelectTableListeners() {
         Button button_left = (Button) getMContainer("button_left");
         Button button_right = (Button) getMContainer("button_right");
         List lTableTo = ((List) getMContainer("tableTo"));
@@ -601,24 +526,21 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
         lTableTo.addListener(SWT.MouseDoubleClick, this);
         lTableTo.addListener(SWT.MouseEnter, this);
 
-        int count = 0;
-        for (Iterator itMContainer = mContainer.keySet().iterator(); itMContainer.hasNext();) {
+        for (Iterator<String> itMContainer = mContainer.keySet().iterator(); itMContainer.hasNext();) {
             String key = String.valueOf(itMContainer.next());
             if (getMContainer(key) instanceof Text) {
                 ((Text) getMContainer(key)).addListener(SWT.Modify, this);
-                //QbXmlGenerateCodePlugin.log("listen the object \"" + key + "\"");
-                count++;
             } else if (getMContainer(key) instanceof Combo) {
                 ((Combo) getMContainer(key)).addListener(SWT.Modify, this);
-                count++;
             } else if (getMContainer(key) instanceof List) {
+            	
             } else {
+            	
             }
             if (getMContainer(key) instanceof Widget) {
                 ((Widget) getMContainer(key)).addListener(SWT.FocusIn, this);
             }
         }
-        QbXmlGenerateCodePlugin.log(count + "个对象加上了修改侦听");
     }
 
     private void refreshLTableStatus() { //刷新状态聚焦
@@ -632,105 +554,111 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
     }
     
     /**
-     * 功能:实现侦听
+     * 功能:实现按钮侦听
      * 
      * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
      * @param event
      */
     public void handleEvent(Event event) {
-        try {
-            Button button_left = (Button) getMContainer("button_left");
-            Button button_right = (Button) getMContainer("button_right");
-            List lTableFrom = ((List) getMContainer("list_tableFrom"));
-            List lTableTo = ((List) getMContainer("tableTo"));
-            List lTableStatus = ((List) getMContainer("list_tableStatus"));
-            this.setErrorMessage(null);
-            if (event.type == SWT.Modify) {
-            	writeValueIntoXml();
+        Button button_left = (Button) getMContainer("button_left");
+        Button button_right = (Button) getMContainer("button_right");
+        List lTableFrom = ((List) getMContainer("list_tableFrom"));
+        List lTableTo = ((List) getMContainer("tableTo"));
+        List lTableStatus = ((List) getMContainer("list_tableStatus"));
+        this.setErrorMessage(null);
+        if (event.type == SWT.Modify) {
+        	writeValueIntoXml();
+        }
+        
+        if ((event.widget == button_right && event.type == SWT.Selection) || (event.widget == lTableFrom && event.type == SWT.MouseDoubleClick)) {
+            int[] aSelection = lTableFrom.getSelectionIndices();
+            for (int i = aSelection.length - 1; i >= 0; i--) {
+                lTableTo.add(lTableFrom.getItem(aSelection[i]));
+                lTableStatus.add("未设置,请双击此表");
+                lTableFrom.remove(aSelection[i]);
             }
-            
-            if ((event.widget == button_right && event.type == SWT.Selection) || (event.widget == lTableFrom && event.type == SWT.MouseDoubleClick)) {
-                int[] aSelection = lTableFrom.getSelectionIndices();
-                for (int i = aSelection.length - 1; i >= 0; i--) {
-                    lTableTo.add(lTableFrom.getItem(aSelection[i]));
-                    lTableStatus.add("未设置,请双击此表");
-                    lTableFrom.remove(aSelection[i]);
-                }
-            }
-            if (event.widget == button_left && event.type == SWT.Selection) { 
-                int[] aSelection = lTableTo.getSelectionIndices();
-                for (int i = aSelection.length - 1; i >= 0; i--) {
-                    { //从rule.xml中删除原计划要生成的表，相当于清空
-                        Node thisTableTo = getNodeFromXmlByText("/rules/database/tableTos/tableTo", lTableTo.getItem(aSelection[i]), gcRule.getMainRule());
-                        if (thisTableTo != null) {
-                            Element thisTableTos = thisTableTo.getParent();
-                            thisTableTos.remove(thisTableTo);
-                        }
-                    }
-                    lTableFrom.add(lTableTo.getItem(aSelection[i]));
-                    lTableTo.remove(aSelection[i]);
-                    lTableStatus.remove(aSelection[i]);
-                }
-            }
-            if (event.widget == lTableTo && event.type == SWT.MouseEnter) {  //目标表区域，鼠标变手
-                final Cursor cursor = new Cursor(this.getShell().getDisplay(), SWT.CURSOR_HAND);
-                lTableTo.setCursor(cursor);
-                dialogChanged();
-            }
-
-            if (event.widget == lTableTo && event.type == SWT.MouseDoubleClick) {
-                if (lTableTo.getFocusIndex() >= 0) {
-                    String currentTable = lTableTo.getItem(lTableTo.getFocusIndex());
-                    File currentTableXmlFile = new File(RmXmlHelper.formatToFile(QbXmlGenerateCodePlugin.qbGenerateCodeHome + "/" + getLongTableXmlName(currentTable)));
-                    if (connectDatabase()) {
-                        try {
-                            if (gcRule.getMTableDocs().get(currentTable) == null) { //如果内存中没有xml
-                            	gcRule.initTableDoc(currentTable, currentTableXmlFile, pdmParser, this);
-                                QbXmlGenerateCodePlugin.log("save file '" + currentTableXmlFile.getPath() + "', before dialog");
-                                RmXmlHelper.saveXmlToPath((Document) gcRule.getMTableDocs().get(currentTable), currentTableXmlFile.getPath());
-
-                            }
-                            { //弹出对话框,并等其点OK后,把值保存回去xml
-                                ConfigTableDialog dialog = new ConfigTableDialog(this.getShell(), this, currentTable, gcRule);
-                                dialog.create();
-                                if (dialog.open() == ContainerSelectionDialog.OK) {
-                                    QbXmlGenerateCodePlugin.log("save file '" + currentTableXmlFile.getPath() + "', after OK");
-                                    RmXmlHelper.saveXmlToPath((Document) gcRule.getMTableDocs().get(currentTable), currentTableXmlFile.getPath());
-                                }
-                            }
-                            lTableStatus.setItem(lTableTo.getFocusIndex(), "finished");
-                            { //删除xml中的已选状态，回写tableTos/@xmlName
-                                Node thisTableTo = getNodeFromXmlByText("/rules/database/tableTos/tableTo", currentTable, gcRule.getMainRule());
-                                if (thisTableTo == null) {
-                                    Element thisTableTos = (Element) gcRule.getMainRule().selectSingleNode("/rules/database/tableTos");
-                                    Element thisTableToEle = thisTableTos.addElement("tableTo");
-                                    thisTableToEle.setText(currentTable);
-                                    thisTableToEle.addAttribute("xmlName", getLongTableXmlName(currentTable));
-                                } else {
-                                    Node thisXmlName = thisTableTo.selectSingleNode("@xmlName");
-                                    thisXmlName.setText(getLongTableXmlName(currentTable));
-                                }
-                            }
-                        } catch (Exception e) {
-                        	e.printStackTrace();
-                            ErrorDialog msgDialog = new ErrorDialog(this.getShell(), "", "不能生成此表", new ResourceStatus(1, "\n从 " + currentTable + " 表生成xml定义文件时错误!\n\n" + e.toString()), 1);
-                            msgDialog.create();
-                            msgDialog.open();
-                        }
+        }
+        if (event.widget == button_left && event.type == SWT.Selection) { 
+            int[] aSelection = lTableTo.getSelectionIndices();
+            for (int i = aSelection.length - 1; i >= 0; i--) {
+                { //从rule.xml中删除原计划要生成的表，相当于清空
+                    Node thisTableTo = getNodeFromXmlByText("/rules/database/tableTos/tableTo", lTableTo.getItem(aSelection[i]), gcRule.getMainRule());
+                    if (thisTableTo != null) {
+                        Element thisTableTos = thisTableTo.getParent();
+                        thisTableTos.remove(thisTableTo);
                     }
                 }
+                lTableFrom.add(lTableTo.getItem(aSelection[i]));
+                lTableTo.remove(aSelection[i]);
+                lTableStatus.remove(aSelection[i]);
             }
-            if (event.type == SWT.FocusIn || event.type == SWT.Modify || event.type == SWT.MouseDoubleClick) {
-                dialogChanged();
-            }
-            
-            if (event.widget == ((Text) getMContainer("pdmPath")) && event.type == SWT.Modify) {
-                loadPdm();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        if (event.widget == lTableTo && event.type == SWT.MouseEnter) {  //目标表区域，鼠标变手
+            final Cursor cursor = new Cursor(this.getShell().getDisplay(), SWT.CURSOR_HAND);
+            lTableTo.setCursor(cursor);
+            dialogChanged();
         }
 
+        if (event.widget == lTableTo && event.type == SWT.MouseDoubleClick) {
+            if (lTableTo.getFocusIndex() >= 0) {
+            	configTableOnDoubleClick(lTableTo, lTableStatus);
+            }
+        }
+        if (event.type == SWT.FocusIn || event.type == SWT.Modify || event.type == SWT.MouseDoubleClick) {
+            dialogChanged();
+        }
+        
+        if (event.widget == ((Text) getMContainer("pdmPath")) && event.type == SWT.Modify) {
+            loadPdm();
+        }
+
+    }
+    
+    /**
+     * 双击lTableTo，弹出配置表的对话框
+     * 
+     * @param lTableTo
+     * @param lTableStatus
+     */
+    private void configTableOnDoubleClick(List lTableTo, List lTableStatus) {
+        String currentTable = lTableTo.getItem(lTableTo.getFocusIndex());
+        File currentTableXmlFile = new File(RmXmlHelper.formatToFile(QbXmlGenerateCodePlugin.qbGenerateCodeHome + "/" + getLongTableXmlName(currentTable)));
+        if (connectDatabase()) {
+            try {
+                if (gcRule.getMTableDocs().get(currentTable) == null) { //如果内存中没有xml
+                	gcRule.initTableDoc(currentTable, currentTableXmlFile, pdmParser, this);
+                    QbXmlGenerateCodePlugin.log("save file '" + currentTableXmlFile.getPath() + "', before dialog");
+                    RmXmlHelper.saveXmlToPath((Document) gcRule.getMTableDocs().get(currentTable), currentTableXmlFile.getPath());
+
+                }
+                { //弹出对话框,并等其点OK后,把值保存回去xml
+                    ConfigTableDialog dialog = new ConfigTableDialog(this.getShell(), this, currentTable, gcRule);
+                    dialog.create();
+                    if (dialog.open() == ContainerSelectionDialog.OK) {
+                        QbXmlGenerateCodePlugin.log("save file '" + currentTableXmlFile.getPath() + "', after OK");
+                        RmXmlHelper.saveXmlToPath((Document) gcRule.getMTableDocs().get(currentTable), currentTableXmlFile.getPath());
+                    }
+                }
+                lTableStatus.setItem(lTableTo.getFocusIndex(), "finished");
+                { //删除xml中的已选状态，回写tableTos/@xmlName
+                    Node thisTableTo = getNodeFromXmlByText("/rules/database/tableTos/tableTo", currentTable, gcRule.getMainRule());
+                    if (thisTableTo == null) {
+                        Element thisTableTos = (Element) gcRule.getMainRule().selectSingleNode("/rules/database/tableTos");
+                        Element thisTableToEle = thisTableTos.addElement("tableTo");
+                        thisTableToEle.setText(currentTable);
+                        thisTableToEle.addAttribute("xmlName", getLongTableXmlName(currentTable));
+                    } else {
+                        Node thisXmlName = thisTableTo.selectSingleNode("@xmlName");
+                        thisXmlName.setText(getLongTableXmlName(currentTable));
+                    }
+                }
+            } catch (Exception e) {
+            	e.printStackTrace();
+                ErrorDialog msgDialog = new ErrorDialog(this.getShell(), "", "不能生成此表", new ResourceStatus(1, "\n从 " + currentTable + " 表生成xml定义文件时错误!\n\n" + e.toString()), 1);
+                msgDialog.create();
+                msgDialog.open();
+            }
+        }
     }
 
     /**
@@ -762,17 +690,17 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
     /**
      * 功能: 从xml中读取参数，初始化combo
      * 
-     * @param lSwt
+     * @param combo
      * @param xPathStr
      * @return
      */
-    public int addCompositeFromXml(Combo lSwt, String xPathStr, Document doc) {
+    @SuppressWarnings("unchecked")
+	private int addCompositeFromXml(Combo combo, String xPathStr, Document doc) {
         int index = 0;
-        java.util.List lNodes = doc.selectNodes(xPathStr);
-        for (Iterator itLNodes = lNodes.iterator(); itLNodes.hasNext();) {
-            Node node = (Node) itLNodes.next();
+        java.util.List<Node> lNode = doc.selectNodes(xPathStr);
+        for (Node node : lNode) {
             if (node.getName() != null && node.getName().length() > 0 && node.getText().length() > 0) {
-                lSwt.add(node.getText());
+            	combo.add(node.getText());
                 index++;
             }
         }
@@ -786,7 +714,8 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
      * @param textValue
      * @return
      */
-    public static Node getNodeFromXmlByText(String xPathStr, String textValue, Document doc) {
+    @SuppressWarnings("unchecked")
+	private static Node getNodeFromXmlByText(String xPathStr, String textValue, Document doc) {
         java.util.List<Node> lNodes = doc.selectNodes(xPathStr);
         Node thisNode = null;
         for (Node node : lNodes) {
@@ -798,93 +727,19 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
     }
 
     /**
-     * 处理按钮事件，从对话框中获得值
-     */
-    private void handleBrowse(String textName) {
-        ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, "请选择目标文件夹");
-        if (dialog.open() == ContainerSelectionDialog.OK) {
-            Object[] result = dialog.getResult();
-            if (result.length == 1) {
-                Path resultPath = (Path) result[0];
-                String projectName = "";
-                if (resultPath.toString().length() > 0) {
-                    projectName = resultPath.toString().substring(1);
-                    if (projectName.indexOf("/") > 0) {
-                        projectName = projectName.substring(0, projectName.indexOf("/"));
-                    }
-                }
-                if ("baseProjectPath".equals(textName)) { //项目根路径
-                    setMContainerText(textName, GcPluginHelper.getProjectRealPath(resultPath.toOSString()));
-                    setMContainerText("projectName", projectName);
-                    //webAppName与baseProjectPath的联动
-                    try {
-                        File fProject = new File(getMContainerText("baseProjectPath"));
-                        if(fProject.exists() && fProject.isDirectory()) {
-                            File[] fProjectChild = fProject.listFiles(); 
-                            for (int i = 0; i < fProjectChild.length; i++) {
-                                if(fProjectChild[i].isDirectory()) {
-                                    //判断有无WEB-INF/web.xml
-                                    if(new File(fProjectChild[i].toString() + System.getProperty("file.separator") + "WEB-INF" + System.getProperty("file.separator") + "web.xml").exists()) {
-                                        setMContainerText("webAppName", fProjectChild[i].getName());
-                                    }
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else if ("javaPackageName".equals(textName) || "javaFileRealPath".equals(textName)) { //java基本包名，java真实路径
-                	//得到resultPath为/projectName/src/main/java/org/quickbundle/test/rm
-                    String selectedFolder = resultPath.toString().substring(1);
-                    String javaFileRealPath = selectedFolder.substring(projectName.length());
-                    String javaPackageName = javaFileRealPath;
-                    if (javaFileRealPath.indexOf("/") == 0) {
-                        javaFileRealPath = javaFileRealPath.substring(1);
-                        javaPackageName = javaFileRealPath;
-                        javaPackageName = javaPackageName.replaceFirst("[^/]+/([\\w\\.]+/java/)?", "");
-                    }
-                    javaPackageName = javaPackageName.replace('/', '.');
-                    setMContainerText("javaPackageName", javaPackageName);
-                    setMContainerText("javaFileRealPath", javaFileRealPath);
-                } else if ("jspSourcePath".equals(textName)) { //jsp基本目录名
-                    String jspSourcePath = resultPath.toString().substring(1);
-                    jspSourcePath = jspSourcePath.substring(projectName.length());
-                    String webAppName = jspSourcePath;
-                    if (jspSourcePath.indexOf("/") == 0) {
-                        jspSourcePath = jspSourcePath.substring(1);
-                        webAppName = jspSourcePath;
-                        if (jspSourcePath.indexOf("/") > 0) {
-                            webAppName = jspSourcePath.substring(0, jspSourcePath.indexOf("/"));
-                            jspSourcePath = jspSourcePath.substring(jspSourcePath.indexOf("/"));
-                            jspSourcePath = jspSourcePath.substring(1);
-                        }
-                    }
-                    setMContainerText("webAppName", webAppName);
-                    setMContainerText("jspSourcePath", jspSourcePath);
-                }
-            }
-        }
-    }
-
-    /**
      * 功能: 重新连接数据库前的清理
      */
     public void clear_onClick() {
-        try {
-            ((List) getMContainer("list_tableFrom")).removeAll();
-            ((List) getMContainer("tableTo")).removeAll();
-            ((List) getMContainer("list_tableStatus")).removeAll();
-            { //从rule.xml中删除
-                Element thisTableTos = (Element) gcRule.getMainRule().selectSingleNode("/rules/database/tableTos");
-                if (thisTableTos != null) {
-                    thisTableTos.clearContent();
-                }
+        ((List) getMContainer("list_tableFrom")).removeAll();
+        ((List) getMContainer("tableTo")).removeAll();
+        ((List) getMContainer("list_tableStatus")).removeAll();
+        { //从rule.xml中删除
+            Element thisTableTos = (Element) gcRule.getMainRule().selectSingleNode("/rules/database/tableTos");
+            if (thisTableTos != null) {
+                thisTableTos.clearContent();
             }
-            gcRule.closeConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        gcRule.closeConnection();
     }
 
     /**
@@ -999,34 +854,20 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
      * 当输入框值改变时，改变提示状态
      */
     private void dialogChanged() {
-        try {
-            if (getMContainerText("baseProjectPath").trim().length() == 0) {
-                updateStatus("请指定项目路径");
-            } else if (getMContainerText("driver").trim().length() == 0) {
-                updateStatus("请指定数据库驱动");
-            } else if (getMContainerText("url").trim().length() == 0) {
-                updateStatus("请指定数据库地址");
-            } else if (getMContainerText("userName").trim().length() == 0) {
-                updateStatus("请指定用户名");
-            } else if (getMContainerText("webAppName").trim().length() == 0) {
-                updateStatus("请指定web应用名");
-            } else if (getMContainerText("javaPackageName").trim().length() == 0) {
-                updateStatus("请指定java基本包名");
-            } else if (getMContainerText("javaFileRealPath").trim().length() == 0) {
-                updateStatus("请指定java路径");
-            } else if (getMContainerText("jspSourcePath").trim().length() == 0) {
-                updateStatus("请指定jsp基本目录名");
-            } else if (!getMContainerText("javaFileRealPath").trim().endsWith(RmStringHelper.replaceAll(getMContainerText("javaPackageName"), ".", "/"))) {
-                updateStatus("java路径应当以java基本包名的的文件格式结尾");
-            } else if (((List) getMContainer("tableTo")).getItemCount() == 0) {
-                updateStatus("请指定选择您要生成的表,双击它,并在对话框中设置其生成规则");
-            } else if (((List) getMContainer("list_tableStatus")).indexOf("finished") < 0) {
-                updateStatus("请至少设置成功一个表,未设置的表不会生成代码");
-            } else {
-                updateStatus(null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+		if (getMContainerText("baseProjectPath").trim().length() == 0) {
+            updateStatus("请指定项目路径");
+        } else if (getMContainerText("driver").trim().length() == 0) {
+            updateStatus("请指定数据库驱动");
+        } else if (getMContainerText("url").trim().length() == 0) {
+            updateStatus("请指定数据库地址");
+        } else if (getMContainerText("userName").trim().length() == 0) {
+            updateStatus("请指定用户名");
+        } else if (((List) getMContainer("tableTo")).getItemCount() == 0) {
+            updateStatus("请指定选择您要生成的表,双击它,并在对话框中设置其生成规则");
+        } else if (((List) getMContainer("list_tableStatus")).indexOf("finished") < 0) {
+            updateStatus("请至少设置成功一个表,未设置的表不会生成代码");
+        } else {
+            updateStatus(null);
         }
     }
 
@@ -1058,7 +899,6 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
      * @param value
      */
     public void setMContainerText(String key, String value) {
-        //QbXmlGenerateCodePlugin.log("set the value of \"" + key + "\" to \"" + value + "\"");
         if (getMContainer(key) == null) {
             return;
         }
@@ -1080,18 +920,6 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
         } else if (getMContainer(key) instanceof String) { //hidden变量
             mContainer.put(key, value);
         }
-        if ("baseProjectPath".equals(key)) { //如果项目路径修改
-            String projectName = value;
-            projectName = RmXmlHelper.formatToUrl(projectName);
-            if (projectName.endsWith("/")) {
-                projectName = projectName.substring(0, projectName.length() - 1);
-            }
-            if (projectName.lastIndexOf("/") >= 0) {
-                projectName = projectName.substring(projectName.lastIndexOf("/") + 1, projectName.length());
-            }
-            setMContainerText("projectName", projectName);
-        }
-
     }
 
     /**

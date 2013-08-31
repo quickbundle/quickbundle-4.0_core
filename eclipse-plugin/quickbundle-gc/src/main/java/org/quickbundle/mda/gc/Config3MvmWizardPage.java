@@ -1,22 +1,30 @@
 package org.quickbundle.mda.gc;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Platform;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.eclipse.jface.dialogs.IPageChangingListener;
+import org.eclipse.jface.dialogs.PageChangingEvent;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.quickbundle.mda.mvm.MvmActivator;
-import org.quickbundle.tools.helper.io.RmFileHelper;
+import org.quickbundle.mda.gc.project.IConfigProject;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 public class Config3MvmWizardPage extends WizardPage implements Listener {
@@ -31,7 +39,7 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
         this.gcRule = currentWizard.getGcRule();
     }
 
-	public void createControl(Composite parent) {
+	public void createControl(final Composite parent) {
         final int columns = 4; //定义列数
     	Composite container = null;
     	if(parent.getChildren() != null && parent.getChildren().length > 1 && parent.getChildren()[1] instanceof ScrolledComposite) {
@@ -53,36 +61,21 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
         gd.horizontalSpan = columns;
         labelTemplateSource.setLayoutData(gd);
     	
-        new Label(container, SWT.NULL).setText("模板URI");
-        Combo serverTemplateSource = new Combo(container, SWT.BORDER | SWT.SINGLE);
-        serverTemplateSource.setText(RmFileHelper.formatToFile(getMvmTemplateSource()));
+        new Label(container, SWT.NULL).setText("模板");
+        final Combo comboMvm = new Combo(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
+        comboMvm.setItems(getMvmContextNames());
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 3;
         gd.widthHint = 800;
-        serverTemplateSource.setLayoutData(gd);
-        
-        createLine(container, columns);
-        
-    	Label labelFramework = new Label(container, SWT.NULL);
-    	labelFramework.setText("请选择框架套餐:");
-        gd = new GridData(GridData.CENTER);
-        gd.horizontalSpan = columns;
-        labelFramework.setLayoutData(gd);
+        comboMvm.setLayoutData(gd);
     	
-        new Label(container, SWT.NULL).setText("服务端");
-        Combo serverFramework = new Combo(container, SWT.BORDER | SWT.SINGLE);
-        serverFramework.setText("SpringMVC-3.2 + Spring-3.2 + MyBatis-3.2");
+        new Label(container, SWT.NULL).setText("框架");
+        final Text textFramework = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
+        textFramework.setText("jQuery-1.6 + Html + SpringMVC-3.2 + Spring-3.2 + MyBatis-3.2");
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 3;
-        serverFramework.setLayoutData(gd);
+        textFramework.setLayoutData(gd);
         
-        new Label(container, SWT.NULL).setText("PC UI端");
-        Combo pcUiFramework = new Combo(container, SWT.BORDER | SWT.SINGLE);
-        pcUiFramework.setText("jQuery-1.6 + Html");
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 3;
-        pcUiFramework.setLayoutData(gd);
-
         createLine(container, columns);
         
     	Label labelProjectPropHead = new Label(container, SWT.NULL);
@@ -90,26 +83,113 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
         gd = new GridData(GridData.CENTER);
         gd.horizontalSpan = columns;
         labelProjectPropHead.setLayoutData(gd);
-        //TODO 根据不同的框架套餐对应的mvm文件
-        for(int i=0; i<1; i++) {
-            new Label(container, SWT.NULL).setText("代码风格");
-            Text projectProp1 = new Text(container, SWT.BORDER);
-            projectProp1.setText("default");
-            gd = new GridData(GridData.FILL_HORIZONTAL);
-            gd.horizontalSpan = 3;
-            projectProp1.setLayoutData(gd);
+        
+        //选择不同的mvm
+        final Canvas canvasProject = new Canvas(container, SWT.NONE);
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.FILL;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = columns;
+        canvasProject.setLayoutData(gd);
+        
+        comboMvm.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				Combo comboMvm = (Combo)e.getSource();
+				Element mvm = getMvm(comboMvm.getText());
+				textFramework.setText(mvm.valueOf("framework"));
+				String configProjectClass = mvm.valueOf("configProjectClass");
+				if(configProjectClass == null || configProjectClass.trim().length() == 0) {
+					return;
+				}
+				IConfigProject cp = null;
+				try {
+					cp = createInstance(configProjectClass.trim());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					updateStatus(e1.toString());
+				}
+				comboMvm.setData(cp);
+				cp.draw(canvasProject, getProjectMap());
+				parent.layout();
+			}
+		});
+        if(comboMvm.getItemCount() > 0) {
+        	comboMvm.select(0);
         }
+
+        //定义Next事件
+        WizardDialog dialog = (WizardDialog) getContainer();  
+        dialog.addPageChangingListener(new IPageChangingListener() {  
+            public void handlePageChanging(PageChangingEvent event) {
+            	if(event.getCurrentPage() instanceof Config3MvmWizardPage) {
+            		try {
+            			Element mvms = (Element)gcRule.getMainRule().selectSingleNode("/rules/codegen/mvms");
+            			mvms.addAttribute("contextName", comboMvm.getText());
+            			IConfigProject cp = (IConfigProject)comboMvm.getData();
+            			String errorMsg = cp.validate();
+            			if(errorMsg != null) {
+            				updateStatus(errorMsg);
+            				event.doit = false;
+            				return;
+            			}
+            			
+            			Map<String, String> projectMap = cp.extractProjectMap();
+            			Element project = (Element)gcRule.getMainRule().selectSingleNode("/rules/project");
+            			for(Map.Entry<String, String> en : projectMap.entrySet()) {
+            				Node node = project.selectSingleNode(en.getKey());
+            				if(node == null) {
+            					node = project.addElement(en.getKey());
+            				}
+            				node.setText(en.getValue());
+            			}
+                    	gcRule.save();
+                        updateStatus("成功保存配置到" + RmXmlHelper.formatToFile(gcRule.getMainRulePath()));
+                    } catch (Exception e1) {
+                        updateStatus("保存失败:" + e1.toString());
+                        e1.printStackTrace();
+                        event.doit = false;
+                    }
+            	}
+            }  
+        });  
         
         setControl(container);
 	}
 	
-	String getMvmTemplateSource() {
-		try {
-			return RmXmlHelper.formatToUrl(FileLocator.getBundleFile(Platform.getBundle(MvmActivator.PLUGIN_ID)).getAbsolutePath() + "/target/classes/template");
-		} catch (IOException e) {
-			e.printStackTrace();
-			return e.toString();
+	IConfigProject createInstance(String configProjectClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Object obj =this.getClass().getClassLoader().loadClass(configProjectClass).newInstance();
+		return (IConfigProject)obj;
+	}
+	
+	@SuppressWarnings("unchecked")
+	List<Element> getMvms() {
+		return gcRule.getMainRule().selectNodes("/rules/codegen/mvms/mvm");
+	}
+	
+	String[] getMvmContextNames() {
+		List<Element> lMvm = getMvms();
+		List<String> result = new ArrayList<String>();
+		for(Element mvm : lMvm) {
+			result.add(mvm.valueOf("contextName"));
 		}
+		return result.toArray(new String[0]);
+	}
+	
+	Element getMvm(String contextName) {
+		return (Element)gcRule.getMainRule().selectSingleNode("/rules/codegen/mvms/mvm[contextName='" + contextName + "']");
+	}
+	
+	public Map<String, String> getProjectMap() {
+		Map<String, String> result = new HashMap<String, String>();
+		List<Node> lProperty = gcRule.getMainRule().selectNodes("/rules/project/node()");
+		for(Node property : lProperty) {
+			if(property instanceof Element) {
+				result.put(property.getName(), property.getText());
+			}
+		}
+		result.put("baseProjectPath", gcRule.getMainRule().valueOf("/rules/codegen/@baseProjectPath"));
+		return result;
 	}
 	
     //生成一行分隔线
@@ -123,5 +203,8 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
 	public void handleEvent(Event event) {
 		
 	}
-
+	
+	public void updateStatus(String message) {
+		setErrorMessage(message);
+	}
 }

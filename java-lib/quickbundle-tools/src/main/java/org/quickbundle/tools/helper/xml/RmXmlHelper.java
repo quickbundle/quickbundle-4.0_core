@@ -73,13 +73,13 @@ public class RmXmlHelper {
             returnStr = bytesStream.toString(RmConfig.defaultEncode());
         } catch (TransformerConfigurationException e) {
             e.printStackTrace();
-            throw new RuntimeException("", e);
+            throw new RuntimeException(e);
         } catch (TransformerException e) {
             e.printStackTrace();
-            throw new RuntimeException("", e);
+            throw new RuntimeException(e);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            throw new RuntimeException("", e);
+            throw new RuntimeException(e);
         }
         return returnStr;
     }
@@ -94,7 +94,7 @@ public class RmXmlHelper {
         try {
 			return new SAXReader().read(new StringReader(xmlStr));
 		} catch (DocumentException e) {
-			throw new RuntimeException("", e);
+			throw new RuntimeException(e);
 		}
     }
     

@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rules rulesVersion="4.0.0-20130830">
+<rules rulesVersion="4.0.0-201308311">
 	<database pdmPath="" dbProductName="MySQL" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost/rmdemo?jdbcCompliantTruncation=false" userName="root" password="" catalog="" schemaPattern="" tableNamePattern="">
 		<!--定义目标表名xml的路径-->
 		<tableTos>
 			<tableTo xmlName="RM_FUNCTION_NODE.xml">RM_FUNCTION_NODE</tableTo>
 		</tableTos>
 	</database>
+    <codegen baseProjectPath="" toTableNameKeyword="TableName">
+       <mvms contextName="JavaEE标准版">
+           <mvm>
+               <contextName>JavaEE标准版</contextName>
+               <codegenConfig>mvm-JavaEE-standard.xml</codegenConfig>
+               <framework>jQuery-1.6 + Html + SpringMVC-3.2 + Spring-3.2 + MyBatis-3.2</framework>
+               <configProjectClass>org.quickbundle.mda.gc.project.JavaEEStandardProject</configProjectClass>
+           </mvm>
+       </mvms>
+    </codegen>
 	<project>
-		<projectName>abc123</projectName>
 		<webAppName>webapp</webAppName>
 		<authorName>白小勇</authorName>
 		<javaPackageName>com.helloworld</javaPackageName>
-		<javaFileRealPath>src/main/java/com/helloworld</javaFileRealPath>
+		<javaPackageDir>com/helloworld</javaPackageDir>
 		<jspSourcePath>helloworld</jspSourcePath>
 	</project>
-	<codegen baseProjectPath="" toTableNameKeyword="TableName"/>
 	<dataType>
 		<!--定义数据库类型-->
 		<dbTypes>

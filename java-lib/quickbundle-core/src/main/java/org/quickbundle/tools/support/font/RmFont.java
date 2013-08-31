@@ -40,11 +40,11 @@ public class RmFont{
 			result = Font.createFont(Font.TRUETYPE_FONT, fb);
 			result = result.deriveFont(style, size);
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException("", e);
+			throw new RuntimeException(e);
 		} catch (FontFormatException e) {
-			throw new RuntimeException("", e);
+			throw new RuntimeException(e);
 		} catch (IOException e) {
-			throw new RuntimeException("", e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				if (fi != null) {

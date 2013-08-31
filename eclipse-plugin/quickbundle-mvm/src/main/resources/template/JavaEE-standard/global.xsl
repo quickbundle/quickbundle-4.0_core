@@ -5,7 +5,6 @@
 	<!--忽略xml声明-->
 	<xsl:output method="xml" omit-xml-declaration="no" encoding="UTF-8"/>
 	<!--定义/project中的全局变量-->
-	<xsl:variable name="projectName" select="/meta/project/projectName"/>
 	<xsl:variable name="webAppName" select="/meta/project/webAppName"/>
 	<xsl:variable name="authorName" select="/meta/project/authorName"/>
 	<xsl:variable name="javaPackageName" select="/meta/project/javaPackageName"/>
