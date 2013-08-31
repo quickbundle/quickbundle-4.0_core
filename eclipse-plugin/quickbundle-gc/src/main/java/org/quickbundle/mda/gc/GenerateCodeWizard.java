@@ -83,7 +83,8 @@ public class GenerateCodeWizard extends Wizard implements INewWizard {
     @Override
     public boolean canFinish() {
     	IWizardPage currentPage = getContainer().getCurrentPage();
-    	if(currentPage instanceof Config3MvmWizardPage) {
+    	if(currentPage instanceof Config3MvmWizardPage
+    			&& currentPage.isPageComplete()) {
     		return true;
     	} else {
     		return false;

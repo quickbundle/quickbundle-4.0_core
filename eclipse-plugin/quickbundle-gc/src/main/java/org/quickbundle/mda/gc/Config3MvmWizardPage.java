@@ -20,17 +20,19 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.quickbundle.mda.gc.project.IConfigProject;
-import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 public class Config3MvmWizardPage extends WizardPage implements Listener {
 
     //Wizard对象
     private GenerateCodeRule gcRule = null;
+    
+    private Combo comboMvm = null;
     
 	public Config3MvmWizardPage(GenerateCodeWizard currentWizard) {
         super("mvmWizardPage");
@@ -62,7 +64,7 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
         labelTemplateSource.setLayoutData(gd);
     	
         new Label(container, SWT.NULL).setText("模板");
-        final Combo comboMvm = new Combo(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
+        comboMvm = new Combo(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
         comboMvm.setItems(getMvmContextNames());
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 3;
@@ -111,6 +113,7 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
 				}
 				comboMvm.setData(cp);
 				cp.draw(canvasProject, getProjectMap());
+				bindFocusIn(canvasProject);
 				parent.layout();
 			}
 		});
@@ -119,42 +122,25 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
         }
 
         //定义Next事件
-        WizardDialog dialog = (WizardDialog) getContainer();  
+        WizardDialog dialog = (WizardDialog) getContainer();
         dialog.addPageChangingListener(new IPageChangingListener() {  
             public void handlePageChanging(PageChangingEvent event) {
             	if(event.getCurrentPage() instanceof Config3MvmWizardPage) {
-            		try {
-            			Element mvms = (Element)gcRule.getMainRule().selectSingleNode("/rules/codegen/mvms");
-            			mvms.addAttribute("contextName", comboMvm.getText());
-            			IConfigProject cp = (IConfigProject)comboMvm.getData();
-            			String errorMsg = cp.validate();
-            			if(errorMsg != null) {
-            				updateStatus(errorMsg);
-            				event.doit = false;
-            				return;
-            			}
-            			
-            			Map<String, String> projectMap = cp.extractProjectMap();
-            			Element project = (Element)gcRule.getMainRule().selectSingleNode("/rules/project");
-            			for(Map.Entry<String, String> en : projectMap.entrySet()) {
-            				Node node = project.selectSingleNode(en.getKey());
-            				if(node == null) {
-            					node = project.addElement(en.getKey());
-            				}
-            				node.setText(en.getValue());
-            			}
-                    	gcRule.save();
-                        updateStatus("成功保存配置到" + RmXmlHelper.formatToFile(gcRule.getMainRulePath()));
-                    } catch (Exception e1) {
-                        updateStatus("保存失败:" + e1.toString());
-                        e1.printStackTrace();
-                        event.doit = false;
-                    }
+
             	}
             }  
         });  
         
         setControl(container);
+	}
+	
+	void bindFocusIn(Canvas canvasProject) {
+		Control[] controls = canvasProject.getChildren();
+		for(Control ctrl : controls) {
+			if(ctrl instanceof Text) {
+				ctrl.addListener(SWT.Modify, this);
+			}
+		}
 	}
 	
 	IConfigProject createInstance(String configProjectClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -180,6 +166,7 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
 		return (Element)gcRule.getMainRule().selectSingleNode("/rules/codegen/mvms/mvm[contextName='" + contextName + "']");
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Map<String, String> getProjectMap() {
 		Map<String, String> result = new HashMap<String, String>();
 		List<Node> lProperty = gcRule.getMainRule().selectNodes("/rules/project/node()");
@@ -201,10 +188,43 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
     }
 
 	public void handleEvent(Event event) {
-		
+		if(event.type == SWT.Modify) {
+    		try {
+    			Element mvms = (Element)gcRule.getMainRule().selectSingleNode("/rules/codegen/mvms");
+    			mvms.addAttribute("contextName", comboMvm.getText());
+    			IConfigProject cp = (IConfigProject)comboMvm.getData();
+    			String errorMsg = cp.validate();
+    			if(errorMsg != null) {
+    				updateStatus(errorMsg);
+    				event.doit = false;
+    				return;
+    			}
+    			
+    			Map<String, String> projectMap = cp.extractProjectMap();
+    			Element project = (Element)gcRule.getMainRule().selectSingleNode("/rules/project");
+    			for(Map.Entry<String, String> en : projectMap.entrySet()) {
+    				Node node = project.selectSingleNode(en.getKey());
+    				if(node == null) {
+    					node = project.addElement(en.getKey());
+    				}
+    				node.setText(en.getValue());
+    			}
+            	gcRule.save();
+            	updateStatus(null);
+            } catch (Exception e1) {
+                updateStatus("保存失败:" + e1.toString());
+                e1.printStackTrace();
+                event.doit = false;
+            }
+		}
 	}
 	
 	public void updateStatus(String message) {
 		setErrorMessage(message);
+		if(message == null) {
+			setPageComplete(true);
+		} else {
+			setPageComplete(false);
+		}
 	}
 }

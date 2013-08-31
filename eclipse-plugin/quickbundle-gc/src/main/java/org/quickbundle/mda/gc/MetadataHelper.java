@@ -174,7 +174,7 @@ public class MetadataHelper {
 				table.selectSingleNode("column[@columnName='" + pkStr + "']/@isBuild_list").setText("false");
 			}
 		}
-		Map mFk_parentTablename = new HashMap();
+		Map<String, String> mFk_parentTablename = new HashMap<String, String>();
 		{ // TODO get fk
 			// String parentTableName = "";
 			String statisticColumn = "";
@@ -232,7 +232,7 @@ public class MetadataHelper {
 			}
 		}
 		// 把外键一律定义为rm.listReference
-		for (Iterator itMFk_ptn = mFk_parentTablename.keySet().iterator(); itMFk_ptn.hasNext();) {
+		for (Iterator<String> itMFk_ptn = mFk_parentTablename.keySet().iterator(); itMFk_ptn.hasNext();) {
 			String fk = itMFk_ptn.next().toString();
 			if (table.selectSingleNode("column[@columnName='" + fk + "']") != null) {
 				Element eleFk = (Element) table.selectSingleNode("column[@columnName='" + fk + "']");
@@ -330,7 +330,7 @@ public class MetadataHelper {
 				aStr[2] = mr.group(3);
 			}
 		} catch (Exception e) {
-			QbXmlGenerateCodePlugin.log(e.getMessage());
+			QbXmlGenerateCodePlugin.log(e.toString());
 		}
 		return aStr;
 	}

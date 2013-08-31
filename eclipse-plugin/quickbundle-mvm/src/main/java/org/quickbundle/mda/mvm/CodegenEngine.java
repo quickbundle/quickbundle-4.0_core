@@ -67,7 +67,7 @@ public class CodegenEngine {
             this.baseProjectPath = RmXmlHelper.formatToUrl(mainRule.getRootElement().valueOf("//rules/codegen//@baseProjectPath"));
             String codegenConfig = mainRule.valueOf("/rules/codegen/mvms/mvm[contextName=../@contextName]/@codegenConfig");
             if(codegenConfig == null || codegenConfig.length() == 0) {
-            	codegenConfig = mainRule.valueOf("/rules/codegen/mvms/mvm[1]/@codegenConfig");
+            	codegenConfig = mainRule.valueOf("/rules/codegen/mvms/mvm[1]/codegenConfig");
             }
             this.mvmDoc = RmXmlHelper.parse(this.templatePath + "/" + codegenConfig);
         } catch (Exception e) {
@@ -204,11 +204,11 @@ public class CodegenEngine {
 			return "";
 		}
 		StringBuffer result = new StringBuffer();
-		Pattern pData = Pattern.compile("$\\{.*?\\}");
+		Pattern pData = Pattern.compile("\\$\\{(.*?)\\}");
 		Matcher mData = pData.matcher(outputPath);
 		while(mData.find()) {
 			//在循环中找出{}的表达式
-			String exp = mData.toMatchResult().group();
+			String exp = mData.toMatchResult().group(1);
 			//处理表达式，添加到结果
 			mData.appendReplacement(result, mainRule.valueOf("/rules/project/" + exp));
 		}

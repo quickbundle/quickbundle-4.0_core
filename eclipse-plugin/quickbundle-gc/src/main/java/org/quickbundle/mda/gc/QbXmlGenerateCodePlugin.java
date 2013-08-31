@@ -40,13 +40,7 @@ public class QbXmlGenerateCodePlugin extends AbstractUIPlugin {
     public QbXmlGenerateCodePlugin() {
         super();
         plugin = this;
-        try {
-            resourceBundle = ResourceBundle.getBundle("resource");
-        } catch (Exception x) {
-            x.printStackTrace();
-            log(x.getMessage());
-            resourceBundle = null;
-        }
+        resourceBundle = ResourceBundle.getBundle("resource");
     }
 
     /**
@@ -108,8 +102,8 @@ public class QbXmlGenerateCodePlugin extends AbstractUIPlugin {
             else
                 s = s1 + File.separator;
             return new Path(s);
-        } catch (Exception exception) {
-            log(exception.getMessage());
+        } catch (Exception e) {
+            log(e.toString());
             return null;
         }
     }
@@ -120,8 +114,7 @@ public class QbXmlGenerateCodePlugin extends AbstractUIPlugin {
      * @param traceMessage
      */
     public static void log(String traceMessage) {
-        IStatus status = new Status(Status.INFO, "ranminXmlGenerateCode", 0, traceMessage, null);
+        IStatus status = new Status(Status.INFO, "org.quickbundle.mda.gc", 0, traceMessage, null);
         getDefault().getLog().log(status);
-        System.out.println(traceMessage);
     }
 }

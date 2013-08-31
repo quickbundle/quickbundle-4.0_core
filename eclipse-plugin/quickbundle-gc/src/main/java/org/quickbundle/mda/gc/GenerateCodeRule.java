@@ -94,13 +94,11 @@ public class GenerateCodeRule {
 
                 RmXmlHelper.saveXmlToPath(thisTableDoc, RmXmlHelper.formatToFile(QbXmlGenerateCodePlugin.qbGenerateCodeHome + "/"
                         + thisTableTo.valueOf("@xmlName")));
-                QbXmlGenerateCodePlugin.log("save " + RmXmlHelper.formatToFile(QbXmlGenerateCodePlugin.qbGenerateCodeHome + "/"
-                		+ thisTableTo.valueOf("@xmlName")));
             }
         }
         //回写rule.xml
         RmXmlHelper.saveXmlToPath(getMainRule(), mainRulePath);
-        QbXmlGenerateCodePlugin.log("save '" + mainRulePath);
+        //QbXmlGenerateCodePlugin.log("save '" + mainRulePath);
     }
     
     public void initTableDoc(String currentTable, File currentTableXmlFile, PdmParser pdmParser, Config1MainRuleWizardPage config1MainRuleWizardPage) throws Exception {

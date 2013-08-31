@@ -627,7 +627,7 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
             try {
                 if (gcRule.getMTableDocs().get(currentTable) == null) { //如果内存中没有xml
                 	gcRule.initTableDoc(currentTable, currentTableXmlFile, pdmParser, this);
-                    QbXmlGenerateCodePlugin.log("save file '" + currentTableXmlFile.getPath() + "', before dialog");
+                    //QbXmlGenerateCodePlugin.log("save file '" + currentTableXmlFile.getPath() + "', before dialog");
                     RmXmlHelper.saveXmlToPath((Document) gcRule.getMTableDocs().get(currentTable), currentTableXmlFile.getPath());
 
                 }
@@ -635,7 +635,7 @@ public class Config1MainRuleWizardPage extends WizardPage implements Listener {
                     ConfigTableDialog dialog = new ConfigTableDialog(this.getShell(), this, currentTable, gcRule);
                     dialog.create();
                     if (dialog.open() == ContainerSelectionDialog.OK) {
-                        QbXmlGenerateCodePlugin.log("save file '" + currentTableXmlFile.getPath() + "', after OK");
+                        //QbXmlGenerateCodePlugin.log("save file '" + currentTableXmlFile.getPath() + "', after OK");
                         RmXmlHelper.saveXmlToPath((Document) gcRule.getMTableDocs().get(currentTable), currentTableXmlFile.getPath());
                     }
                 }
