@@ -3,7 +3,8 @@
 	<!--导入全局定义-->
 	<xsl:import href="../../global.xsl"/>
 	<!--忽略xml声明-->
-	<xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
+    <xsl:output method="text" encoding="UTF-8" escape-uri-attributes="yes" name="rm-text"/>
+<xsl:param name="targetFullPath"></xsl:param>
 	<!--处理table-->
 	<xsl:template match="table[1]">
 		<xsl:value-of select="str:getJavaFileComment($authorName)"/>

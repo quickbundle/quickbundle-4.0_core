@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rules rulesVersion="4.0.0-2013083123">
+<rules rulesVersion="4.0.0-201308311">
 	<database pdmPath="" dbProductName="MySQL" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost/rmdemo?jdbcCompliantTruncation=false" userName="root" password="" catalog="" schemaPattern="" tableNamePattern="">
 		<!--定义目标表名xml的路径-->
 		<tableTos>
@@ -17,11 +17,11 @@
        </mvms>
     </codegen>
 	<project>
-		<webAppName>webapp</webAppName>
-		<authorName>白小勇</authorName>
 		<javaPackageName>com.helloworld</javaPackageName>
 		<javaPackageDir>com/helloworld</javaPackageDir>
 		<jspSourcePath>helloworld</jspSourcePath>
+		<webAppName>webapp</webAppName>
+		<authorName>白小勇</authorName>
 	</project>
 	<dataType>
 		<!--定义数据库类型-->
