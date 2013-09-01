@@ -116,7 +116,8 @@
 		<xsl:param name="word" as="xs:string"/>
 		<xsl:param name="filterKeyword" as="xs:string"/>
 		<xsl:param name="filterType" as="xs:string"/>
-		<xsl:sequence select="str:upperFirst(str:upperFirstTableName($word, $filterKeyword, $filterType))"/>
+		<xsl:variable name="upperFirstTableNameVar" select="str:upperFirstTableName($word, $filterKeyword, $filterType)"/>
+		<xsl:sequence select="concat(lower-case(substring($upperFirstTableNameVar,1,1)),substring($upperFirstTableNameVar,2,string-length($upperFirstTableNameVar)))"/>
 	</xsl:function>
 	<!--（带规则）自定义函数，根据指定的规则处理字符串-->
 	<xsl:function name="str:filter">

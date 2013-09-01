@@ -23,53 +23,28 @@ public interface <xsl:value-of select="$ITableNameConstants"/> extends IGlobalCo
     public final static String TABLE_NAME_DISPLAY = "<xsl:value-of select="@tableNameDisplay"/>";
     //列名汉化
     @SuppressWarnings({ "unchecked", "serial" })
-    public final static Map<xsl:value-of select="$charLt"/>String, String> TABLE_COLUMN_DISPLAY = new CaseInsensitiveMap(){{
-        
-        put("id","主键");
-        put("biz_keyword","业务关键字");
-        put("sender_id","发送人ID");
-        put("parent_message_id","父消息ID");
-        put("owner_org_id","所属组织ID");
-        put("template_id","模板ID");
-        put("is_affix","有无附件");
-        put("record_id","主记录ID");
-        put("message_xml_context","消息XML内容");
-        put("usable_status","数据可用状态");
-        put("modify_date","修改日期");
-        put("modify_ip","修改IP");
-        put("modify_user_id","修改用户ID");
+    public final static Map<xsl:value-of select="$charLt"/>String, String> TABLE_COLUMN_DISPLAY = new CaseInsensitiveMap(){{<xsl:apply-templates mode="table_column_display_put"/>
     }};
 
-
-    //子表1-消息收件人-表名、显示名
+<xsl:for-each select="//table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
+    //子表<xsl:value-of select="position()"/>-<xsl:value-of select="str:getTableNameDisplay(/meta, @tableName)"/>-表名、显示名
     public final static String TABLE_NAME_<xsl:value-of select="@tableName"/> = "<xsl:value-of select="@tableName"/>";
-    public final static String TABLE_NAME_DISPLAY_<xsl:value-of select="@tableName"/> = "消息收件人";
-    public final static String TABLE_PK_<xsl:value-of select="@tableName"/> = "<xsl:value-of select="$tablePk"/>";
-    //子表1-列名汉化
+    public final static String TABLE_NAME_DISPLAY_<xsl:value-of select="@tableName"/> = "<xsl:value-of select="str:getTableNameDisplay(/meta, @tableName)"/>";
+    public final static String TABLE_PK_<xsl:value-of select="@tableName"/> = "<xsl:value-of select="str:getTablePk(/meta, @tableName)"/>";
+    //子表<xsl:value-of select="position()"/>-列名汉化
     @SuppressWarnings({"unchecked", "serial" })
-    public final static Map<xsl:value-of select="$charLt"/>String, String> TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/> = new CaseInsensitiveMap(){{
-        
-        put("id","主键");
-        put("message_id","消息ID");
-        put("receiver_id","接收人ID");
-        put("is_handle","是否办理");
-        put("handle_date","办理时间");
-        put("handle_result","办理结果");
-        put("usable_status","数据可用状态");
-        put("modify_date","修改日期");
-        put("modify_ip","修改IP");
-        put("modify_user_id","修改用户ID");
+    public final static Map<xsl:value-of select="$charLt"/>String, String> TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/> = new CaseInsensitiveMap(){{<xsl:apply-templates mode="table_column_display_put"/>
     }};
+</xsl:for-each>
     
     //日志类型名称
     public final static String LOG_TYPE_NAME = TABLE_NAME_DISPLAY + "管理";
 }
 </xsl:template>
-
-	<!--处理TABLE_COLUMN_DISPLAY的循环部分-->
-	<xsl:template match="column" mode="table_column_display_put">
-		<xsl:param name="columnName" select="@columnName"/>
-		<xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>
-		<xsl:param name="columnNameFormatLower" select="lower-case($columnNameFormat)"/>
+<!--处理TABLE_COLUMN_DISPLAY的循环部分-->
+<xsl:template match="column" mode="table_column_display_put">
+    <xsl:param name="columnName" select="@columnName"/>
+    <xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>
+    <xsl:param name="columnNameFormatLower" select="lower-case($columnNameFormat)"/>
 		put("<xsl:value-of select="$columnNameFormatLower"/>","<xsl:value-of select="@columnNameDisplay"/>");</xsl:template>
 </xsl:stylesheet>

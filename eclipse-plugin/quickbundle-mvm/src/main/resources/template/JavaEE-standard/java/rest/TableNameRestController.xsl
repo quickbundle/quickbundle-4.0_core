@@ -59,7 +59,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController implements <xsl:value-of select="$ITableNameConstants"/> {
 
     @Autowired
-    private <xsl:value-of select="$tableFormatNameUpperFirst"/>Service <xsl:value-of select="tableFormatNameLowerFirst"/>Service;
+    private <xsl:value-of select="$tableFormatNameUpperFirst"/>Service <xsl:value-of select="$tableFormatNameLowerFirst"/>Service;
 
     @Autowired
     private Validator validator;
@@ -73,9 +73,9 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
     @ResponseBody
     public Map<xsl:value-of select="$charLt"/>String, Object> list(HttpServletRequest request) {
         String queryCondition = <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller.getQueryCondition(request);  //从request中获得查询条件
-        RmPageVo pageVo = RmJspHelper.transctPageVo(request, <xsl:value-of select="tableFormatNameLowerFirst"/>Service.getCount(queryCondition));
+        RmPageVo pageVo = RmJspHelper.transctPageVo(request, <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.getCount(queryCondition));
         String orderStr = RmJspHelper.getOrderStr(request);  //得到排序信息
-        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.list(queryCondition, orderStr, pageVo.getStartIndex(), pageVo.getPageSize());  //按条件查询全部,带排序
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.list(queryCondition, orderStr, pageVo.getStartIndex(), pageVo.getPageSize());  //按条件查询全部,带排序
         Map<xsl:value-of select="$charLt"/>String, Object> result = new HashMap<xsl:value-of select="$charLt"/>String, Object>();
         result.put(RM_JSON_TOTAL_COUNT, pageVo.getRecordCount());
         result.put(REQUEST_BEANS, beans);
@@ -90,7 +90,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<xsl:value-of select="$charLt"/>?> get(@PathVariable("id") Long id) {
-        <xsl:value-of select="$TableNameVo"/> task = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.get(id);
+        <xsl:value-of select="$TableNameVo"/> task = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.get(id);
         if (task == null) {
             return new ResponseEntity<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>(HttpStatus.NOT_FOUND);
         }
@@ -111,7 +111,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
         if (!failures.isEmpty()) {
             return RmResponseEntityFactory.build(failures, HttpStatus.BAD_REQUEST);
         }
-        <xsl:value-of select="tableFormatNameLowerFirst"/>Service.insert(vo);
+        <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insert(vo);
         //按照Restful风格约定，创建指向新任务的url, 也可以直接返回id或对象.
         Long id = vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>();
         URI uri = uriBuilder.path("/api/<xsl:value-of select="@tableDirName"/>/" + id).build().toUri();
@@ -133,7 +133,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
             return RmResponseEntityFactory.build(failures, HttpStatus.BAD_REQUEST);
         }
         //保存
-        <xsl:value-of select="tableFormatNameLowerFirst"/>Service.update(vo);
+        <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.update(vo);
         //按Restful约定，返回204状态码, 无内容. 也可以返回200状态码.
         return new ResponseEntity<xsl:value-of select="$charLt"/>String>(HttpStatus.NO_CONTENT);
     }
@@ -145,7 +145,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
-        <xsl:value-of select="tableFormatNameLowerFirst"/>Service.delete(id);
+        <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete(id);
     }
     
     /**
@@ -157,7 +157,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
     public int delete(HttpServletRequest request) {
         Long[] ids = RmJspHelper.getLongArrayFromRequest(request, REQUEST_IDS); //从request获取多条记录id
         if (ids != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> ids.length != 0) {
-            return <xsl:value-of select="tableFormatNameLowerFirst"/>Service.delete(ids); //删除多条记录
+            return <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete(ids); //删除多条记录
         }
         return 0;
     }
@@ -177,7 +177,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
                 RmVoHelper.markCreateStamp(request, vo);
             }
         }
-        int[] sum_insert_update = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.insertUpdateBatch(lvo.toArray(new <xsl:value-of select="$TableNameVo"/>[0]));
+        int[] sum_insert_update = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insertUpdateBatch(lvo.toArray(new <xsl:value-of select="$TableNameVo"/>[0]));
         Map<xsl:value-of select="$charLt"/>String, int[]> result = new HashMap<xsl:value-of select="$charLt"/>String, int[]>();
         result.put(EXECUTE_ROW_COUNT, sum_insert_update);
         return new ResponseEntity<xsl:value-of select="$charLt"/>Map<xsl:value-of select="$charLt"/>String, int[]>>(result, HttpStatus.OK);

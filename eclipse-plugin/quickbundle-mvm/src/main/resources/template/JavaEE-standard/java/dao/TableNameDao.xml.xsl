@@ -7,7 +7,6 @@
 	<xsl:param name="targetFullPath"/>
 	<!--处理table-->
 	<xsl:template match="table">
-		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
 		<xsl:result-document href="{$targetFullPath}/{str:getTableFormatNameUpperFirst(/meta, @tableName)}Dao.xml">
 			<xsl:variable name="thisTablePk" select="str:getTablePk(/meta, @tableName)"/>
 			<xsl:value-of select="$charLt"/>?xml version="1.0" encoding="UTF-8"?>

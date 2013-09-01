@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:str="http://www.quickbundle.org">
-    <!--导入全局定义-->
-    <xsl:import href="../../global.xsl"/>
-    <!--忽略xml声明-->
-    <xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
-    <!--处理table-->
-    <xsl:template match="table[1]">
-        <xsl:value-of select="str:getJavaFileComment($authorName)"/>
+	<!--导入全局定义-->
+	<xsl:import href="../../global.xsl"/>
+	<!--忽略xml声明-->
+	<xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
+	<!--处理table-->
+	<xsl:template match="table[1]">
+		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
 package <xsl:value-of select="$javaPackageTableDir"/>.service;
 
 import java.sql.ResultSet;
@@ -23,6 +23,10 @@ import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITab
 import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao;
 import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Dao;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
+<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Dao;
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
+</xsl:for-each>
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 import org.quickbundle.project.RmProjectHelper;
 import org.quickbundle.project.common.service.IRmCommonService;
@@ -40,11 +44,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implements <xsl:value-of select="$ITableNameConstants"/> {
 
     @Autowired
-    private <xsl:value-of select="$tableFormatNameUpperFirst"/>Dao <xsl:value-of select="tableFormatNameLowerFirst"/>Dao;
-    
+    private <xsl:value-of select="$tableFormatNameUpperFirst"/>Dao <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao;
+<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
     @Autowired
     private <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Dao <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao;
-    
+</xsl:for-each>
     /**
      * 插入单条记录
      * 
@@ -52,16 +56,18 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 若添加成功，返回新生成的Oid
      */
     public Long insert(<xsl:value-of select="$TableNameVo"/> vo) {
-        Long id = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.insert(vo);
-<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
-        if(vo.getBody() != null) {
-            for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo: vo.getBody()) {
+        Long id = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.insert(vo);<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+        if(vo.getBody<xsl:if test="position()>1">
+				<xsl:value-of select="position()"/>
+			</xsl:if>() != null) {
+            for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo: vo.getBody<xsl:if test="position()>1">
+				<xsl:value-of select="position()"/>
+			</xsl:if>()) {
                 bodyVo.set<xsl:value-of select="str:upperFirst(str:getRefColumnFormatLower(/meta, @tableName))"/> (vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
             }
             <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert(vo.getBody().toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
-        }
-</xsl:for-each>
-        RmProjectHelper.log(LOG_TYPE_NAME, "插入了1条记录,id={},子记录{}条", id, vo.getBody() == null ? 0 : vo.getBody().size());
+        }</xsl:for-each>
+        RmProjectHelper.log(LOG_TYPE_NAME, "插入了1条记录,id={}<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">,子记录{}条</xsl:if>", id<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">, vo.getBody() == null ? 0 : vo.getBody().size()</xsl:if>);
         return id;
     }
     
@@ -72,22 +78,37 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 返回新生成的id数组
      */
     public Long[] insert(<xsl:value-of select="$TableNameVo"/>[] vos) {
-        Long[] ids = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.insert(vos);
+        Long[] ids = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.insert(vos);<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">
+			<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> bodyVoToInsert = new ArrayList<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
-        for(<xsl:value-of select="$TableNameVo"/> vo : vos) {
-<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
-            if(vo.getBody() != null) {
-                for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo: vo.getBody()) {
+				<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> bodyVoToInsert<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if> = new ArrayList<xsl:value-of select="$charLt"/>
+				<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();</xsl:for-each>
+        for(<xsl:value-of select="$TableNameVo"/> vo : vos) {<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+            if(vo.getBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>() != null) {
+                for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo: vo.getBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>()) {
                     bodyVo.set<xsl:value-of select="str:upperFirst(str:getRefColumnFormatLower(/meta, @tableName))"/> (vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
-                    bodyVoToInsert.add(bodyVo);
+                    bodyVoToInsert<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.add(bodyVo);
                 }
-            }
-</xsl:for-each>
+            }</xsl:for-each>
         }
-        <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert(bodyVoToInsert.toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
-        RmProjectHelper.log(LOG_TYPE_NAME, "插入了{}条记录,id={},子记录共{}条", vos.length, Arrays.toString(ids), bodyVoToInsert.size());
+        <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+				<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert(bodyVoToInsert<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));</xsl:for-each>
+		</xsl:if>
+        RmProjectHelper.log(LOG_TYPE_NAME, "插入了{}条记录,id={}<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">,子记录共{}条</xsl:if>", vos.length, Arrays.toString(ids)<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">, <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">bodyVoToInsert<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.size()<xsl:if test="not(position()=last())"> + </xsl:if>
+			</xsl:for-each>
+		</xsl:if>);
         return ids;
     }
 
@@ -98,20 +119,36 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 成功删除的记录数
      */
     public int delete(Long id) {
-        List<xsl:value-of select="$charLt"/>Long> bodyIdToDelete = new ArrayList<xsl:value-of select="$charLt"/>Long>();
         <xsl:value-of select="$TableNameVo"/> vo = get(id);
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
-        if(vo.getBody() != null) {
-            for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo : vo.getBody()) {
-                bodyIdToDelete.add(bodyVo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>());
+        List<xsl:value-of select="$charLt"/>Long> bodyIdToDelete<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if> = new ArrayList<xsl:value-of select="$charLt"/>Long>();
+        if(vo.getBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>() != null) {
+            for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo : vo.getBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>()) {
+                bodyIdToDelete<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.add(bodyVo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>());
             }
         }
-        if(bodyIdToDelete.size() > 0) {
-            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(bodyIdToDelete.toArray(new Long[0]));
+        if(bodyIdToDelete<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.size() > 0) {
+            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(bodyIdToDelete<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.toArray(new Long[0]));
         }
 </xsl:for-each>
-        int sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.delete(id);
-        RmProjectHelper.log(LOG_TYPE_NAME, "删除了{}条记录,id={},子记录{}条", sum, id, bodyIdToDelete.size());
+        int sum = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.delete(id);
+        RmProjectHelper.log(LOG_TYPE_NAME, "删除了{}条记录,id={}<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">,子记录共{}条</xsl:if>", sum, id<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">, <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">bodyIdToDelete<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.size()<xsl:if test="not(position()=last())"> + </xsl:if>
+			</xsl:for-each>
+		</xsl:if>);
         return sum;
     }
 
@@ -122,22 +159,42 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 成功删除的记录数
      */
     public int delete(Long ids[]) {
-        List<xsl:value-of select="$charLt"/>Long> bodyIdToDelete = new ArrayList<xsl:value-of select="$charLt"/>Long>();
+<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">
+<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+        List<xsl:value-of select="$charLt"/>Long> bodyIdToDelete<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if> = new ArrayList<xsl:value-of select="$charLt"/>Long>();
+</xsl:for-each>
         for(Long id : ids) {
             <xsl:value-of select="$TableNameVo"/> vo = get(id);
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
-            if(vo.getBody() != null) {
-                for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo : vo.getBody()) {
-                    bodyIdToDelete.add(bodyVo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>());
+            if(vo.getBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>() != null) {
+                for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo bodyVo : vo.getBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>()) {
+                    bodyIdToDelete<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.add(bodyVo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>());
                 }
             }
 </xsl:for-each>
         }
-        if(bodyIdToDelete.size() > 0) {
+<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+        if(bodyIdToDelete<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.size() > 0) {
             <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(bodyIdToDelete.toArray(new Long[0]));
         }
-        int sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.delete(ids);
-        RmProjectHelper.log(LOG_TYPE_NAME, "删除了{}条记录,ids={},子记录共{}条", sum, Arrays.toString(ids), bodyIdToDelete.size());
+</xsl:for-each>
+</xsl:if>
+        int sum = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.delete(ids);
+        RmProjectHelper.log(LOG_TYPE_NAME, "删除了{}条记录,ids={}<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">,子记录共{}条</xsl:if>", sum, Arrays.toString(ids)<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">, <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">bodyIdToDelete<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>.size()<xsl:if test="not(position()=last())"> + </xsl:if>
+			</xsl:for-each>
+		</xsl:if>);
         return sum;
     }
 
@@ -157,7 +214,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
             <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.update((<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[])result[2].toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
         }
 </xsl:for-each>
-        int sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.update(vo);
+        int sum = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.update(vo);
         RmProjectHelper.log(LOG_TYPE_NAME, "更新了{}条记录,id={}", sum, vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
         return sum;
     }
@@ -171,12 +228,12 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public int update(<xsl:value-of select="$TableNameVo"/>[] vos) {
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toInsert = new ArrayList<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toInsert = new ArrayList<xsl:value-of select="$charLt"/>
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
         List<xsl:value-of select="$charLt"/>Long> toDelete = new ArrayList<xsl:value-of select="$charLt"/>Long>();
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toUpdate = new ArrayList<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toUpdate = new ArrayList<xsl:value-of select="$charLt"/>
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
         for(<xsl:value-of select="$TableNameVo"/> vo : vos) {
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
             if(vo.getBody() != null) {
@@ -190,7 +247,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
         <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert(toInsert.toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
         <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(toDelete.toArray(new Long[0]));
         <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.update(toUpdate.toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
-        int[] sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.update(vos);
+        int[] sum = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.update(vos);
         int finalSum = 0;
         for (int i = 0; i <xsl:value-of select="$charLt"/> sum.length; i++) {
             finalSum += sum[i];
@@ -209,15 +266,15 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      */
     @SuppressWarnings("rawtypes")
     protected List[] mergeVos(<xsl:value-of select="$TableNameVo"/> headVo, List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> oldVos, List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> newVos) {
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> oldVos, List<xsl:value-of select="$charLt"/>
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> newVos) {
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toInsert = new ArrayList<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toInsert = new ArrayList<xsl:value-of select="$charLt"/>
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
         List<xsl:value-of select="$charLt"/>Long> toDelete = new ArrayList<xsl:value-of select="$charLt"/>Long>();
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toUpdate = new ArrayList<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> toUpdate = new ArrayList<xsl:value-of select="$charLt"/>
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
         List[] result = new List[]{toInsert, toDelete, toUpdate};
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         Map<xsl:value-of select="$charLt"/>Long, <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> oldVoMap = new HashMap<xsl:value-of select="$charLt"/>Long, <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo>();
@@ -226,7 +283,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
         }
         for(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo newVo : newVos) {
             if(newVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() != null <xsl:value-of select="$charAmp"/>
-        <xsl:value-of select="$charAmp"/> oldVoMap.containsKey(newVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>())){
+			<xsl:value-of select="$charAmp"/> oldVoMap.containsKey(newVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>())){
                 toUpdate.add(newVo);
                 oldVoMap.remove(newVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
             } else {
@@ -250,11 +307,11 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
     public int[] insertUpdateBatch(<xsl:value-of select="$TableNameVo"/>[] vos) {
         int[] sum_insert_update = new int[2];
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>> lInsert = new ArrayList<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>>();
+		<xsl:value-of select="$TableNameVo"/>> lInsert = new ArrayList<xsl:value-of select="$charLt"/>
+		<xsl:value-of select="$TableNameVo"/>>();
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>> lUpdate = new ArrayList<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>>();
+		<xsl:value-of select="$TableNameVo"/>> lUpdate = new ArrayList<xsl:value-of select="$charLt"/>
+		<xsl:value-of select="$TableNameVo"/>>();
         for (int i = 0; i <xsl:value-of select="$charLt"/> vos.length; i++) {
             if(vos[i].get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>() != null) {
                 lUpdate.add(vos[i]);
@@ -278,10 +335,15 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 查询到的VO对象
      */
     public <xsl:value-of select="$TableNameVo"/> get(Long id) {
-        <xsl:value-of select="$TableNameVo"/> vo = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.get(id);
+        <xsl:value-of select="$TableNameVo"/> vo = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.get(id);
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> body = <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + String.valueOf(id), null, 1, Integer.MAX_VALUE, true);
-        vo.setBody(body);
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> body<xsl:if test="position()>1">
+			<xsl:value-of select="position()"/>
+		</xsl:if> = <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + String.valueOf(id), null, 1, Integer.MAX_VALUE, true);<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+        vo.setBody<xsl:if test="position()>1">
+				<xsl:value-of select="position()"/>
+			</xsl:if>(body);
+</xsl:for-each>
         return vo;
     }
     
@@ -292,7 +354,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 总记录数
      */
     public int getCount(String queryCondition) {
-        int sum = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.getCount(queryCondition);
+        int sum = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.getCount(queryCondition);
         return sum;
     }
 
@@ -304,7 +366,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 查询到的VO列表
      */
     public List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr) {
+		<xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr) {
         return list(queryCondition, orderStr, 1, Integer.MAX_VALUE);
     }
 
@@ -318,7 +380,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 查询到的VO列表
      */
     public List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr, int startIndex, int size) {
+		<xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr, int startIndex, int size) {
         return list(queryCondition, orderStr, startIndex, size, false);
     }
     
@@ -333,14 +395,17 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 查询到的VO列表
      */
     public List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr, int startIndex, int size, boolean allColumn) {
+		<xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr, int startIndex, int size, boolean allColumn) {
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>> lResult = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.list(queryCondition, orderStr, startIndex, size, allColumn);
+		<xsl:value-of select="$TableNameVo"/>> lResult = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.list(queryCondition, orderStr, startIndex, size, allColumn);
         if(allColumn) {
             for(<xsl:value-of select="$TableNameVo"/> vo : lResult) {
                 List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> body = <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + String.valueOf(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()), null, 1, Integer.MAX_VALUE, true);
-                vo.setBody(body);
+		<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo> body = <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + String.valueOf(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()), null, 1, Integer.MAX_VALUE, true);<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+        vo.setBody<xsl:if test="position()>1">
+				<xsl:value-of select="position()"/>
+			</xsl:if>(body);
+</xsl:for-each>
             }
         }
         return lResult;
@@ -356,9 +421,9 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @return 查询到的VO列表
      */
     public List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>> search(Map<xsl:value-of select="$charLt"/>String, Object> searchPara, String orderStr, int startIndex, int size) {
+		<xsl:value-of select="$TableNameVo"/>> search(Map<xsl:value-of select="$charLt"/>String, Object> searchPara, String orderStr, int startIndex, int size) {
         List<xsl:value-of select="$charLt"/>
-        <xsl:value-of select="$TableNameVo"/>> lResult = <xsl:value-of select="tableFormatNameLowerFirst"/>Dao.search(searchPara, orderStr, startIndex, size);
+		<xsl:value-of select="$TableNameVo"/>> lResult = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.search(searchPara, orderStr, startIndex, size);
         return lResult;
     }
     
@@ -372,7 +437,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public String[] insertRm_m_message_user(String message_id, String[] user_ids) {
         if(user_ids.length == 0 || (user_ids.length == 1 <xsl:value-of select="$charAmp"/>
-        <xsl:value-of select="$charAmp"/>user_ids[0].trim().length() == 0)) {
+		<xsl:value-of select="$charAmp"/>user_ids[0].trim().length() == 0)) {
             return new String[0];
         }
         IRmCommonService cs = RmProjectHelper.getCommonServiceInstance();
@@ -413,13 +478,13 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
     }
 }
 </xsl:template>
-    <!--生成多对多表Service定义-->
-    <xsl:template name="buildMiddleService">
-        <xsl:variable name="parentChildTable" select="@parentChildTable"/>
-        <xsl:analyze-string select="$parentChildTable" regex=",">
-            <xsl:non-matching-substring>
-                <xsl:analyze-string select="." regex="^\s*([\w_]+)\.([\w_]+)=([\w_]+)\.([\w_]+)\|([\w_]+)=([\w_]+)\.([\w_]+)\(([\w_]+)\.([\w_]+)\)\s*$">
-                    <xsl:matching-substring>
+	<!--生成多对多表Service定义-->
+	<xsl:template name="buildMiddleService">
+		<xsl:variable name="parentChildTable" select="@parentChildTable"/>
+		<xsl:analyze-string select="$parentChildTable" regex=",">
+			<xsl:non-matching-substring>
+				<xsl:analyze-string select="." regex="^\s*([\w_]+)\.([\w_]+)=([\w_]+)\.([\w_]+)\|([\w_]+)=([\w_]+)\.([\w_]+)\(([\w_]+)\.([\w_]+)\)\s*$">
+					<xsl:matching-substring>
     /**
      * 插入中间表<xsl:value-of select="regex-group(3)"/>数据
      * 
@@ -429,8 +494,8 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      */
     public String[] insert<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>(String <xsl:value-of select="lower-case(regex-group(4))"/>, String[] <xsl:value-of select="lower-case(regex-group(5))"/>s) {
         if(<xsl:value-of select="lower-case(regex-group(5))"/>s.length == 0 || (<xsl:value-of select="lower-case(regex-group(5))"/>s.length == 1 <xsl:value-of select="$charAmp"/>
-                        <xsl:value-of select="$charAmp"/>
-                        <xsl:value-of select="lower-case(regex-group(5))"/>s[0].trim().length() == 0)) {
+						<xsl:value-of select="$charAmp"/>
+						<xsl:value-of select="lower-case(regex-group(5))"/>s[0].trim().length() == 0)) {
             return new String[0];
         }
         IRmCommonService cs = RmProjectHelper.getCommonServiceInstance();
@@ -470,8 +535,8 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
         return cs.doUpdate("DELETE FROM <xsl:value-of select="regex-group(3)"/> WHERE <xsl:value-of select="regex-group(4)"/>=" + <xsl:value-of select="lower-case(regex-group(4))"/> + " AND <xsl:value-of select="regex-group(5)"/> IN(" + RmStringHelper.parseToString(<xsl:value-of select="lower-case(regex-group(5))"/>s) + ")");
     }
                         </xsl:matching-substring>
-                </xsl:analyze-string>
-            </xsl:non-matching-substring>
-        </xsl:analyze-string>
-    </xsl:template>
+				</xsl:analyze-string>
+			</xsl:non-matching-substring>
+		</xsl:analyze-string>
+	</xsl:template>
 </xsl:stylesheet>

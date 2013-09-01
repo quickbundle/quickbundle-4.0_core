@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +153,7 @@ public class TableRelation {
 	
 	public void buildTableRelationXml(List<List<Object>> relations) {
 		Map<String, Document> mTableDoc = gcRule.getMTableDocs();
+		Set<String> sHasRelationTable = new HashSet<String>();
 		for(List<Object> lRelationGroup : relations) {
 			List<List<Widget>> lRelationRow = (List<List<Widget>>)lRelationGroup.get(0);
 			if(lRelationRow.size() == 0) {
@@ -183,6 +185,7 @@ public class TableRelation {
 						middleTable.addAttribute("tableName", lMiddleTableRow.get(0).getText());
 						middleTable.addAttribute("mainColumn", lMiddleTableRow.get(1).getText());
 						middleTable.addAttribute("refColumn", lMiddleTableRow.get(2).getText());
+						sHasRelationTable.add(mainTableName);
 					}
 				} else { //子表
 					List<Combo> lChildTableRow = getCombos(relationRow);
@@ -190,12 +193,34 @@ public class TableRelation {
 						Element refTable = mainTable.addElement("refTable");
 						refTable.addAttribute("tableName", lChildTableRow.get(0).getText());
 						refTable.addAttribute("refColumn", lChildTableRow.get(1).getText());
+						sHasRelationTable.add(mainTableName);
 					}
 				}
 			}
 		}
+		clearNotHasRelationTable(sHasRelationTable);
 	}
 	
+	/**
+	 * 清理掉没有体现关系的表
+	 * 
+	 * @param sHasRelationTable
+	 */
+	private void clearNotHasRelationTable(Set<String> sHasRelationTable) {
+		Map<String, Document> mTableDoc = gcRule.getMTableDocs();
+		for(Map.Entry<String, Document> en : mTableDoc.entrySet()) {
+			String mainTableName = en.getKey();
+			if(sHasRelationTable.contains(mainTableName)) {
+				continue;
+			}
+			Document tableDoc = mTableDoc.get(mainTableName);
+			Element eleRelations = (Element)tableDoc.selectSingleNode("/meta/relations");
+			if(eleRelations != null) {
+				eleRelations.clearContent();
+			}
+		}
+	}
+
 	private List<Combo> getCombos(List objs) {
 		List<Combo> result = new ArrayList<Combo>();
 		for(Object obj : objs) {

@@ -5,8 +5,8 @@
 		<files filesType="java" outputPath="src/main/java/${javaPackageDir}">
 			<file xsltPath="JavaEE-standard/java/web/TableNameController.xsl" outputFile="web/TableNameController.java" bundleCode="main"/>
 			<file xsltPath="JavaEE-standard/java/service/TableNameService.xsl" outputFile="service/TableNameService.java"/>
-			<file xsltPath="JavaEE-standard/java/dao/TableNameDao.xsl" outputFile="dao/TableNameDao.java" result-document="true"/>
-			<file xsltPath="JavaEE-standard/java/dao/TableNameDao.xml.xsl" outputFile="dao/TableNameDao.xml" result-document="true"/>
+			<file xsltPath="JavaEE-standard/java/dao/TableNameDao.xsl" outputFolder="dao/" result-document="true"/>
+			<file xsltPath="JavaEE-standard/java/dao/TableNameDao.xml.xsl" outputFolder="dao/" result-document="true"/>
 			<file xsltPath="JavaEE-standard/java/ITableNameConstants.xsl" outputFile="ITableNameConstants.java"/>
 			<file xsltPath="JavaEE-standard/java/vo/TableNameVo.xsl" outputFile="vo/TableNameVo.java" result-document="true"/>
 			<file xsltPath="JavaEE-standard/java/rest/TableNameRestController.xsl" outputFile="rest/TableNameRestController.java"/>

@@ -20,6 +20,9 @@ import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITab
 import <xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="$tableFormatNameUpperFirst"/>Service;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
+<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
+</xsl:for-each>
 import org.quickbundle.third.excel.StatisticExport;
 import org.quickbundle.tools.helper.RmJspHelper;
 import org.quickbundle.tools.helper.RmPopulateHelper;
@@ -60,7 +63,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller implements <xsl:value-of select="$ITableNameConstants"/> {
 
     @Autowired
-    private <xsl:value-of select="$tableFormatNameUpperFirst"/>Service <xsl:value-of select="tableFormatNameLowerFirst"/>Service;
+    private <xsl:value-of select="$tableFormatNameUpperFirst"/>Service <xsl:value-of select="$tableFormatNameLowerFirst"/>Service;
     
     /**
      * 简单查询，分页显示，支持表单回写
@@ -68,9 +71,9 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     @RequestMapping(value = "")
     public String list(Model model, HttpServletRequest request) {
         String queryCondition = getQueryCondition(request);  //从request中获得查询条件
-        RmPageVo pageVo = RmJspHelper.transctPageVo(request, <xsl:value-of select="tableFormatNameLowerFirst"/>Service.getCount(queryCondition));
+        RmPageVo pageVo = RmJspHelper.transctPageVo(request, <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.getCount(queryCondition));
         String orderStr = RmJspHelper.getOrderStr(request);  //得到排序信息
-        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.list(queryCondition, orderStr, pageVo.getStartIndex(), pageVo.getPageSize());  //按条件查询全部,带排序
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.list(queryCondition, orderStr, pageVo.getStartIndex(), pageVo.getPageSize());  //按条件查询全部,带排序
         RmJspHelper.saveOrderStr(orderStr, request);  //保存排序信息
         model.addAttribute(REQUEST_QUERY_CONDITION, queryCondition);
         model.addAttribute(REQUEST_BEANS, beans);  //把结果集放入request
@@ -93,10 +96,13 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      */
     @RequestMapping(value = "insert", method = RequestMethod.POST)
     public String insert(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
-        RmVoHelper.markCreateStamp(request,vo);  //打创建时间,IP戳
-        vo.setBody(RmPopulateHelper.populateVos(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo.class, request, TABLE_PK_<xsl:value-of select="@tableName"/>, TABLE_NAME_<xsl:value-of select="@tableName"/> + RM_NAMESPACE_SPLIT_KEY));
+        RmVoHelper.markCreateStamp(request,vo);  //打创建时间,IP戳<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+        vo.setBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>(RmPopulateHelper.populateVos(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo.class, request, TABLE_PK_<xsl:value-of select="@tableName"/>, TABLE_NAME_<xsl:value-of select="@tableName"/> + RM_NAMESPACE_SPLIT_KEY));
         RmVoHelper.markCreateStamp(request, vo.getBody());
-        <xsl:value-of select="tableFormatNameLowerFirst"/>Service.insert(vo);  //插入单条记录
+</xsl:for-each>
+        <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insert(vo);  //插入单条记录
         redirectAttributes.addFlashAttribute("message", "创建成功");
         return "redirect:/<xsl:value-of select="@tableDirName"/>";
     }
@@ -106,7 +112,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      */
     @RequestMapping(value = "update/{id}", method = RequestMethod.GET)
     public String updateForm(@PathVariable("id") String id, Model model) {
-        <xsl:value-of select="$TableNameVo"/> bean = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.get(new Long(id));
+        <xsl:value-of select="$TableNameVo"/> bean = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.get(new Long(id));
         model.addAttribute(REQUEST_BEAN, bean);  //把vo放入request
         model.addAttribute("action", "update");
         return "<xsl:value-of select="$jspSourceTableDir"/>/insert<xsl:value-of select="$tableFormatNameUpperFirst"/>";
@@ -117,10 +123,13 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      */
     @RequestMapping(value = "update", method = RequestMethod.POST)
     public String update(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
-        RmVoHelper.markModifyStamp(request,vo);  //打修改时间,IP戳
-        vo.setBody(RmPopulateHelper.populateVos(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo.class, request, TABLE_PK_<xsl:value-of select="@tableName"/>, TABLE_NAME_<xsl:value-of select="@tableName"/> + RM_NAMESPACE_SPLIT_KEY));
+        RmVoHelper.markModifyStamp(request,vo);  //打修改时间,IP戳<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+        vo.setBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>(RmPopulateHelper.populateVos(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo.class, request, TABLE_PK_<xsl:value-of select="@tableName"/>, TABLE_NAME_<xsl:value-of select="@tableName"/> + RM_NAMESPACE_SPLIT_KEY));
         RmVoHelper.markModifyStamp(request, vo.getBody());
-        int count = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.update(vo);  //更新单条记录
+</xsl:for-each>
+        int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.update(vo);  //更新单条记录
         redirectAttributes.addFlashAttribute("message", "更新成功: " + count);
         return "redirect:/<xsl:value-of select="@tableDirName"/>";
     }
@@ -133,11 +142,11 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         int deleteCount = 0;  //定义成功删除的记录数
         String id = request.getParameter(REQUEST_ID);
         if(id != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> id.length() > 0) {
-            deleteCount = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.delete(new Long(id));
+            deleteCount = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete(new Long(id));
         } else {
             Long[] ids = RmJspHelper.getLongArrayFromRequest(request, REQUEST_IDS); //从request获取多条记录id
             if (ids != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> ids.length != 0) {
-                deleteCount += <xsl:value-of select="tableFormatNameLowerFirst"/>Service.delete(ids);  //删除多条记录
+                deleteCount += <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete(ids);  //删除多条记录
             }
         }
         redirectAttributes.addFlashAttribute("message", "删除成功: " + deleteCount);
@@ -149,7 +158,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      */
     @RequestMapping(value = "detail/{id}")
     public String detail(@PathVariable("id") String id, Model model, HttpServletRequest request) {
-        <xsl:value-of select="$TableNameVo"/> bean = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.get(new Long(id));
+        <xsl:value-of select="$TableNameVo"/> bean = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.get(new Long(id));
         model.addAttribute(REQUEST_BEAN, bean);  //把vo放入request
         if(RM_YES.equals(request.getParameter(REQUEST_IS_READ_ONLY))) {
             model.addAttribute(REQUEST_IS_READ_ONLY, request.getParameter(REQUEST_IS_READ_ONLY));
@@ -175,7 +184,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         String rowKeyField = "parent_message_id";  //定义行统计关键字
         String columnKeyField = "id";  //定义列统计关键字
         String queryCondition = getQueryCondition(request);  //从request中获得查询条件
-        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.list(queryCondition, null);  //查询出全部结果
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.list(queryCondition, null);  //查询出全部结果
         StatisticExport sh = new StatisticExport(beans, rowKeyField, columnKeyField, "父消息ID\\主键");
         model.addAttribute(REQUEST_STATISTIC_HANDLER, sh);  //把结果集放入request
         model.addAttribute(REQUEST_WRITE_BACK_FORM_VALUES, RmVoHelper.getMapFromRequest((HttpServletRequest) request));  //回写表单
@@ -285,7 +294,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     public String insertRm_m_message_user(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
         String message_id = request.getParameter("message_id");
         String[] user_ids = request.getParameter("user_ids").split(",");
-        int count = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.insertRm_m_message_user(message_id, user_ids).length;
+        int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insertRm_m_message_user(message_id, user_ids).length;
         redirectAttributes.addFlashAttribute("message", "插入了" + count + "条记录!");
         redirectAttributes.addAttribute("message_id", message_id);
         return "redirect:/<xsl:value-of select="@tableDirName"/>/rm_m_message_user";
@@ -298,7 +307,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     public String deleteRm_m_message_user(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
         String message_id = request.getParameter("message_id");
         String[] user_ids = request.getParameter("user_ids").split(",");
-        int count = <xsl:value-of select="tableFormatNameLowerFirst"/>Service.deleteRm_m_message_user(message_id, user_ids);
+        int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.deleteRm_m_message_user(message_id, user_ids);
         redirectAttributes.addFlashAttribute("message", "删除了" + count + "条记录!");
         redirectAttributes.addAttribute("message_id", message_id);
         return "redirect:/<xsl:value-of select="@tableDirName"/>/rm_m_message_user";

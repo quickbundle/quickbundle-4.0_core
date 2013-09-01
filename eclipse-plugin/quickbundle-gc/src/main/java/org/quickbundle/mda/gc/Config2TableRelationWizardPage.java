@@ -110,7 +110,7 @@ public class Config2TableRelationWizardPage extends WizardPage implements Listen
 			for(Element mainTable : lMainTable) {
 				if(mainTable.selectNodes("refTable").size() > 0) {
 					needCreateDefault = false;
-					addRelationGroup(container, columns, mainTable);
+					relations.add(addRelationGroup(container, columns, mainTable));
 				}
 			}
 		}
