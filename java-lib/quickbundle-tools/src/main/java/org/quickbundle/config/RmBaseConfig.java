@@ -1,6 +1,5 @@
 package org.quickbundle.config;
 
-import java.io.File;
 
 
 /**
@@ -10,8 +9,8 @@ import java.io.File;
 public class RmBaseConfig {
 	
 	public enum PageKey {
-		RM_PAGE_SIZE("rm_page_size"),
-		RM_CURRENT_PAGE("rm_current_page"),
+		RM_PAGE_SIZE("RM_PAGE_SIZE"),
+		RM_CURRENT_PAGE("RM_CURRENT_PAGE"),
 		RM_PAGE_VO("RM_PAGE_VO"),
 		RM_ORDER_STR("RM_ORDER_STR");
 		private String key;

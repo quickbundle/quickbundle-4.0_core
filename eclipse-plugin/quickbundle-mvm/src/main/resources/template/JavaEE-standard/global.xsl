@@ -278,7 +278,7 @@
 					<xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title='<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("<xsl:value-of select="$columnNameFormatLower"/>")%>' property="<xsl:value-of select="$columnNameFormatLower"/>" sortable="true">
 		<xsl:value-of select="$charLt"/>bean:define id="rmValue" name="rmBean" property="<xsl:value-of select="$columnNameFormatLower"/>"/>
 		<xsl:value-of select="$charLt"/>bean:define id="pk" name="rmBean" property="<xsl:value-of select="$tablePkFormatLower"/>"/>
-		<xsl:value-of select="$charLt"/>%="1".equals(rmValue) ? "<xsl:value-of select="$charLt"/>a target='_blank' href='" + request.getContextPath() + "/third/swfupload/globalUpload.jsp?bs_keyword=" + <xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME + "<xsl:value-of select="$charAmp"/>record_id=" + pk + "<xsl:value-of select="$charAmp"/>request_is_read_only=1'><xsl:value-of select="$charLt"/>img align='center' width='30' height='30' src='" + request.getContextPath() + "/images/icon/affix.gif' /><xsl:value-of select="$charLt"/>/a>" : "" %>
+		<xsl:value-of select="$charLt"/>%="1".equals(rmValue) ? "<xsl:value-of select="$charLt"/>a target='_blank' href='" + request.getContextPath() + "/third/swfupload/globalUpload.jsp?bs_keyword=" + <xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME + "<xsl:value-of select="$charAmp"/>record_id=" + pk + "<xsl:value-of select="$charAmp"/>REQUEST_IS_READ_ONLY=1'><xsl:value-of select="$charLt"/>img align='center' width='30' height='30' src='" + request.getContextPath() + "/images/icon/affix.gif' /><xsl:value-of select="$charLt"/>/a>" : "" %>
 	<xsl:value-of select="$charLt"/>/layout:collectionItem>
 	</xsl:when>
 				<!--处理时间戳参照-->

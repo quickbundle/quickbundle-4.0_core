@@ -35,7 +35,7 @@
     //饼图的链接定制
     PieURLGenerator pug = new PieURLGenerator() {
         public String generateURL(PieDataset dataset, Comparable key, int pieIndex) {
-            return contextPath + "/<xsl:value-of select="@tableDirName"/>?request_is_read_only=1<xsl:value-of select="$charAmp"/><xsl:value-of select="@statisticColumnFormatLower"/> =" + key;
+            return contextPath + "/<xsl:value-of select="@tableDirName"/>?REQUEST_IS_READ_ONLY=1<xsl:value-of select="$charAmp"/><xsl:value-of select="@statisticColumnFormatLower"/> =" + key;
         }
     };
     //饼图2D
@@ -45,7 +45,7 @@
     //柱图的链接定制
     CategoryURLGenerator cug = new CategoryURLGenerator() {
         public String generateURL(CategoryDataset dataset, int series, int category) {
-            return contextPath + "/<xsl:value-of select="@tableDirName"/>?request_is_read_only=1<xsl:value-of select="$charAmp"/><xsl:value-of select="@statisticColumnFormatLower"/> =" + dataset.getColumnKey(series);
+            return contextPath + "/<xsl:value-of select="@tableDirName"/>?REQUEST_IS_READ_ONLY=1<xsl:value-of select="$charAmp"/><xsl:value-of select="@statisticColumnFormatLower"/> =" + dataset.getColumnKey(series);
         }
     };
     //柱图
