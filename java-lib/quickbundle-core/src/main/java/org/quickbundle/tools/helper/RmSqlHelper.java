@@ -1,7 +1,9 @@
 package org.quickbundle.tools.helper;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -415,5 +417,36 @@ select * from ( select top 200 * from ( select TOP 100000 * from moa_user order 
 			return "group_concat";
 		} 
 		return null;
+	}
+	
+	public static<T> List<T[]> splitPagingArray(T[] array, int maxSqlInCount) {
+		if(array == null) {
+			return null;
+		}
+		List<T[]> result = new ArrayList<T[]>();
+		int position = 0;
+		while(position < array.length) {
+			int end = position + maxSqlInCount;
+			if(end > array.length) {
+				end = array.length;
+			}
+			T[] split = Arrays.copyOfRange(array, position, end);
+			result.add(split);
+			position += maxSqlInCount;
+		}
+		
+		return result;
+	}
+	
+	public static void main(String[] args) {
+		List<String> lvo = new ArrayList<String>();
+		for(int i=1; i<=1000; i++) {
+			lvo.add(i + "");
+		}
+		System.out.println(lvo);
+		List<String[]> result = splitPagingArray(lvo.toArray(new String[0]), 100);
+		for(String[] array : result) {
+			System.out.println(Arrays.deepToString(array));
+		}
 	}
 }

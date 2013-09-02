@@ -108,6 +108,11 @@ public class RmBaseConfigVo {
 	 * 默认字体
 	 */
 	private String defaultFont = null;
+	
+	/**
+	 * 最多in多少条记录？
+	 */
+	private int maxSqlInCount = 1000;
 
 	/**
 	 * @return the warHome
@@ -370,8 +375,16 @@ public class RmBaseConfigVo {
 	void setDefaultFont(String defaultFont) {
 		this.defaultFont = defaultFont;
 	}
-
 	
+	
+	public int getMaxSqlInCount() {
+		return maxSqlInCount;
+	}
+
+	public void setMaxSqlInCount(int maxSqlInCount) {
+		this.maxSqlInCount = maxSqlInCount;
+	}
+
 	//未加入rm.xml文件的配置
 	/**
 	 * 系统缓存检查周期
