@@ -90,11 +90,6 @@ public class RmBaseConfigVo {
 	private boolean createPythonLibIfNotExist = true;
 
 	/**
-	 * Perl的目录不存在时，自动解压缩
-	 */
-	private boolean createPerlIfNotExist = true;
-	
-	/**
 	 * 是否逻辑删除文件
 	 */
 	private boolean logicDeleteFile = false;
@@ -330,20 +325,6 @@ public class RmBaseConfigVo {
 	 */
 	void setCreatePythonLibIfNotExist(boolean createPythonLibIfNotExist) {
 		this.createPythonLibIfNotExist = createPythonLibIfNotExist;
-	}
-	
-	/**
-	 * @return the createPerlIfNotExist
-	 */
-	public boolean isCreatePerlIfNotExist() {
-		return createPerlIfNotExist;
-	}
-
-	/**
-	 * @param createPerlIfNotExist the createPerlIfNotExist to set
-	 */
-	void setCreatePerlIfNotExist(boolean createPerlIfNotExist) {
-		this.createPerlIfNotExist = createPerlIfNotExist;
 	}
 
 	/**
