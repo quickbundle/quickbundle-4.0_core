@@ -751,7 +751,6 @@ public final class RmVoHelper implements ICoreConstants {
                             }
     	                    int index = Integer.parseInt(String.valueOf(mFinalValue.get("tempIndex")));
     	                    mFinalValue.put("tempIndex", String.valueOf(++ index) );
-                            //RmStringHelper.log("      " + index + ": " + bEquals + " -->  vo1[" + currentKey + "]='" + bw.getPropertyValue(currentKey) + "',vo2[" + currentKey + "]='" + bw2.getPropertyValue(currentKey) + "'") ;
                             mFinalValue.put("tempEquals", bEquals ? "1" : "0" );
                         }
 	                    return 1;
@@ -1023,5 +1022,42 @@ public final class RmVoHelper implements ICoreConstants {
         }
 
         return valid;
+    }
+    
+    
+	/**
+	 * 比较老数据集与新数据集，得出insert/delete/update的最优序列
+	 * @param headVo 父(表头)Vo
+	 * @param headPkColumn 父(表头)Vo的PK列
+	 * @param oldVos 子(表体)Vo的老数据集
+	 * @param newVos 子(表体)Vo的新数据集
+	 * @param bodyPkColumn 子(表体)Vo的PK列
+	 * @param bodyFkColumn 子(表体)Vo的FK列，和父(表头)Vo的PK列关联
+	 * @return 将被新增、将被删除、将被更新的List数组，结构是 List[]{toInsert<放bodyVo对象>, toDelete<放bodyVo的PK>, toUpdate<放bodyVo对象>}
+	 */
+	public static<H,B> List<?>[] mergeVos(H headVo, String headPkColumn, List<B> oldVos, List<B> newVos, String bodyPkColumn, String bodyFkColumn) {
+    	List<B> toInsert = new ArrayList<B>();
+    	List<Object> toDelete = new ArrayList<Object>();
+    	List<B> toUpdate = new ArrayList<B>();
+		List<?>[] result = new List[]{toInsert, toDelete, toUpdate};
+    	Map<Object, B> oldVoMap = new HashMap<Object, B>();
+    	for(B oldVo : oldVos) {
+    		oldVoMap.put(getVoFieldValue(oldVo, bodyPkColumn), oldVo);
+    	}
+    	for(B newVo : newVos) {
+    		Object newVoPk = getVoFieldValue(newVo, bodyPkColumn);
+    		if(newVoPk != null && oldVoMap.containsKey(newVoPk)){
+    			toUpdate.add(newVo);
+    			oldVoMap.remove(newVoPk);
+    		} else {
+    			Object headVoPk = getVoFieldValue(headVo, headPkColumn);
+    			setVoFieldValue(newVo, bodyFkColumn, headVoPk);
+    			toInsert.add(newVo);
+    		}
+    	}
+    	for(Map.Entry<Object, B> en : oldVoMap.entrySet()) {
+    		toDelete.add(en.getKey());
+    	}
+    	return result;
     }
 }
