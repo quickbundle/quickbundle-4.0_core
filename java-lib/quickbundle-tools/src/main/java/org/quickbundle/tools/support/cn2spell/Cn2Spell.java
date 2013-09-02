@@ -11,7 +11,7 @@ import java.util.Set;
 
 import javax.management.RuntimeErrorException;
 
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.helper.RmStringHelper;
 
 /**

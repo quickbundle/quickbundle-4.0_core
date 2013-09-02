@@ -2,7 +2,7 @@ package org.quickbundle.tools.support.encrypt;
 
 import java.security.MessageDigest;
 
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 public final class Md5Token {
 	private static char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 	private static Md5Token instance = new Md5Token();
@@ -25,7 +25,7 @@ public final class Md5Token {
 		MessageDigest md5 = null;
 		try {
 			md5=MessageDigest.getInstance("MD5");
-			md5.update(arg.getBytes(RmConfig.defaultEncode()));
+			md5.update(arg.getBytes(RmBaseConfig.getSingleton().getDefaultEncode()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

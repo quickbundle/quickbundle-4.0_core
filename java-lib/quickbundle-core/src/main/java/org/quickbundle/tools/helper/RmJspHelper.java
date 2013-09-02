@@ -20,8 +20,8 @@ import javax.servlet.jsp.JspWriter;
 import org.quickbundle.ICoreConstants;
 import org.quickbundle.base.exception.RmRuntimeException;
 import org.quickbundle.base.web.page.RmPageVo;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.itf.IObject2Object;
-import org.quickbundle.project.init.RmConfig;
 import org.quickbundle.tools.support.log.RmLogHelper;
 
 
@@ -45,7 +45,7 @@ public class RmJspHelper implements ICoreConstants {
             strValue = "";
         } else {
             try {
-                strValue = new String(strValue.getBytes("ISO8859_1"), RmConfig.defaultEncode());
+                strValue = new String(strValue.getBytes("ISO8859_1"), RmBaseConfig.getSingleton().getDefaultEncode());
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -177,7 +177,7 @@ public class RmJspHelper implements ICoreConstants {
     public static void showHtmlAlertHistory(JspWriter out, String msg) throws Exception {
         out.write("<html>");
         out.write("<head><title></title>");
-        out.write("<meta http-equiv='Content-Type' content='text/html; charset=" + RmConfig.defaultEncode() + "'>");
+        out.write("<meta http-equiv='Content-Type' content='text/html; charset=" + RmBaseConfig.getSingleton().getDefaultEncode() + "'>");
         out.write("</head>");
         out.write("<body>");
         out.write("<SCRIPT type=\"text/javascript\">");
@@ -736,7 +736,7 @@ public class RmJspHelper implements ICoreConstants {
      * @param recordCount
      */
     public static RmPageVo transctPageVo(HttpServletRequest request, int recordCount) {
-        int pageSize = RmConfig.defaultPageSize();
+        int pageSize = RmBaseConfig.getSingleton().getDefaultPageSize();
         String requestValue = getValueFromRequest_attributeParameter(request, RM_PAGE_SIZE);
         try {
             if(requestValue != null && requestValue.trim().length() > 0) {
@@ -753,7 +753,7 @@ public class RmJspHelper implements ICoreConstants {
         String uri = request.getRequestURI();
         boolean rememberPage = false;
         try {
-        	rememberPage = RmConfig.getSingleton().isRememberPage();
+        	rememberPage = RmBaseConfig.getSingleton().isRememberPage();
 		} catch (Throwable e) {
 			//ignore
 		}
@@ -918,7 +918,7 @@ public class RmJspHelper implements ICoreConstants {
     }
     
     public static void setProfile(HttpServletRequest request, HttpServletResponse response, String key, String value) {
-    	setProfile(request, response, key, value, RmConfig.defaultCookieAge());
+    	setProfile(request, response, key, value, RmBaseConfig.getSingleton().getDefaultCookieAge());
     }
     
     public static void setProfile(HttpServletRequest request, HttpServletResponse response, String key, String value, int cookieAge) {

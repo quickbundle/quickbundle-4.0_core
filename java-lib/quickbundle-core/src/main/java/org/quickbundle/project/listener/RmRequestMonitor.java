@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.helper.RmStringHelper;
 import org.quickbundle.tools.helper.RmUUIDHelper;
 import org.quickbundle.tools.support.log.RmLogHelper;
@@ -102,7 +102,7 @@ public class RmRequestMonitor {
         String qs = "";
         if(request.getQueryString() != null) {
         	qs = request.getQueryString();
-        	qs = RmStringHelper.encode2Encode(qs, "iso8859-1", RmConfig.defaultEncode());
+        	qs = RmStringHelper.encode2Encode(qs, "iso8859-1", RmBaseConfig.getSingleton().getDefaultEncode());
         }
         sb.append(qs);
     	if (request.getAttribute("org.apache.struts.action.EXCEPTION") != null) {

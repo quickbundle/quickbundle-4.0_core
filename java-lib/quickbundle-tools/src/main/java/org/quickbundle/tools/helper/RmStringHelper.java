@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.support.cn2spell.Cn2Spell;
 import org.quickbundle.tools.support.log.RmLogHelper;
 import org.quickbundle.tools.support.unicode.UnicodeReader;
@@ -386,7 +386,7 @@ public class RmStringHelper {
         	sb.append("\"");
         } else if (tempValue instanceof BigDecimal) { //如果是数字，直接注入
         	sb.append("\"");
-            BigDecimal tmpB = new BigDecimal(tempValue.toString()).setScale(RmConfig.defaultNumberScale(), BigDecimal.ROUND_HALF_UP);
+            BigDecimal tmpB = new BigDecimal(tempValue.toString()).setScale(RmBaseConfig.getSingleton().getDefaultNumberScale(), BigDecimal.ROUND_HALF_UP);
             sb.append(replaceStringToScript(tmpB.toString()));
             sb.append("\"");
         } else if (tempValue instanceof String[] || tempValue instanceof int[] || tempValue instanceof long[]) { //如果是多值，放入数组
@@ -669,7 +669,7 @@ public class RmStringHelper {
 		String rtStr = "";
 		try {
 			if (url != null && url.length() >= 0) {
-				rtStr = URLEncoder.encode(url, RmConfig.defaultEncode());
+				rtStr = URLEncoder.encode(url, RmBaseConfig.getSingleton().getDefaultEncode());
 			}
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
@@ -681,7 +681,7 @@ public class RmStringHelper {
 		String rtStr = "";
 		try {
 			if (url != null && url.length() >= 0) {
-				rtStr = URLDecoder.decode(url, RmConfig.defaultEncode());
+				rtStr = URLDecoder.decode(url, RmBaseConfig.getSingleton().getDefaultEncode());
 			}
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
@@ -713,7 +713,7 @@ public class RmStringHelper {
             String tempValue = (mValue.get(tempKey) == null) ? "" : String.valueOf(mValue.get(tempKey));
 			if (tempKey.startsWith("RM") || tempKey.startsWith("RANMIN")) {
 				// TODO
-                if(!tempKey.equals(RmConfig.PageKey.RM_PAGE_SIZE.key())&&!tempKey.equals(RmConfig.PageKey.RM_CURRENT_PAGE.key())&& !tempKey.equals(RmConfig.PageKey.RM_ORDER_STR.key())){
+                if(!tempKey.equals(RmBaseConfig.PageKey.RM_PAGE_SIZE.key())&&!tempKey.equals(RmBaseConfig.PageKey.RM_CURRENT_PAGE.key())&& !tempKey.equals(RmBaseConfig.PageKey.RM_ORDER_STR.key())){
 					continue;
 				}
 			}

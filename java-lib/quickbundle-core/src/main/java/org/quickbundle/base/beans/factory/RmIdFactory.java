@@ -13,9 +13,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.itf.base.IRmIdFactory;
 import org.quickbundle.project.common.service.IRmCommonService;
-import org.quickbundle.project.init.RmConfig;
 import org.quickbundle.project.multidb.RmMultiDbHolder;
 import org.quickbundle.tools.context.RmBeanHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class RmIdFactory implements IRmIdFactory{
 	//批查询的数量
-    public static int MAX_BATCH_SIZE = RmConfig.getSingleton().getDefaultBatchSize();
+    public static int MAX_BATCH_SIZE = RmBaseConfig.getSingleton().getDefaultBatchSize();
     
 	//表名tableName-->ID
 	private Map<String, AtomicLong> mId = null;
@@ -73,10 +73,10 @@ public class RmIdFactory implements IRmIdFactory{
             	//this.mId.put(tableName, new AtomicLong());//放弃对mId初始化。
             }
             //generateIdFromDb模式下每次都查询的sql
-            if(RmConfig.isGenerateIdFromDb()) {
+            if(RmBaseConfig.getSingleton().isGenerateIdFromDb()) {
             	this.mTableName_sql = new HashMap<String, String[]>();
             }
-            if(RmConfig.getSingleton().isInitIdBatch()) { //Batch模式下批量查询maxId
+            if(RmBaseConfig.getSingleton().isInitIdBatch()) { //Batch模式下批量查询maxId
             	doInitIdBatch(mTableName_Ele);
             } else {
             	doInitId(mTableName_Ele);
@@ -153,7 +153,7 @@ public class RmIdFactory implements IRmIdFactory{
     	}
         IRmCommonService cService = RmBeanHelper.getCommonServiceInstance();
         //取到当前的集群节点ID
-        String clusterIdPrefix = RmConfig.getClusterIdPrefix();
+        String clusterIdPrefix = RmBaseConfig.getSingleton().getClusterIdPrefix();
         StringBuilder sql = new StringBuilder();
         int indexThisBatch = 0;
         List<String> lTmpTableName = new ArrayList<String>();
@@ -165,7 +165,7 @@ public class RmIdFactory implements IRmIdFactory{
     		lTmpTableName.add(tableName);
     		lTmpTablePrefix.add(tablePrefix);
     		String sqlSingle = getSqlSelectMax(eleTable, clusterIdPrefix);
-    		if(RmConfig.isGenerateIdFromDb()) {
+    		if(RmBaseConfig.getSingleton().isGenerateIdFromDb()) {
     			mTableName_sql.put(tableName, new String[]{sqlSingle, tablePrefix});
     		}
     		if(sql.length() > 0) {
@@ -174,7 +174,7 @@ public class RmIdFactory implements IRmIdFactory{
     		sql.append(sqlSingle);
     		indexThisBatch ++;
     	}
-    	if(!RmConfig.isGenerateIdFromDb()) {
+    	if(!RmBaseConfig.getSingleton().isGenerateIdFromDb()) {
     		try {
     			List<String> lMax_id = cService.doQuery(sql.toString(), new RowMapper() {
     				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -202,16 +202,16 @@ public class RmIdFactory implements IRmIdFactory{
     void doInitId( Map<String, Element> mTableName_Ele) {
         IRmCommonService cService = RmBeanHelper.getCommonServiceInstance();
         //取到当前的集群节点ID
-        String clusterIdPrefix = RmConfig.getClusterIdPrefix();
+        String clusterIdPrefix = RmBaseConfig.getSingleton().getClusterIdPrefix();
         for (Map.Entry<String, Element> en: mTableName_Ele.entrySet()) {
             String tableName = en.getKey();
         	Element eleTable = en.getValue();
         	String clusterTablePrefix = clusterIdPrefix + eleTable.valueOf("@table_code");
         	String strsql = getSqlSelectMax(eleTable, clusterIdPrefix);
-        	if(RmConfig.isGenerateIdFromDb()) {
+        	if(RmBaseConfig.getSingleton().isGenerateIdFromDb()) {
         		mTableName_sql.put(tableName, new String[]{strsql, clusterTablePrefix});
         	} 
-        	if(!RmConfig.isGenerateIdFromDb()) {
+        	if(!RmBaseConfig.getSingleton().isGenerateIdFromDb()) {
         		try {
         			List<String> lMax_id = cService.doQuery(strsql, new RowMapper() {
         				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -293,7 +293,7 @@ public class RmIdFactory implements IRmIdFactory{
         if(idFactory == null && isInitId) {
             return null;
         }
-        if(RmConfig.isGenerateIdFromDb()) {
+        if(RmBaseConfig.getSingleton().isGenerateIdFromDb()) {
         	String strsql = this.mTableName_sql.get(tableName)[0];
             List<String> lMax_id = RmBeanHelper.getCommonServiceInstance().doQuery(strsql, new RowMapper() {
                 public Object mapRow(ResultSet rs, int rowNum) throws SQLException {

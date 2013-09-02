@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.quickbundle.ICoreConstants;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 
 public class RmSqlHelper {
 	/**
@@ -172,7 +172,7 @@ public class RmSqlHelper {
 			return "";
 		}
 		StringBuilder sb = new StringBuilder();
-		if(ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equalsIgnoreCase(RmConfig.getDatabaseProductName())) {
+		if(ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equalsIgnoreCase(RmBaseConfig.getSingleton().getDatabaseProductName())) {
 			String valueStr = value.toString().trim();
 			sb.append("to_date('");
 			switch (valueStr.length()) {
@@ -237,7 +237,7 @@ public class RmSqlHelper {
 	 * @return
 	 */
 	public static String[] loadSql(String sqlFile) {
-		String str =  RmStringHelper.readStringFromFile(new File(sqlFile), RmConfig.defaultEncode());
+		String str =  RmStringHelper.readStringFromFile(new File(sqlFile), RmBaseConfig.getSingleton().getDefaultEncode());
 		str = Pattern.compile("/\\*.*?\\*/", Pattern.DOTALL).matcher(str).replaceAll("");
 		str = Pattern.compile("^\\s*(#|\\-\\-).*", Pattern.MULTILINE).matcher(str).replaceAll("");
 		String[] aSql = Pattern.compile(";|(^\\s*/\\s*$)|(\\n\\s*go(\\s*\\n|$))", Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).split(str);

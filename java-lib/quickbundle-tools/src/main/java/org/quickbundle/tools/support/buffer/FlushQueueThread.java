@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 
 /**
  * 刷新监视器
@@ -81,7 +81,7 @@ public class FlushQueueThread extends Thread {
 	/**
 	 * 检查周期
 	 */
-	private long flush_interval = RmConfig.cacheCheckInterval();
+	private long flush_interval = RmBaseConfig.getSingleton().getCacheCheckInterval();
 
 	public void addTaskQueue(AbstractTaskQueue buf) {
 		if (buf == null) {

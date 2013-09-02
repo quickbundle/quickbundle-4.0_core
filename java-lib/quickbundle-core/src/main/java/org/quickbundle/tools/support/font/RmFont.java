@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.support.path.RmPathHelper;
 
 public class RmFont{
@@ -68,8 +68,8 @@ public class RmFont{
 		for (String fontName : fontNames) {
 			lFont.add(fontName);
 		}
-		if(RmConfig.getSingleton().getDefaultFont() != null && RmConfig.getSingleton().getDefaultFont().trim().length() > 0) {
-			String[] aDefaultFont = RmConfig.getSingleton().getDefaultFont().trim().split(",");
+		if(RmBaseConfig.getSingleton().getDefaultFont() != null && RmBaseConfig.getSingleton().getDefaultFont().trim().length() > 0) {
+			String[] aDefaultFont = RmBaseConfig.getSingleton().getDefaultFont().trim().split(",");
 			for(String defaultFont : aDefaultFont) {
 				if(lFont.contains(defaultFont)) {
 					return defaultFont;

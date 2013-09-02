@@ -20,7 +20,7 @@ import java.util.Map;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.project.listener.RmGlobalMonitor;
 import org.quickbundle.tools.helper.RmUUIDHelper;
 import org.quickbundle.tools.support.log.RmLogHelper;
@@ -69,7 +69,7 @@ public class RmLogMethod {
     }
     
     private void recursionAppendCause(Throwable t, List<String> lCause) {
-    	if(t.getCause() == null || lCause.size() > RmConfig.maxCircleCount()) {
+    	if(t.getCause() == null || lCause.size() > RmBaseConfig.getSingleton().getMaxCircleCount()) {
     		return;
     	} else {
     		Throwable tCause = t.getCause();

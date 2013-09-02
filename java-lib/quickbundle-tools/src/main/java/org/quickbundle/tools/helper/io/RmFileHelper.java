@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 
 public class RmFileHelper {
 	
@@ -293,7 +293,7 @@ public class RmFileHelper {
         initParentDir(targetFile);
         try {
             in1 = new BufferedReader(new StringReader(context));
-            out1 = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), RmConfig.defaultEncode()));
+            out1 = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), RmBaseConfig.getSingleton().getDefaultEncode()));
             String s = null;
             boolean isFirstLine = true;
             while ((s = in1.readLine()) != null) {
@@ -457,7 +457,7 @@ public class RmFileHelper {
             		isFirstLine = false;
                 }
                 rf.seek(position);
-                rf.write(context.getBytes(RmConfig.defaultEncode()));
+                rf.write(context.getBytes(RmBaseConfig.getSingleton().getDefaultEncode()));
                 rf.writeBytes(originRemain.toString());
             }
 
@@ -528,8 +528,8 @@ public class RmFileHelper {
      * @throws IOException 
      */
     public static boolean delete(File f) throws IOException {
-    	if(RmConfig.getSingleton().isLogicDeleteFile()) {
-    		String recycle = RmConfig.getSingleton().getRecycleBinFolder();
+    	if(RmBaseConfig.getSingleton().isLogicDeleteFile()) {
+    		String recycle = RmBaseConfig.getSingleton().getRecycleBinFolder();
     		File fRecycle = new File(recycle);
     		if(!fRecycle.exists()) {
     			fRecycle.mkdirs();

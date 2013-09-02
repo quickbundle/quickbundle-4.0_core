@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.quickbundle.ICoreConstants;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.helper.RmSqlHelper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -215,7 +215,7 @@ public class RmJdbcTemplate extends JdbcTemplate {
 	 * @return
 	 */
 	private String appendTs(String sql) {
-		// if(RmConfig.sqlUpdateAutoAppendTs()) {
+		// if(RmBaseConfig.sqlUpdateAutoAppendTs()) {
 		// //检测是否有TS列
 		// if(RmTableTsDetector.containTs(sql)) {
 		// //sql = CrossDBObject.translate(sql);
@@ -284,11 +284,11 @@ public class RmJdbcTemplate extends JdbcTemplate {
 	 * @return
 	 */
 	public List query(String strsql, RowMapper rowMapper, int startIndex, int size, boolean absoluteByNext) {
-		if (RmConfig.getDatabaseProductName() != null &&
-				(getAbsolutePage().equals(EnumBoolean.FALSE) || (getAbsolutePage().equals(EnumBoolean.NULL) && !RmConfig.isAbsolutePage()))) {
-			if (ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equalsIgnoreCase(RmConfig.getDatabaseProductName())) {
+		if (RmBaseConfig.getSingleton().getDatabaseProductName() != null &&
+				(getAbsolutePage().equals(EnumBoolean.FALSE) || (getAbsolutePage().equals(EnumBoolean.NULL) && !RmBaseConfig.getSingleton().isAbsolutePage()))) {
+			if (ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equalsIgnoreCase(RmBaseConfig.getSingleton().getDatabaseProductName())) {
 				return (List) query(RmSqlHelper.getSqlPage4Oracle(strsql, startIndex, size), rowMapper);
-			} else if (ICoreConstants.DATABASE_PRODUCT_NAME_MYSQL.equalsIgnoreCase(RmConfig.getDatabaseProductName())) {
+			} else if (ICoreConstants.DATABASE_PRODUCT_NAME_MYSQL.equalsIgnoreCase(RmBaseConfig.getSingleton().getDatabaseProductName())) {
 				return (List) query(RmSqlHelper.getSqlPage4Mysql(strsql, startIndex, size), rowMapper);
 			}
 		}

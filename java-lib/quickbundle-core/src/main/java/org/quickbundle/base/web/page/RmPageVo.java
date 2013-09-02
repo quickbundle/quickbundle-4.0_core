@@ -1,7 +1,7 @@
 package org.quickbundle.base.web.page;
 
 import org.quickbundle.base.vo.RmValueObject;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 
 public class RmPageVo extends RmValueObject {
 	   
@@ -25,7 +25,7 @@ public class RmPageVo extends RmValueObject {
             recordCount = 0;
         }
         if(pageSize < 1) {
-            pageSize = RmConfig.defaultPageSize();
+            pageSize = RmBaseConfig.getSingleton().getDefaultPageSize();
         }
         this.recordCount = recordCount;
         this.pageSize = pageSize;

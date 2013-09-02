@@ -22,7 +22,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.DocumentSource;
 import org.dom4j.io.SAXReader;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 
 public class RmTransformHelper {
 	/**
@@ -60,7 +60,7 @@ public class RmTransformHelper {
 				}
 			}
 			transformer.transform(new StreamSource(myTableXml), new StreamResult(outer));
-			returnStr = bytesStream.toString(RmConfig.defaultEncode());
+			returnStr = bytesStream.toString(RmBaseConfig.getSingleton().getDefaultEncode());
 		} catch (TransformerConfigurationException e) {
 			throw new RuntimeException(e); 
 		} catch (TransformerException e) {
@@ -93,7 +93,7 @@ public class RmTransformHelper {
 			Templates pss = factory.newTemplates(new DocumentSource(xsltDoc));
 			transformer = pss.newTransformer();
 			transformer.transform(new DocumentSource(xmlDoc), new StreamResult(outer));
-			returnStr = bytesStream.toString(RmConfig.defaultEncode());
+			returnStr = bytesStream.toString(RmBaseConfig.getSingleton().getDefaultEncode());
 		} catch (TransformerConfigurationException e) {
 			throw new RuntimeException(e); 
 		} catch (TransformerException e) {

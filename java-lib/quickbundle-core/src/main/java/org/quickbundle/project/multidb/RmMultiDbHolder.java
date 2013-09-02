@@ -12,7 +12,7 @@
 package org.quickbundle.project.multidb;
 
 import org.quickbundle.base.exception.RmRuntimeException;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 
 public class RmMultiDbHolder {
     private static final ThreadLocal contextHolder = new ThreadLocal();
@@ -23,7 +23,7 @@ public class RmMultiDbHolder {
      * @param customerType
      */
     public static void setChannelId(String customerType) {
-        if(RmConfig.isMultiDb()) {
+        if(RmBaseConfig.getSingleton().isMultiDb()) {
             if(customerType == null || customerType.trim().length() == 0) {
                 throw new RmRuntimeException("指定的分频道数据库为空，非法操作！");
             }
@@ -37,7 +37,7 @@ public class RmMultiDbHolder {
      * @return
      */
     public static String getChannelId() {
-        if(RmConfig.isMultiDb()) {
+        if(RmBaseConfig.getSingleton().isMultiDb()) {
             return (String) contextHolder.get();  
         } else {
             return null;
@@ -49,7 +49,7 @@ public class RmMultiDbHolder {
      *
      */
     public static void clearChannelId() {
-        if(RmConfig.isMultiDb()) {
+        if(RmBaseConfig.getSingleton().isMultiDb()) {
             contextHolder.remove();
         }
     }

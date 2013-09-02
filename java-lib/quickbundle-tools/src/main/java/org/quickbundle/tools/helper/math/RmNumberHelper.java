@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 
 public class RmNumberHelper {
 	
@@ -20,7 +20,7 @@ public class RmNumberHelper {
 	 * @return
 	 */
 	public static String formatToThousandth(String value) {
-		return formatToThousandth(value, RmConfig.defaultNumberScale(), ",");
+		return formatToThousandth(value, RmBaseConfig.getSingleton().getDefaultNumberScale(), ",");
 	}
 	
 	/**

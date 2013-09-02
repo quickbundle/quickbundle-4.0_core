@@ -39,7 +39,7 @@ import org.dom4j.io.DocumentSource;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.helper.io.RmFileHelper;
 
 /**
@@ -67,10 +67,10 @@ public class RmXmlHelper {
         Transformer transformer = null;
         try {
             transformer = tFactory.newTransformer();
-            transformer.setOutputProperty("encoding", RmConfig.defaultEncode());
+            transformer.setOutputProperty("encoding", RmBaseConfig.getSingleton().getDefaultEncode());
             transformer.setOutputProperty("indent", "yes");
             transformer.transform(new DocumentSource(document), new StreamResult(outer));
-            returnStr = bytesStream.toString(RmConfig.defaultEncode());
+            returnStr = bytesStream.toString(RmBaseConfig.getSingleton().getDefaultEncode());
         } catch (TransformerConfigurationException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -186,7 +186,7 @@ public class RmXmlHelper {
             targetFile = formatToFile(targetFile);
             RmFileHelper.initParentDir(targetFile);
             OutputFormat format = OutputFormat.createPrettyPrint();
-            format.setEncoding(RmConfig.defaultEncode());
+            format.setEncoding(RmBaseConfig.getSingleton().getDefaultEncode());
             XMLWriter writer = new XMLWriter(new FileOutputStream(targetFile), format);
             writer.write(document);
             writer.close();

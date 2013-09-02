@@ -1,11 +1,16 @@
-package org.quickbundle.project.init;
+package org.quickbundle.config;
 
-public class RmConfigVo {
+import java.io.File;
+
+public class RmBaseConfigVo {
+	RmBaseConfigVo() {
+		super();
+	}
 	
 	private String warHome = "/qb_home/default";
 	
 	/**
-	 * 		<!-- cloud node info collected automatically? or read from rm.xml? #change in production -->
+	 * 	<!-- cloud node info collected automatically? or read from rm.xml? #change in production -->
 		<cloudNodeInfoAuto>false</cloudNodeInfoAuto>
 	 * @return 是集群模式？或单机？
 	 */
@@ -47,14 +52,6 @@ public class RmConfigVo {
 	 * RmIdFactory init id batch, union all?
 	 */
 	private boolean initIdBatch = false;
-
-	public boolean isInitIdBatch() {
-		return initIdBatch;
-	}
-
-	public void setInitIdBatch(boolean initIdBatch) {
-		this.initIdBatch = initIdBatch;
-	}
 
 	/**
 	 * 系统用户是否唯一登录，同时登录会强制踢出第一个用户
@@ -127,14 +124,14 @@ public class RmConfigVo {
 	/**
 	 * @param warHome the warHome to set
 	 */
-	public void setWarHome(String warHome) {
+	void setWarHome(String warHome) {
 		this.warHome = warHome;
 	}
 
 	/**
-	 * @return the clusterMode
+	 * @return 是集群模式？或单机？
 	 */
-	boolean isClusterMode() {
+	public boolean isClusterMode() {
 		return clusterMode;
 	}
 
@@ -146,9 +143,9 @@ public class RmConfigVo {
 	}
 
 	/**
-	 * @return the cloudNodeInfoAuto
+	 * @return 云节点信息是自动采集？还是从rm.xml中读取
 	 */
-	boolean isCloudNodeInfoAuto() {
+	public boolean isCloudNodeInfoAuto() {
 		return cloudNodeInfoAuto;
 	}
 
@@ -160,9 +157,9 @@ public class RmConfigVo {
 	}
 
 	/**
-	 * @return the databaseProductName
+	 * @return 获得默认数据源的数据库类型  IGlobalConstants.DATABASE_PRODUCT_NAME_...
 	 */
-	String getDatabaseProductName() {
+	public String getDatabaseProductName() {
 		return databaseProductName;
 	}
 
@@ -174,9 +171,9 @@ public class RmConfigVo {
 	}
 
 	/**
-	 * @return the multiDb
+	 * @return 是否水平拆分数据库
 	 */
-	boolean isMultiDb() {
+	public boolean isMultiDb() {
 		return multiDb;
 	}
 
@@ -188,9 +185,9 @@ public class RmConfigVo {
 	}
 
 	/**
-	 * @return the systemDebugMode
+	 * @return 系统是否开发调试状态(系统综合运行性能较低，优化了应用启动速度。同时sql的?替换输出，日志记录了sql真实数据)
 	 */
-	boolean isSystemDebugMode() {
+	public boolean isSystemDebugMode() {
 		return systemDebugMode;
 	}
 
@@ -202,9 +199,9 @@ public class RmConfigVo {
 	}
 
 	/**
-	 * @return the clusterIdPrefix
+	 * @return 本集群节点RmIdFactory产生的主键前缀
 	 */
-	String getClusterIdPrefix() {
+	public String getClusterIdPrefix() {
 		return clusterIdPrefix;
 	}
 
@@ -216,9 +213,9 @@ public class RmConfigVo {
 	}
 
 	/**
-	 * @return the generateIdFromDb
+	 * @return 是否RmIdFactory每次从数据库中读取，生成id (用于多人clusterIdPrefix相同，而且要同时开发)
 	 */
-	boolean isGenerateIdFromDb() {
+	public boolean isGenerateIdFromDb() {
 		return generateIdFromDb;
 	}
 
@@ -229,10 +226,18 @@ public class RmConfigVo {
 		this.generateIdFromDb = generateIdFromDb;
 	}
 
+	public boolean isInitIdBatch() {
+		return initIdBatch;
+	}
+
+	void setInitIdBatch(boolean initIdBatch) {
+		this.initIdBatch = initIdBatch;
+	}
+	
 	/**
-	 * @return the userUniqueLogin
+	 * @return 系统用户是否唯一登录，同时登录会强制踢出第一个用户
 	 */
-	boolean isUserUniqueLogin() {
+	public boolean isUserUniqueLogin() {
 		return userUniqueLogin;
 	}
 
@@ -244,9 +249,9 @@ public class RmConfigVo {
 	}
 
 	/**
-	 * @return the defaultPageSize
+	 * @return 默认的分页条数，会被rm.xml/rm/RmJspHelper/pageSize覆盖
 	 */
-	int getDefaultPageSize() {
+	public int getDefaultPageSize() {
 		return defaultPageSize;
 	}
 
@@ -267,14 +272,14 @@ public class RmConfigVo {
 	/**
 	 * @param defaultBatchSize the defaultBatchSize to set
 	 */
-	public void setDefaultBatchSize(int defaultBatchSize) {
+	void setDefaultBatchSize(int defaultBatchSize) {
 		this.defaultBatchSize = defaultBatchSize;
 	}
 
 	/**
-	 * @return the schedulerStart
+	 * @return 是否启动任务调度
 	 */
-	boolean isSchedulerStart() {
+	public boolean isSchedulerStart() {
 		return schedulerStart;
 	}
 
@@ -286,9 +291,9 @@ public class RmConfigVo {
 	}
 
 	/**
-	 * @return the appDescription
+	 * @return 得到系统简短描述
 	 */
-	String getAppDescription() {
+	public String getAppDescription() {
 		return appDescription;
 	}
 
@@ -300,9 +305,9 @@ public class RmConfigVo {
 	}
 
 	/**
-	 * @return the logRequest
+	 * @return 是否记录request的执行时间和SQL数量
 	 */
-	boolean isLogRequest() {
+	public boolean isLogRequest() {
 		return logRequest;
 	}
 
@@ -323,7 +328,7 @@ public class RmConfigVo {
 	/**
 	 * @param createPythonLibIfNotExist the createPythonLibIfNotExist to set
 	 */
-	public void setCreatePythonLibIfNotExist(boolean createPythonLibIfNotExist) {
+	void setCreatePythonLibIfNotExist(boolean createPythonLibIfNotExist) {
 		this.createPythonLibIfNotExist = createPythonLibIfNotExist;
 	}
 	
@@ -337,7 +342,7 @@ public class RmConfigVo {
 	/**
 	 * @param createPerlIfNotExist the createPerlIfNotExist to set
 	 */
-	public void setCreatePerlIfNotExist(boolean createPerlIfNotExist) {
+	void setCreatePerlIfNotExist(boolean createPerlIfNotExist) {
 		this.createPerlIfNotExist = createPerlIfNotExist;
 	}
 
@@ -351,7 +356,7 @@ public class RmConfigVo {
 	/**
 	 * @param logicDeleteFile the logicDeleteFile to set
 	 */
-	public void setLogicDeleteFile(boolean logicDeleteFile) {
+	void setLogicDeleteFile(boolean logicDeleteFile) {
 		this.logicDeleteFile = logicDeleteFile;
 	}
 
@@ -365,7 +370,7 @@ public class RmConfigVo {
 	/**
 	 * @param recycleBinFolder the recycleBinFolder to set
 	 */
-	public void setRecycleBinFolder(String recycleBinFolder) {
+	void setRecycleBinFolder(String recycleBinFolder) {
 		this.recycleBinFolder = recycleBinFolder;
 	}
 
@@ -373,7 +378,7 @@ public class RmConfigVo {
 		return rememberPage;
 	}
 
-	public void setRememberPage(boolean rememberPage) {
+	void setRememberPage(boolean rememberPage) {
 		this.rememberPage = rememberPage;
 	}
 
@@ -381,8 +386,132 @@ public class RmConfigVo {
 		return defaultFont;
 	}
 
-	public void setDefaultFont(String defaultFont) {
+	void setDefaultFont(String defaultFont) {
 		this.defaultFont = defaultFont;
 	}
 
+	
+	//未加入rm.xml文件的配置
+	/**
+	 * 系统缓存检查周期
+	 * @return
+	 */
+	public long getCacheCheckInterval() {
+		return 1000 * 2;
+	}
+	
+	/**
+	 * 是否全局监控
+	 * @return
+	 */
+	public boolean isGlobalMonitor() {
+		return true;
+	}
+	
+	/**
+	 * 系统缓存刷新周期
+	 * @return
+	 */
+	public long getCacheFlushInterval() {
+		return 1000 * 60 * 5;
+	}
+	
+    /**
+     * 翻页是否用rs.absolute(index)的方案
+     */
+    public boolean isAbsolutePage() {
+    	return false;
+    }
+    
+    /**
+     * 批处理sql的最大记录日志数量
+     */
+    public int getMaxLogSqlBatchSize() {
+    	return 100;
+    }
+	
+	/**
+	 * 系统用户登录是否DEMO状态(不校验用户数据库)
+	 */
+	public boolean isUserDemoMode() {
+		return false;
+	}
+	
+	/**
+	 * 是否给insert和update的sql语句自动加ts
+	 */
+	public boolean isSqlUpdateAutoAppendTs() {
+		return false;
+	}
+	
+	/**
+	 * 默认的临时文件夹
+	 */
+	public File getDefaultTempDir() {
+		return new File(System.getProperty("java.io.tmpdir") + File.separator + "quickbundle");
+	}
+	
+	/**
+	 * 默认编码
+	 */
+	public String getDefaultEncode() {
+		return "UTF-8";
+	}
+	
+	/**
+	 * 默认实数数值的精度
+	 */
+	public int getDefaultNumberScale() {
+		return 2;
+	}
+	
+	/**
+	 * 登录时是否有校验码
+	 */
+	public boolean isLoginValidateVerifyCode() {
+		return true;
+	}
+	
+	/**
+	 * 登录是持否支持cookie
+	 */
+	public boolean isLoginCookie() {
+		return true;
+	}
+	
+	/**
+	 * cookie默认值365天
+	 */
+	public int getDefaultCookieAge() {
+		return 365 * 24 * 60 * 60;
+	}
+		
+	/**
+	 * ajax提交是否已json格式，还是post表单提交？
+	 */
+	public boolean isSubmitJson() {
+		return false;
+	}
+	
+	/**
+	 * 默认的树形编码起始值，适用于简单的纯数字树，每个节点下最多有900个子节点
+	 */
+	public String getDefaultTreeCodeFirst() {
+		return "100";
+	}
+    
+	/**
+	 * 指定最大循环次数，防止死循环
+	 */
+	public int getMaxCircleCount() {
+		return 10000;
+	}
+	
+	/**
+	 * 定义单实例全局缓存的最大容量，防止溢出攻击，如公开的url列表
+	 * @return
+	 */
+	public int getMaxCacheSize() {
+		return 10000;
+	}
 }

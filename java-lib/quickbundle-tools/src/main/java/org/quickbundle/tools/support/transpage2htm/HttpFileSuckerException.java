@@ -1,8 +1,5 @@
 package org.quickbundle.tools.support.transpage2htm;
 
-
-
-
 public class HttpFileSuckerException extends AppException
 {
 

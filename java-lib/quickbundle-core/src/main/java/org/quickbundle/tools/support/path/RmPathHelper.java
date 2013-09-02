@@ -20,7 +20,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.quickbundle.base.web.servlet.RmHolderServlet;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 import org.quickbundle.tools.support.log.RmLogHelper;
 
@@ -93,7 +93,7 @@ public class RmPathHelper {
 		if (defaultRealPath != null) {
 			return new File(defaultRealPath);
 		} else {
-			File fileClasses = new File(getClassRootPath(RmConfig.class));
+			File fileClasses = new File(getClassRootPath(RmBaseConfig.class));
 			return findParentDir(fileClasses, "WEB-INF").getParentFile();
 		}
 	}
@@ -170,7 +170,7 @@ public class RmPathHelper {
 		String rtStr = "";
 		String url = String.valueOf(thisClass.getResource(""));
 		try {
-			rtStr = URLDecoder.decode(url, RmConfig.defaultEncode());
+			rtStr = URLDecoder.decode(url, RmBaseConfig.getSingleton().getDefaultEncode());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

@@ -14,8 +14,8 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.quickbundle.base.cache.RmCacheHandler;
 import org.quickbundle.base.web.servlet.RmHolderServlet;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.project.cloud.HostInfo;
-import org.quickbundle.project.init.RmConfig;
 import org.quickbundle.util.RmSequenceMap;
 
 public class RmClusterConfig {
@@ -79,7 +79,7 @@ public class RmClusterConfig {
 	}
 
 	private static Element getSelfNode() {
-		if (RmConfig.systemDebugMode()) {
+		if (RmBaseConfig.getSingleton().isSystemDebugMode()) {
 			String guessSelfId = guessSelfId();
 			if (guessSelfId != null && guessSelfId.length() > 0) {
 				return (Element) getRmClusterDoc().selectSingleNode("/rm/org.quickbundle.base.cloud.RmClusterConfig/node[@id='" + guessSelfId + "']");
@@ -112,7 +112,7 @@ public class RmClusterConfig {
 	 * @return
 	 */
 	public static String getSelfId() {
-		if (RmConfig.isCloudNodeInfoAuto()) {
+		if (RmBaseConfig.getSingleton().isCloudNodeInfoAuto()) {
 			try {
 				return InetAddress.getLocalHost().toString();
 			} catch (Exception e) {
@@ -128,7 +128,7 @@ public class RmClusterConfig {
 	 * @return
 	 */
 	public static String getSelfWsUrl() {
-		if (RmConfig.isCloudNodeInfoAuto() && localhostInfo != null) {
+		if (RmBaseConfig.getSingleton().isCloudNodeInfoAuto() && localhostInfo != null) {
 			String localhost = localhostInfo.getScheme() + "://" + localhostInfo.getServerName() + ":" + localhostInfo.getServerPort();
 			return localhost + getContextPath() + "/services/";
 		}

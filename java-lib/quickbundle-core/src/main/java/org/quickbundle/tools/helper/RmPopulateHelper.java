@@ -26,8 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.quickbundle.ICoreConstants;
 import org.quickbundle.base.vo.RmValueObject;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.itf.IPopulateParser;
-import org.quickbundle.project.init.RmConfig;
 import org.quickbundle.project.serializer.RmObjectMapper;
 import org.quickbundle.project.serializer.RmPopulateParser;
 import org.quickbundle.tools.support.log.RmLogHelper;
@@ -291,7 +291,7 @@ public class RmPopulateHelper<E> {
 		try {
 			Object resultObj = rs.getObject(columnName);
 			if(resultObj instanceof Date) {
-				if(ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equals(RmConfig.getDatabaseProductName())) {
+				if(ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equals(RmBaseConfig.getSingleton().getDatabaseProductName())) {
 					resultObj = rs.getTimestamp(columnName);
 				}
 			} else if (resultObj instanceof Clob) {
@@ -356,7 +356,7 @@ public class RmPopulateHelper<E> {
     @SuppressWarnings("unchecked")
 	public static<T> List<T> populateAjax(Class<T> classVo, HttpServletRequest request) {
     	List<T> lvo = new ArrayList<T>();
-    	if(RmConfig.isSubmitJson()) {
+    	if(RmBaseConfig.getSingleton().isSubmitJson()) {
     		String jsonStr = request.getParameter(ICoreConstants.RM_AJAX_JSON);
     		List vos;
 			try {

@@ -26,7 +26,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.DocumentSource;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 
 /**
  * 功能、用途、现存BUG:
@@ -57,7 +57,7 @@ public class DeepTreeXmlHandler {
         Transformer transformer = null;
         try {
             transformer = tFactory.newTransformer();
-            transformer.setOutputProperty(javax.xml.transform.OutputKeys.ENCODING, RmConfig.defaultEncode());
+            transformer.setOutputProperty(javax.xml.transform.OutputKeys.ENCODING, RmBaseConfig.getSingleton().getDefaultEncode());
             transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
             transformer.transform(new DocumentSource(this.document), new StreamResult(outer));
         } catch (TransformerConfigurationException e) {
@@ -67,7 +67,7 @@ public class DeepTreeXmlHandler {
         }
         String returnValue = "";
 		try {
-			returnValue = bytesStream.toString(RmConfig.defaultEncode());
+			returnValue = bytesStream.toString(RmBaseConfig.getSingleton().getDefaultEncode());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}

@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.support.log.RmLogHelper;
 import org.slf4j.Logger;
 
@@ -40,7 +40,7 @@ public abstract class AbstractTaskQueue<E> {
 	/**
 	 * 最大未刷新时间
 	 */
-	protected long expire_interval = RmConfig.cacheFlushInterval();
+	protected long expire_interval = RmBaseConfig.getSingleton().getCacheFlushInterval();
 
 	/**
 	 * 指定的下次刷新时刻

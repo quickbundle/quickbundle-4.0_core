@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.quickbundle.base.web.servlet.RmHolderServlet;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.helper.RmStringHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 import org.quickbundle.tools.support.log.RmLogHelper;
@@ -119,7 +119,7 @@ public class RmBeanFactory {
 			if(!isInitBean) {
 				StringBuilder warnInfo = new StringBuilder("RmBeanFactory.getBeanFactorySafe(\"");
 				warnInfo.append("\") return null, StackTrace:");
-				if(RmConfig.systemDebugMode()) {
+				if(RmBaseConfig.getSingleton().isSystemDebugMode()) {
 					warnInfo.append("\n");
 					warnInfo.append(RmStringHelper.getStackTrace(10000));
 				}
