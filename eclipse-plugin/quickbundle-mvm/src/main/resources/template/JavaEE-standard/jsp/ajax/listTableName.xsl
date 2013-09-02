@@ -229,7 +229,7 @@ Ext.onReady(function(){
 
     //分页工具栏
     var pagingToolbar = new Ext.PagingToolbar({
-        pageSize: <xsl:value-of select="$charLt"/>%=RmConfig.defaultPageSize()%>,
+        pageSize: <xsl:value-of select="$charLt"/>%=RmConfig.getSingleton().getDefaultPageSize()%>,
         store: store,
         displayInfo: true,
         displayMsg: '第{0}－{1}条 / 共{2}条',
@@ -271,7 +271,7 @@ Ext.onReady(function(){
                 var records = store.getModifiedRecords();
                 if(records != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> records.length > 0){
                     var params = {};
-<xsl:value-of select="$charLt"/>%if(RmConfig.isSubmitJson()) {%>
+<xsl:value-of select="$charLt"/>%if(RmConfig.getSingleton().isSubmitJson()) {%>
                     var json = [];
                     Ext.each(records, function(item) {
                         json.push(item.data);
