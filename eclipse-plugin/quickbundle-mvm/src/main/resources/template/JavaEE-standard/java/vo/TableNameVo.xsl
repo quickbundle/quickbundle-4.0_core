@@ -29,7 +29,7 @@ import org.quickbundle.base.vo.RmValueObject;
 public class <xsl:value-of select="$tableFormatName"/>Vo extends RmValueObject{
 
     private static final long serialVersionUID = 1;
-<xsl:for-each select="//table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
+<xsl:for-each select="/meta/tables/table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
     /**
      * <xsl:value-of select="str:getTableNameDisplay(/meta, @tableName)"/>:<xsl:value-of select="@tableName"/>
      */

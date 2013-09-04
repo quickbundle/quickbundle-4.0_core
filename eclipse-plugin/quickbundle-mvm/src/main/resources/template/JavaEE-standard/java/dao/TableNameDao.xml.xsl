@@ -6,7 +6,7 @@
 	<xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
 	<xsl:param name="targetFullPath"/>
 	<!--处理table-->
-	<xsl:template match="table">
+	<xsl:template match="/meta/tables/table[position()=1 or @tableName=/meta/relations/mainTable[@tableName=/meta/tables/table[1]/@tableName]/refTable[count(middleTable)=0]/@tableName]">
 		<xsl:result-document href="{$targetFullPath}/{str:getTableFormatNameUpperFirst(/meta, @tableName)}Dao.xml">
 			<xsl:variable name="thisTablePk" select="str:getTablePk(/meta, @tableName)"/>
 			<xsl:value-of select="$charLt"/>?xml version="1.0" encoding="UTF-8"?>

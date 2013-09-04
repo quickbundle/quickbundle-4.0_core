@@ -278,39 +278,41 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         return queryCondition;
     }
 
+<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0]/middleTable[1]">
     /**
-     * 跳转到中间表RM_M_MESSAGE_USER页
+     * 跳转到中间表<xsl:value-of select="@tableName"/>页
      */
-    @RequestMapping(value = "rm_m_message_user")
-    public String rm_m_message_user(Model model) {
-        return "<xsl:value-of select="$jspSourceTableDir"/>/middle/listRm_m_message_user";
+    @RequestMapping(value = "<xsl:value-of select="lower-case(@tableName)"/>")
+    public String <xsl:value-of select="lower-case(@tableName)"/>(Model model) {
+        return "<xsl:value-of select="$jspSourceTableDir"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>";
     }
     
     /**
-     * 插入中间表RM_M_MESSAGE_USER数据
+     * 插入中间表<xsl:value-of select="@tableName"/>数据
      */
-    @RequestMapping(value = "insertRm_m_message_user", method = RequestMethod.POST)
-    public String insertRm_m_message_user(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
-        String message_id = request.getParameter("message_id");
-        String[] user_ids = request.getParameter("user_ids").split(",");
-        int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insertRm_m_message_user(message_id, user_ids).length;
+    @RequestMapping(value = "insert<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>", method = RequestMethod.POST)
+    public String insert<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
+        String <xsl:value-of select="lower-case(@mainColumn)"/> = request.getParameter("<xsl:value-of select="lower-case(@mainColumn)"/>");
+        String[] <xsl:value-of select="lower-case(@refColumn)"/>s = request.getParameter("<xsl:value-of select="lower-case(@refColumn)"/>s").split(",");
+        int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insert<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(<xsl:value-of select="lower-case(@mainColumn)"/>, <xsl:value-of select="lower-case(@refColumn)"/>s).length;
         redirectAttributes.addFlashAttribute("message", "插入了" + count + "条记录!");
-        redirectAttributes.addAttribute("message_id", message_id);
-        return "redirect:/<xsl:value-of select="@tableDirName"/>/rm_m_message_user";
+        redirectAttributes.addAttribute("<xsl:value-of select="lower-case(@mainColumn)"/>", <xsl:value-of select="lower-case(@mainColumn)"/>);
+        return "redirect:/<xsl:value-of select="@tableDirName"/>/<xsl:value-of select="lower-case(@tableName)"/>";
     }
     
     /**
-     * 删除中间表RM_M_MESSAGE_USER数据
+     * 删除中间表<xsl:value-of select="@tableName"/>数据
      */
-    @RequestMapping(value = "deleteRm_m_message_user", method = RequestMethod.POST)
-    public String deleteRm_m_message_user(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
-        String message_id = request.getParameter("message_id");
-        String[] user_ids = request.getParameter("user_ids").split(",");
-        int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.deleteRm_m_message_user(message_id, user_ids);
+    @RequestMapping(value = "delete<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>", method = RequestMethod.POST)
+    public String delete<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
+        String <xsl:value-of select="lower-case(@mainColumn)"/> = request.getParameter("<xsl:value-of select="lower-case(@mainColumn)"/>");
+        String[] <xsl:value-of select="lower-case(@refColumn)"/>s = request.getParameter("<xsl:value-of select="lower-case(@refColumn)"/>s").split(",");
+        int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(<xsl:value-of select="lower-case(@mainColumn)"/>, <xsl:value-of select="lower-case(@refColumn)"/>s);
         redirectAttributes.addFlashAttribute("message", "删除了" + count + "条记录!");
-        redirectAttributes.addAttribute("message_id", message_id);
-        return "redirect:/<xsl:value-of select="@tableDirName"/>/rm_m_message_user";
+        redirectAttributes.addAttribute("<xsl:value-of select="lower-case(@mainColumn)"/>", <xsl:value-of select="lower-case(@mainColumn)"/>);
+        return "redirect:/<xsl:value-of select="@tableDirName"/>/<xsl:value-of select="lower-case(@tableName)"/>";
     }
+</xsl:for-each>
 }
 </xsl:template>
 
@@ -348,51 +350,5 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:if>
-	</xsl:template>
-	<!--生成多对多表Action定义-->
-	<xsl:template name="buildMiddleAction">
-		<xsl:variable name="parentChildTable" select="@parentChildTable"/>
-		<xsl:variable name="jspSourceTableDir" select="$jspSourceTableDir"/>
-			<xsl:analyze-string select="$parentChildTable" regex=",">
-				<xsl:non-matching-substring>
-					<xsl:analyze-string select="." regex='^\s*([\w_]+)\.([\w_]+)=([\w_]+)\.([\w_]+)\|([\w_]+)=([\w_]+)\.([\w_]+)\(([\w_]+)\.([\w_]+)\)\s*$'>
-						<xsl:matching-substring>
-    /**
-     * 功能: 插入中间表<xsl:value-of select="regex-group(3)"/>数据
-     * 
-     * @param mapping
-     * @param form
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    public ActionForward insert<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	String <xsl:value-of select="lower-case(regex-group(4))"/> = request.getParameter("<xsl:value-of select="lower-case(regex-group(4))"/>");
-    	String[] <xsl:value-of select="lower-case(regex-group(5))"/>s = request.getParameter("<xsl:value-of select="lower-case(regex-group(5))"/>s").split(",");
-    	int count = getService().insert<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>(<xsl:value-of select="lower-case(regex-group(4))"/>, <xsl:value-of select="lower-case(regex-group(5))"/>s).length;
-    	return RmJspHelper.getForwardInstanceWithAlert("/<xsl:value-of select="$jspSourceTableDir"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>.jsp?<xsl:value-of select="lower-case(regex-group(4))"/>=" + <xsl:value-of select="lower-case(regex-group(4))"/>, "插入了" + count + "条记录!");
-    }
-    
-    /**
-     * 功能: 删除中间表<xsl:value-of select="regex-group(3)"/>数据
-     * 
-     * @param mapping
-     * @param form
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    public ActionForward delete<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	String <xsl:value-of select="lower-case(regex-group(4))"/> = request.getParameter("<xsl:value-of select="lower-case(regex-group(4))"/>");
-    	String[] <xsl:value-of select="lower-case(regex-group(5))"/>s = request.getParameter("<xsl:value-of select="lower-case(regex-group(5))"/>s").split(",");
-    	int count = getService().delete<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>(<xsl:value-of select="lower-case(regex-group(4))"/>, <xsl:value-of select="lower-case(regex-group(5))"/>s);
-    	return RmJspHelper.getForwardInstanceWithAlert("/<xsl:value-of select="$jspSourceTableDir"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>.jsp?<xsl:value-of select="lower-case(regex-group(4))"/>=" + <xsl:value-of select="lower-case(regex-group(4))"/>, "删除了" + count + "条记录!");
-    }
-						</xsl:matching-substring>
-					</xsl:analyze-string>
-				</xsl:non-matching-substring>
-			</xsl:analyze-string>
 	</xsl:template>
 </xsl:stylesheet>

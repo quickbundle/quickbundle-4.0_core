@@ -27,7 +27,7 @@ public interface <xsl:value-of select="$ITableNameConstants"/> extends IGlobalCo
     public final static Map<xsl:value-of select="$charLt"/>String, String> TABLE_COLUMN_DISPLAY = new CaseInsensitiveMap(){{<xsl:apply-templates mode="table_column_display_put"/>
     }};
 
-<xsl:for-each select="//table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
+<xsl:for-each select="/meta/tables/table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
     //子表<xsl:value-of select="position()"/>-<xsl:value-of select="str:getTableNameDisplay(/meta, @tableName)"/>-表名、显示名
     public final static String TABLE_NAME_<xsl:value-of select="@tableName"/> = "<xsl:value-of select="@tableName"/>";
     public final static String TABLE_NAME_DISPLAY_<xsl:value-of select="@tableName"/> = "<xsl:value-of select="str:getTableNameDisplay(/meta, @tableName)"/>";
