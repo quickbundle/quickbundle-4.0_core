@@ -10,8 +10,6 @@
 	<xsl:strip-space elements=""/>
 	<xsl:preserve-space elements="*"/>
 	<!--抽取XML中的公共元素-->
-	<!--定义是否DEBUG状态-->
-	<xsl:variable name="debug" select="true"/>
 	<!--定义/database中的全局变量-->
 	<xsl:variable name="driver" select="/meta/database/driver"/>
 	<xsl:variable name="url" select="/meta/database/url"/>

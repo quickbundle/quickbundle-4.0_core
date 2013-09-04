@@ -70,7 +70,7 @@ public class RmStringHelper {
      * @param strArray 输入字符串数组
 	 * @return String
 	 */
-    public static String parseToSQLString(Object[] strArray) {
+    public static<T> String parseToSQLString(T[] strArray) {
         if (strArray == null || strArray.length == 0) {
 			return "-1"; //为了让长度为0的数组返回的sql不报错
         }
@@ -96,7 +96,7 @@ public class RmStringHelper {
      * @param strArray 输入字符串数组
 	 * @return String
 	 */
-	public static String parseToSQLStringApos(Object[] strArray) {
+	public static<T> String parseToSQLStringApos(T[] strArray) {
 		if (strArray == null || strArray.length == 0) {
 			return "'-1'"; //为了让长度为0的数组返回的sql不报错
 		}
@@ -122,8 +122,18 @@ public class RmStringHelper {
 	 * @param str
 	 * @return
 	 */
-	public static String[] parseStringToArray(String str) {
-		return parseStringToArray(str, ",");
+	public static String[] parseToArray(String str) {
+		return parseToArray(str, ",");
+	}
+	
+	/**
+	 * 功能: 把"123,234,567"转为new String[]{"123", "234", "567"}
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static Long[] parseToLongArray(String str) {
+		return parseToLongArray(str, ",");
 	}
 
 	/**
@@ -133,15 +143,37 @@ public class RmStringHelper {
 	 * @param splitKey
 	 * @return
 	 */
-	public static String[] parseStringToArray(String str, String splitKey) {
-		String[] returnStrArray = null;
+	public static String[] parseToArray(String str, String splitKey) {
+		String[] result = null;
 		if (str != null && str.length() > 0) {
-			returnStrArray = str.split(splitKey, -1);
+			result = str.split(splitKey, -1);
 		}
-		if (returnStrArray == null) {
-			returnStrArray = new String[0];
+		if (result == null) {
+			result = new String[0];
 		}
-		return returnStrArray;
+		return result;
+	}
+	
+	/**
+	 * 功能: 把"123,234,567"转为new Long[]{"123", "234", "567"}
+	 * 
+	 * @param str
+	 * @param splitKey
+	 * @return
+	 */
+	public static Long[] parseToLongArray(String str, String splitKey) {
+		Long[] result = null;
+		if (str != null && str.length() > 0) {
+			String[] strArray = str.split(splitKey, -1);
+			result = new Long[strArray.length];
+			for(int i=0; i<strArray.length; i++) {
+				result[i] = new Long(strArray[i]);
+			}
+		}
+		if (result == null) {
+			result = new Long[0];
+		}
+		return result;
 	}
 
 	/**
@@ -150,11 +182,11 @@ public class RmStringHelper {
      * @param strArray-->输入字符串数组
 	 * @return String
 	 */
-	public static String parseToString(String[] strArray) {
+	public static<T> String parseToString(T[] strArray) {
 		if (strArray == null || strArray.length == 0) {
 			return "";
 		} else if (strArray.length == 1) {
-			return strArray[0];
+			return String.valueOf(strArray[0]);
 		}
 
 		return parseToSQLString(strArray);

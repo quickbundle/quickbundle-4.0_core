@@ -20,8 +20,10 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.quickbundle.base.beans.factory.RmIdFactory;
+import org.quickbundle.config.RmConfig;
 import org.quickbundle.third.mybatis.ParaMap;
 import org.quickbundle.third.mybatis.RmSqlSessionDaoSupport;
+import org.quickbundle.tools.helper.RmSqlHelper;
 import org.springframework.stereotype.Repository;
 import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
@@ -81,7 +83,15 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
      * @return 成功删除的记录数
      */
     public int delete(Long ids[]) {
-        return getSqlSession().delete(namespace("deleteMulti"), ids);
+        if(ids == null || ids.length == 0) {
+            return 0;
+        }
+        int result = 0;
+        List<xsl:value-of select="$charLt"/>Long[]> lIds = RmSqlHelper.splitPagingArray(ids, RmConfig.getSingleton().getMaxSqlInCount());
+        for(Long[] thisIds : lIds) {
+            result += getSqlSession().delete(namespace("deleteMulti"), thisIds);
+        }
+        return result;
     }
 
     /**

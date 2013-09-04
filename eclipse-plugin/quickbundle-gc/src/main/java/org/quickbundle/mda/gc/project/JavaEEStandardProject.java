@@ -88,7 +88,12 @@ public class JavaEEStandardProject implements IConfigProject {
 		webAppName.setText(projectMap.get("webAppName"));
 		authorName.setText(projectMap.get("authorName"));
 		
-		if(projectMap.containsKey("baseProjectPath") && projectMap.get("baseProjectPath").trim().length() > 0) {
+		//如果webAppName不存在，自动调整
+		if(projectMap.containsKey("baseProjectPath") 
+				&& projectMap.get("baseProjectPath").trim().length() > 0
+				&& (webAppName.getText().length() == 0 
+					|| !new File(projectMap.get("baseProjectPath").trim() + File.separator + webAppName.getText()).exists())
+				){
 			File fProject = new File(projectMap.get("baseProjectPath").trim());
 			if(fProject.exists() && fProject.isDirectory()) {
 				File[] fProjectChild = fProject.listFiles(); 

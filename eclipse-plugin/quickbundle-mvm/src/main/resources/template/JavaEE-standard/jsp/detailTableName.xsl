@@ -7,6 +7,9 @@
 	<!--处理table-->
 	<xsl:template match="table[1]">
 <xsl:value-of select="$charLt"/>%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<xsl:if test="column[@isBuild='true' and (@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox')]">
+<xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
+</xsl:if>
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmVoHelper" %>
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmStringHelper" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
@@ -23,7 +26,6 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-    var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>Action";
     function find_onClick(){  //直接点到修改页面
         window.location.href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/update/" + $("#head_id").val();
     }
@@ -52,52 +54,7 @@
         <xsl:value-of select="$charLt"/>td align="right" width="20%"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
         <xsl:value-of select="$charLt"/>td width="25%"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
     <xsl:value-of select="$charLt"/>/tr>
-    <xsl:value-of select="$charLt"/>tr>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("biz_keyword")%>：<xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td>${bean.biz_keyword}<xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-    <xsl:value-of select="$charLt"/>/tr>
-    <xsl:value-of select="$charLt"/>tr>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("sender_id")%>：<xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td>${bean.sender_id}<xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-    <xsl:value-of select="$charLt"/>/tr>
-    <xsl:value-of select="$charLt"/>tr>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("parent_message_id")%>：<xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td>${bean.parent_message_id}<xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-    <xsl:value-of select="$charLt"/>/tr>
-    <xsl:value-of select="$charLt"/>tr>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("owner_org_id")%>：<xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td>${bean.owner_org_id}<xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-    <xsl:value-of select="$charLt"/>/tr>
-    <xsl:value-of select="$charLt"/>tr>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("template_id")%>：<xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td>${bean.template_id}<xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-    <xsl:value-of select="$charLt"/>/tr>
-    <xsl:value-of select="$charLt"/>tr>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("is_affix")%>：<xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td>${bean.is_affix}<xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-    <xsl:value-of select="$charLt"/>/tr>
-    <xsl:value-of select="$charLt"/>tr>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("record_id")%>：<xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td>${bean.record_id}<xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-    <xsl:value-of select="$charLt"/>/tr>
-    <xsl:value-of select="$charLt"/>tr>
-        <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("message_xml_context")%>：<xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td colspan="3">${bean.message_xml_context}<xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-    <xsl:value-of select="$charLt"/>/tr>
+	<xsl:apply-templates mode="buildTableColumn_detailDisplay"/>
     <xsl:value-of select="$charLt"/>/table>
 
 <xsl:value-of select="$charLt"/>input id="head_id" type="hidden" name="<xsl:value-of select="$tablePkFormatLower"/>" value="<xsl:value-of select="$charLt"/>%=RmStringHelper.prt(resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>())%>" />

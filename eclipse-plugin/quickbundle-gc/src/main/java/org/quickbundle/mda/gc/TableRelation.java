@@ -232,6 +232,7 @@ public class TableRelation {
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	public void mergeChildTable() {
 		Map<String, Document> mTableDoc = gcRule.getMTableDocs();
 		for(Map.Entry<String, Document> en : mTableDoc.entrySet()) {
@@ -242,7 +243,8 @@ public class TableRelation {
 			if(eleMainTable == null) {
 				continue;
 			}
-			List<Element> lRefTableChild = eleMainTable.selectNodes("refTable[count(middleTable)=0]");
+			//合并子表、中间表的目标表
+			List<Element> lRefTableChild = eleMainTable.selectNodes("refTable"); //"refTable[count(middleTable)=0]"则表示只merge子表
 			if(lRefTableChild.size() == 0) {
 				continue;
 			}
@@ -259,7 +261,7 @@ public class TableRelation {
 					//清理tableTos
 					Element eleTableTos = (Element)gcRule.getMainRule().selectSingleNode("/rules/database/tableTos");
 					Node eleTableTo = eleTableTos.selectSingleNode("tableTo[text()='" + refTableChild + "']");
-					if(eleTableTo != null) {
+					if(eleTableTo != null && eleRefTableChild.selectNodes("middleTable").size() == 0) {
 						eleTableTos.remove(eleTableTo);
 					}
 				}

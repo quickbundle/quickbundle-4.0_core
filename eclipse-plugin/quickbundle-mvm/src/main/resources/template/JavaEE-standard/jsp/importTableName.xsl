@@ -45,11 +45,7 @@
                 public String isValid(Object obj) {
                     String errorMsg = "";
                     <xsl:value-of select="$TableNameVo"/> vo = (<xsl:value-of select="$TableNameVo"/>)obj;
-
-                    if(vo.getBiz_keyword().length() == 0 ) { errorMsg += "Biz_keyword不能为空;"; }
-                                
-                    if(vo.getSender_id() == null ) { errorMsg += "Sender_id不能为空;"; }
-                
+<xsl:apply-templates mode="buildTableColumn_validateNotNull"/>
                     RmVoHelper.markCreateStamp(request2, vo);
                     return errorMsg;
                 }

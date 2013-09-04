@@ -20,13 +20,13 @@
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="@columnName"/>
 				<xsl:if test="not(position()=last())">, </xsl:if>
-				<xsl:if test="position() mod 4=0">
-      </xsl:if>
+				<xsl:if test="position() mod 4=0"><xsl:text>
+      </xsl:text></xsl:if>
 			</xsl:for-each>)
     values ( #{<xsl:value-of select="str:getTablePkFormatLower(/meta, @tableName)"/>}, 
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">#{<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>}<xsl:if test="not(position()=last())">, </xsl:if>
-				<xsl:if test="position() mod 4=0">
-      </xsl:if>
+				<xsl:if test="position() mod 4=0"><xsl:text>
+      </xsl:text></xsl:if>
 			</xsl:for-each>)
   <xsl:value-of select="$charLt"/>/insert>
     
@@ -45,8 +45,8 @@
     update <xsl:value-of select="@tableName"/> set 
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="@columnName"/>=#{<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>}<xsl:if test="not(position()=last())">, </xsl:if>
-				<xsl:if test="position() mod 4=0">
-      </xsl:if>
+				<xsl:if test="position() mod 4=0"><xsl:text>
+      </xsl:text></xsl:if>
 			</xsl:for-each>  
     where <xsl:value-of select="$thisTablePk"/>=#{<xsl:value-of select="str:getTablePkFormatLower(/meta, @tableName)"/>}
   <xsl:value-of select="$charLt"/>/update>
@@ -56,8 +56,8 @@
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="../@tableName"/>.<xsl:value-of select="@columnName"/>
 				<xsl:if test="not(position()=last())">, </xsl:if>
-				<xsl:if test="position() mod 4=0">
-      </xsl:if>
+				<xsl:if test="position() mod 4=0"><xsl:text>
+      </xsl:text></xsl:if>
 			</xsl:for-each>
     from <xsl:value-of select="@tableName"/> 
     where <xsl:value-of select="@tableName"/>.<xsl:value-of select="$thisTablePk"/>=#{<xsl:value-of select="str:getTablePkFormatLower(/meta, @tableName)"/>}
@@ -75,8 +75,8 @@
       <xsl:for-each select="column[not(@columnName=$thisTablePk) and @isBuild_list='true']">
 				<xsl:value-of select="../@tableName"/>.<xsl:value-of select="@columnName"/>
 				<xsl:if test="not(position()=last())">, </xsl:if>
-				<xsl:if test="position() mod 4=0">
-      </xsl:if>
+				<xsl:if test="position() mod 4=0"><xsl:text>
+      </xsl:text></xsl:if>
 			</xsl:for-each>
     from <xsl:value-of select="@tableName"/>
 			<xsl:value-of select="$charLt"/>if test="queryCondition != null and queryCondition != ''">
@@ -92,8 +92,8 @@
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="../@tableName"/>.<xsl:value-of select="@columnName"/>
 				<xsl:if test="not(position()=last())">, </xsl:if>
-				<xsl:if test="position() mod 4=0">
-      </xsl:if>
+				<xsl:if test="position() mod 4=0"><xsl:text>
+      </xsl:text></xsl:if>
 			</xsl:for-each>
     from <xsl:value-of select="@tableName"/>
 			<xsl:value-of select="$charLt"/>if test="queryCondition != null and queryCondition != ''">
@@ -109,8 +109,8 @@
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="../@tableName"/>.<xsl:value-of select="@columnName"/>
 				<xsl:if test="not(position()=last())">, </xsl:if>
-				<xsl:if test="position() mod 4=0">
-      </xsl:if>
+				<xsl:if test="position() mod 4=0"><xsl:text>
+      </xsl:text></xsl:if>
 			</xsl:for-each>
     from <xsl:value-of select="@tableName"/>
 			<xsl:value-of select="$charLt"/>trim prefix="where" prefixOverrides="and|or">  

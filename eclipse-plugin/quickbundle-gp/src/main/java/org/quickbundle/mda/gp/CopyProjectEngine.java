@@ -28,7 +28,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.quickbundle.project.init.RmConfig;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.helper.RmStringHelper;
 import org.quickbundle.tools.helper.io.RmFileHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
@@ -235,7 +235,7 @@ public class CopyProjectEngine {
 				String fileType = thisReplacedFile.substring(dotPos + 1);
 				if (sFileType.contains(fileType) || fileNeedCopyType == 1) {
 					Map<String, String[]> mToBeReplaceKey = new HashMap<String, String[]>();
-					String thisFileEncode = RmConfig.defaultEncode();
+					String thisFileEncode = RmBaseConfig.getSingleton().getDefaultEncode();
 					if (fileNeedCopyType == 1) {
 						List<Node> lNotNeedModuleFileKey = gpRule.getProjectRule().selectNodes("/rules/modules/module[@isBuild='false']/file[count(key)>0]");
 						for (Node nodeFile : lNotNeedModuleFileKey) {

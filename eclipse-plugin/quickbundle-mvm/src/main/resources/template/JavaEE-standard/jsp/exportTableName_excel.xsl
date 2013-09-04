@@ -20,6 +20,9 @@
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.base.web.page.RmPageVo"%>
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmStringHelper"%>
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmDateHelper"%>
+<xsl:if test="column[@isBuild='true' and (@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox')]">
+<xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
+</xsl:if>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="$tableFormatNameUpperFirst"/>Service" %>
@@ -55,47 +58,7 @@
         wsheet.addCell(new Label(columnIndex, rowIndex, "dt"));
         wsheet.addCell(new Label(columnIndex, rowIndex+1, "sn"));
         wsheet.addCell(new Label(columnIndex ++, rowIndex+2, "序"));
-
-        if(sColumn.contains("biz_keyword")) {
-            wsheet.addCell(new Label(columnIndex, rowIndex, ""));
-            wsheet.addCell(new Label(columnIndex, rowIndex+1, "biz_keyword"));
-            wsheet.addCell(new Label(columnIndex ++, rowIndex+2, <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("biz_keyword")));
-        }
-        if(sColumn.contains("sender_id")) {
-            wsheet.addCell(new Label(columnIndex, rowIndex, ""));
-            wsheet.addCell(new Label(columnIndex, rowIndex+1, "sender_id"));
-            wsheet.addCell(new Label(columnIndex ++, rowIndex+2, <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("sender_id")));
-        }
-        if(sColumn.contains("parent_message_id")) {
-            wsheet.addCell(new Label(columnIndex, rowIndex, ""));
-            wsheet.addCell(new Label(columnIndex, rowIndex+1, "parent_message_id"));
-            wsheet.addCell(new Label(columnIndex ++, rowIndex+2, <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("parent_message_id")));
-        }
-        if(sColumn.contains("owner_org_id")) {
-            wsheet.addCell(new Label(columnIndex, rowIndex, ""));
-            wsheet.addCell(new Label(columnIndex, rowIndex+1, "owner_org_id"));
-            wsheet.addCell(new Label(columnIndex ++, rowIndex+2, <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("owner_org_id")));
-        }
-        if(sColumn.contains("template_id")) {
-            wsheet.addCell(new Label(columnIndex, rowIndex, ""));
-            wsheet.addCell(new Label(columnIndex, rowIndex+1, "template_id"));
-            wsheet.addCell(new Label(columnIndex ++, rowIndex+2, <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("template_id")));
-        }
-        if(sColumn.contains("is_affix")) {
-            wsheet.addCell(new Label(columnIndex, rowIndex, ""));
-            wsheet.addCell(new Label(columnIndex, rowIndex+1, "is_affix"));
-            wsheet.addCell(new Label(columnIndex ++, rowIndex+2, <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("is_affix")));
-        }
-        if(sColumn.contains("record_id")) {
-            wsheet.addCell(new Label(columnIndex, rowIndex, ""));
-            wsheet.addCell(new Label(columnIndex, rowIndex+1, "record_id"));
-            wsheet.addCell(new Label(columnIndex ++, rowIndex+2, <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("record_id")));
-        }
-        if(sColumn.contains("message_xml_context")) {
-            wsheet.addCell(new Label(columnIndex, rowIndex, ""));
-            wsheet.addCell(new Label(columnIndex, rowIndex+1, "message_xml_context"));
-            wsheet.addCell(new Label(columnIndex ++, rowIndex+2, <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("message_xml_context")));
-        }
+<xsl:apply-templates mode="buildTableColumn_exportHead"/>
         wsheet.addCell(new Label(columnIndex++, rowIndex+2, "主键"));
         
         RmPageVo pageVo = new RmPageVo();
@@ -110,47 +73,7 @@
             columnIndex = 0;
             resultVo = itLResult.next();
             wsheet.addCell(new Label(columnIndex ++ , rowIndex, (startIndex ++) + "" ));
-
-            if(sColumn.contains("biz_keyword")) {
-                wsheet.addCell(new Label(columnIndex ++ , rowIndex, RmStringHelper.prt(resultVo.getBiz_keyword())));
-        
-            }
-        
-            if(sColumn.contains("sender_id")) {
-                wsheet.addCell(new Label(columnIndex ++ , rowIndex, RmStringHelper.prt(resultVo.getSender_id())));
-        
-            }
-        
-            if(sColumn.contains("parent_message_id")) {
-                wsheet.addCell(new Label(columnIndex ++ , rowIndex, RmStringHelper.prt(resultVo.getParent_message_id())));
-        
-            }
-        
-            if(sColumn.contains("owner_org_id")) {
-                wsheet.addCell(new Label(columnIndex ++ , rowIndex, RmStringHelper.prt(resultVo.getOwner_org_id())));
-        
-            }
-        
-            if(sColumn.contains("template_id")) {
-                wsheet.addCell(new Label(columnIndex ++ , rowIndex, RmStringHelper.prt(resultVo.getTemplate_id())));
-        
-            }
-        
-            if(sColumn.contains("is_affix")) {
-                wsheet.addCell(new Label(columnIndex ++ , rowIndex, RmStringHelper.prt(resultVo.getIs_affix())));
-        
-            }
-        
-            if(sColumn.contains("record_id")) {
-                wsheet.addCell(new Label(columnIndex ++ , rowIndex, RmStringHelper.prt(resultVo.getRecord_id())));
-        
-            }
-        
-            if(sColumn.contains("message_xml_context")) {
-                wsheet.addCell(new Label(columnIndex ++ , rowIndex, RmStringHelper.prt(resultVo.getMessage_xml_context())));
-        
-            }
-        
+<xsl:apply-templates mode="buildTableColumn_exportEnglishBody"/>
             wsheet.addCell(new Label(columnIndex ++ , rowIndex, RmStringHelper.prt(resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>())));
         }
         wbook.write();

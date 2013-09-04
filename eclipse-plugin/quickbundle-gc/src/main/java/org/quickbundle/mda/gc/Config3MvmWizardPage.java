@@ -132,6 +132,11 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
         });  
         
         setControl(container);
+		try {
+			doValidateSaveProject();
+        } catch (Exception e1) {
+            updateStatus("校验失败:" + e1.toString());
+        }
 	}
 	
 	void bindFocusIn(Canvas canvasProject) {
@@ -190,33 +195,34 @@ public class Config3MvmWizardPage extends WizardPage implements Listener {
 	public void handleEvent(Event event) {
 		if(event.type == SWT.Modify) {
     		try {
-    			Element mvms = (Element)gcRule.getMainRule().selectSingleNode("/rules/codegen/mvms");
-    			mvms.addAttribute("contextName", comboMvm.getText());
-    			IConfigProject cp = (IConfigProject)comboMvm.getData();
-    			String errorMsg = cp.validate();
-    			if(errorMsg != null) {
-    				updateStatus(errorMsg);
-    				event.doit = false;
-    				return;
-    			}
-    			
-    			Map<String, String> projectMap = cp.extractProjectMap();
-    			Element project = (Element)gcRule.getMainRule().selectSingleNode("/rules/project");
-    			for(Map.Entry<String, String> en : projectMap.entrySet()) {
-    				Node node = project.selectSingleNode(en.getKey());
-    				if(node == null) {
-    					node = project.addElement(en.getKey());
-    				}
-    				node.setText(en.getValue());
-    			}
-            	gcRule.save();
-            	updateStatus(null);
+    			doValidateSaveProject();
             } catch (Exception e1) {
-                updateStatus("保存失败:" + e1.toString());
+                updateStatus("校验失败:" + e1.toString());
                 e1.printStackTrace();
                 event.doit = false;
             }
 		}
+	}
+	
+	private void doValidateSaveProject() throws Exception {
+		Element mvms = (Element)gcRule.getMainRule().selectSingleNode("/rules/codegen/mvms");
+		mvms.addAttribute("contextName", comboMvm.getText());
+		IConfigProject cp = (IConfigProject)comboMvm.getData();
+		String errorMsg = cp.validate();
+		if(errorMsg != null) {
+			throw new RuntimeException(errorMsg);
+		}
+		Map<String, String> projectMap = cp.extractProjectMap();
+		Element project = (Element)gcRule.getMainRule().selectSingleNode("/rules/project");
+		for(Map.Entry<String, String> en : projectMap.entrySet()) {
+			Node node = project.selectSingleNode(en.getKey());
+			if(node == null) {
+				node = project.addElement(en.getKey());
+			}
+			node.setText(en.getValue());
+		}
+    	gcRule.save();
+    	updateStatus(null);
 	}
 	
 	public void updateStatus(String message) {

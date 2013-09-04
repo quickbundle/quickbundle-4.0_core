@@ -24,7 +24,6 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-    var rmJspPath = "";
     function export_onClick(){  //导出Excel
         form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/modules/<xsl:value-of select="@tableDirName"/>/<xsl:value-of select="@tableDirName"/>" + rmJspPath + "/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_excel.jsp";
         clickAllSelectMultiple(form.custom_column);
@@ -58,23 +57,7 @@
     <xsl:value-of select="$charLt"/>/tr>
     <xsl:value-of select="$charLt"/>%
         Map<xsl:value-of select="$charLt"/>String, String> m = new RmSequenceMap<xsl:value-of select="$charLt"/>String, String>();
-
-        m.put("biz_keyword", <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("biz_keyword"));
-        
-        m.put("sender_id", <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("sender_id"));
-        
-        m.put("parent_message_id", <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("parent_message_id"));
-        
-        m.put("owner_org_id", <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("owner_org_id"));
-        
-        m.put("template_id", <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("template_id"));
-        
-        m.put("is_affix", <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("is_affix"));
-        
-        m.put("record_id", <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("record_id"));
-        
-        m.put("message_xml_context", <xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("message_xml_context"));
-        
+<xsl:apply-templates mode="buildTableColumn_exportMap"/>
     %>
     <xsl:value-of select="$charLt"/>tr>
         <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>h4>选择字段：<xsl:value-of select="$charLt"/>/h4><xsl:value-of select="$charLt"/>/td>

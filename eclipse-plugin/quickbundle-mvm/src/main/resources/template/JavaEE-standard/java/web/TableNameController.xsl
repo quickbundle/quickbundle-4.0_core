@@ -18,14 +18,13 @@ import javax.validation.Valid;
 import org.quickbundle.base.web.page.RmPageVo;
 import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
 import <xsl:value-of select="$javaPackageTableDir"/>.service.<xsl:value-of select="$tableFormatNameUpperFirst"/>Service;
-import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>;
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
 </xsl:for-each>
 import org.quickbundle.third.excel.StatisticExport;
-import org.quickbundle.tools.helper.RmJspHelper;
-import org.quickbundle.tools.helper.RmPopulateHelper;
+import org.quickbundle.tools.helper.RmJspHelper;<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">
+import org.quickbundle.tools.helper.RmPopulateHelper;</xsl:if>
 import org.quickbundle.tools.helper.RmSqlHelper;
 import org.quickbundle.tools.helper.RmVoHelper;
 import org.springframework.beans.factory.annotation.Autowired;

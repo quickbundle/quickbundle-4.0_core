@@ -9,6 +9,10 @@
 <xsl:value-of select="$charLt"/>%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <xsl:value-of select="$charLt"/>%@ page import="java.util.List" %>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.tools.helper.RmVoHelper"%>
+<xsl:if test="column[@isBuild='true' and (@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox')]">
+<xsl:value-of select="$charLt"/>%@page import="org.quickbundle.tools.helper.RmJspHelper"%>
+<xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
+</xsl:if>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.base.web.page.RmPageVo"%>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
@@ -18,6 +22,7 @@
         lResult = (List)request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_BEANS);  //赋值给resultList
     }
 %>
+<xsl:if test="contains(@customBundleCode, 'importExport')">
 <xsl:value-of select="$charLt"/>%  //是否跳往打印页面
     if("1".equals(request.getParameter("isExport"))) {  //如果isExport参数等于1
         session.setAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION, request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION).toString());  //把查询条件放到session中
@@ -27,6 +32,7 @@
         return;
     }
 %>
+</xsl:if>
 <xsl:value-of select="$charLt"/>!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <xsl:value-of select="$charLt"/>html>
 <xsl:value-of select="$charLt"/>head>
@@ -62,7 +68,7 @@
         form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>";
         form.submit();
     }
-    
+  	<xsl:if test="contains(@customBundleCode, 'importExport')">
     function toImport_onClick() {  //到导入页面
         window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/import";
     }
@@ -73,7 +79,7 @@
         form.target="_self";    
         form.isExport.value="";
     }
-    
+   	</xsl:if>
     function toAdd_onClick() {  //到增加记录页面
         window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/insert";
     }
@@ -104,70 +110,7 @@
             <xsl:value-of select="$charLt"/>td width="20%"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
             <xsl:value-of select="$charLt"/>td width="25%"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
         <xsl:value-of select="$charLt"/>/tr>
-        <xsl:value-of select="$charLt"/>tr>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("biz_keyword")%><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td>
-                <xsl:value-of select="$charLt"/>input type="text" class="text_field" name="biz_keyword" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("biz_keyword")%>" maxLength="25"/>
-            <xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>/tr>
-        <xsl:value-of select="$charLt"/>tr>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("sender_id")%><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td>
-                <xsl:value-of select="$charLt"/>input type="text" class="text_field" name="sender_id" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("sender_id")%>" maxLength="9"/>
-            <xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>/tr>
-        <xsl:value-of select="$charLt"/>tr>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("parent_message_id")%><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td>
-                <xsl:value-of select="$charLt"/>input type="text" class="text_field_reference" hiddenInputId="parent_message_id" name="parent_message_id_name" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("parent_message_id")%>" value="" /><xsl:value-of select="$charLt"/>input type="hidden" name="parent_message_id"><xsl:value-of select="$charLt"/>img class="refButtonClass" src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/images/09.gif" onclick="javascript:getReference(new Array(form.parent_message_id, form.parent_message_id_name), '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/', '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/reference?referenceInputType=radio');"/>
-            <xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>/tr>
-        <xsl:value-of select="$charLt"/>tr>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("owner_org_id")%><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td>
-                <xsl:value-of select="$charLt"/>input type="text" class="text_field" name="owner_org_id" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("owner_org_id")%>" maxLength="25"/>
-            <xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>/tr>
-        <xsl:value-of select="$charLt"/>tr>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("template_id")%><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td>
-                <xsl:value-of select="$charLt"/>input type="text" class="text_field" name="template_id" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("template_id")%>" maxLength="9"/>
-            <xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>/tr>
-        <xsl:value-of select="$charLt"/>tr>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("is_affix")%><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td>
-                <xsl:value-of select="$charLt"/>input type="text" class="text_field" name="is_affix" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("is_affix")%>" maxLength="1"/>
-            <xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>/tr>
-        <xsl:value-of select="$charLt"/>tr>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("record_id")%><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td>
-                <xsl:value-of select="$charLt"/>input type="text" class="text_field" name="record_id" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("record_id")%>" maxLength="25"/>
-            <xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>/tr>
-        <xsl:value-of select="$charLt"/>tr>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("message_xml_context")%><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td>
-                <xsl:value-of select="$charLt"/>input type="text" class="text_field" name="message_xml_context" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("message_xml_context")%>" maxLength="32767"/>
-            <xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>/td>
-            <xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>/tr>
+		<xsl:apply-templates mode="buildTableColumn_queryInput"/>
     <xsl:value-of select="$charLt"/>/table>
 <xsl:value-of select="$charLt"/>/div>
 
@@ -202,30 +145,31 @@
         <xsl:value-of select="$charLt"/>bean:define id="rmValue" name="rmBean" property="<xsl:value-of select="$tablePkFormatLower"/>"/>
         <xsl:value-of select="$charLt"/>input type="hidden" signName="hiddenId" value="<xsl:value-of select="$charLt"/>%=rmValue%>"/>
     <xsl:value-of select="$charLt"/>/layout:collectionItem>
-    <xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title='<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("biz_keyword")%>' property="biz_keyword" sortable="true"/>
-    <xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title='<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("sender_id")%>' property="sender_id" sortable="true"/>
-    <xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title='<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("parent_message_id")%>' property="parent_message_id" sortable="true"/>
-    <xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title='<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("owner_org_id")%>' property="owner_org_id" sortable="true"/>
-    <xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title='<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("template_id")%>' property="template_id" sortable="true"/>
-    <xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title='<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("is_affix")%>' property="is_affix" sortable="true"/>
-    <xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title='<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("record_id")%>' property="record_id" sortable="true"/>
-    <xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title='<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("message_xml_context")%>' property="message_xml_context" sortable="true"/>
+	<xsl:apply-templates mode="buildTableColumn_listLayout"/>
     <xsl:value-of select="$charLt"/>/layout:collection>
 
 <xsl:value-of select="$charLt"/>%-- 下边这句是翻页, 如果去掉就不带翻页了,同时注意Action中也要调整方法 --%>
 <xsl:value-of select="$charLt"/>jsp:include page="/jsp/include/page.jsp" />
 
 <xsl:value-of select="$charLt"/>input type="hidden" name="id" value="">
+<xsl:if test="contains(@customBundleCode, 'importExport')">
 <xsl:value-of select="$charLt"/>input type="hidden" name="isExport" value="">
+</xsl:if>
 <xsl:value-of select="$charLt"/>input type="hidden" name="queryCondition" value="">
 
 <xsl:value-of select="$charLt"/>%--begin 生成页面汇总，正式部署前删除以下代码 --%>
 <xsl:value-of select="$charLt"/>div id="div_funcNode" style="padding:20px 10px 10px 0px; display:none" align="right">
+	<xsl:if test="contains(@customBundleCode, 'ajax')">
     <xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/ajax">Ajax<xsl:value-of select="$charLt"/>/a>
+	</xsl:if>
+	<xsl:if test="contains(@customBundleCode, 'statistic')">
     <xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/statistic/chart">图表统计<xsl:value-of select="$charLt"/>/a>
     <xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/statistic/flash">Flash图表<xsl:value-of select="$charLt"/>/a>
     <xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/statistic/table">交叉统计<xsl:value-of select="$charLt"/>/a>
+	</xsl:if>
+	<xsl:if test="contains(@customBundleCode, 'readonly')">
     <xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>?<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY%>=1">只读模式<xsl:value-of select="$charLt"/>/a>
+	</xsl:if>
 <xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>%--end --%>
 
