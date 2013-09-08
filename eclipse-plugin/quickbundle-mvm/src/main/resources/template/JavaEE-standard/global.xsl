@@ -328,7 +328,7 @@
 				<xsl:when test="@humanDisplayType='rm.affix'">
 					<xsl:value-of select="$charLt"/>tr>
 		<xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("<xsl:value-of select="$columnNameFormatLower"/>")%>：<xsl:value-of select="$charLt"/>/td>
-		<xsl:value-of select="$charLt"/>td colspan="3"><xsl:value-of select="$charLt"/>span class="rm_affix" bs_keyword="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME%>" record_id="<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()%>"><xsl:value-of select="$charLt"/>%=RmStringHelper.prt(resultVo.get<xsl:value-of select="str:upperFirst($columnNameFormatLower)"/>())%><xsl:value-of select="$charNbsp"/>
+		<xsl:value-of select="$charLt"/>td colspan="3"><xsl:value-of select="$charLt"/>span class="rm_affix" bs_keyword="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME%>" record_id="<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()%>">${bean.<xsl:value-of select="$columnNameFormatLower"/>}<xsl:value-of select="$charNbsp"/>
 					<xsl:value-of select="$charLt"/>/span><xsl:value-of select="$charLt"/>/td>
 	<xsl:value-of select="$charLt"/>/tr>
 	</xsl:when>
@@ -336,14 +336,14 @@
 				<xsl:when test="not(@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox') and @dataType='java.lang.String' and @maxLength &gt;= 1000">
 					<xsl:value-of select="$charLt"/>tr>
 		<xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("<xsl:value-of select="$columnNameFormatLower"/>")%>：<xsl:value-of select="$charLt"/>/td>
-		<xsl:value-of select="$charLt"/>td colspan="3"><xsl:value-of select="$charLt"/>%=RmStringHelper.prt(resultVo.get<xsl:value-of select="str:upperFirst($columnNameFormatLower)"/>())%><xsl:value-of select="$charNbsp"/>
+		<xsl:value-of select="$charLt"/>td colspan="3">${<xsl:value-of select="$columnNameFormatLower"/>}<xsl:value-of select="$charNbsp"/>
 					<xsl:value-of select="$charLt"/>/td>
 	<xsl:value-of select="$charLt"/>/tr>
 	</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="$charLt"/>tr>
 		<xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("<xsl:value-of select="$columnNameFormatLower"/>")%>：<xsl:value-of select="$charLt"/>/td>
-		<xsl:value-of select="$charLt"/>td><xsl:value-of select="$charLt"/>%=RmStringHelper.prt(resultVo.get<xsl:value-of select="str:upperFirst($columnNameFormatLower)"/>())%><xsl:value-of select="$charNbsp"/>
+		<xsl:value-of select="$charLt"/>td>${bean.<xsl:value-of select="$columnNameFormatLower"/>}<xsl:value-of select="$charNbsp"/>
 					<xsl:value-of select="$charLt"/>/td>
 		<xsl:value-of select="$charLt"/>td align="right"><xsl:value-of select="$charNbsp"/>
 					<xsl:value-of select="$charLt"/>/td>

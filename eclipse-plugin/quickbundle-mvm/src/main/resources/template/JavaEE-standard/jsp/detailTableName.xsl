@@ -6,11 +6,11 @@
 	<xsl:output method="text" encoding="UTF-8" escape-uri-attributes="no"/>
 	<!--处理table-->
 	<xsl:template match="table[1]">
-<xsl:value-of select="$charLt"/>%@ page contentType="text/html; charset=UTF-8" language="java" %>
+		<xsl:value-of select="$charLt"/>%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <xsl:if test="column[@isBuild='true' and (@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox')]">
-<xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
+			<xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmGlobalReference"%>
 </xsl:if>
-<xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmVoHelper" %>
+		<xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmVoHelper" %>
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmStringHelper" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
@@ -49,48 +49,79 @@
 
 <xsl:value-of select="$charLt"/>table class="mainTable">
     <xsl:value-of select="$charLt"/>tr>
-        <xsl:value-of select="$charLt"/>td align="right" width="20%"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td width="35%"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td align="right" width="20%"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
-        <xsl:value-of select="$charLt"/>td width="25%"><xsl:value-of select="$charNbsp"/><xsl:value-of select="$charLt"/>/td>
+        <xsl:value-of select="$charLt"/>td align="right" width="20%"><xsl:value-of select="$charNbsp"/>
+		<xsl:value-of select="$charLt"/>/td>
+        <xsl:value-of select="$charLt"/>td width="35%"><xsl:value-of select="$charNbsp"/>
+		<xsl:value-of select="$charLt"/>/td>
+        <xsl:value-of select="$charLt"/>td align="right" width="20%"><xsl:value-of select="$charNbsp"/>
+		<xsl:value-of select="$charLt"/>/td>
+        <xsl:value-of select="$charLt"/>td width="25%"><xsl:value-of select="$charNbsp"/>
+		<xsl:value-of select="$charLt"/>/td>
     <xsl:value-of select="$charLt"/>/tr>
 	<xsl:apply-templates mode="buildTableColumn_detailDisplay"/>
-    <xsl:value-of select="$charLt"/>/table>
+		<xsl:value-of select="$charLt"/>/table>
 
 <xsl:value-of select="$charLt"/>input id="head_id" type="hidden" name="<xsl:value-of select="$tablePkFormatLower"/>" value="<xsl:value-of select="$charLt"/>%=RmStringHelper.prt(resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>())%>" />
 
 <xsl:value-of select="$charLt"/>!-- child table begin -->
 <xsl:value-of select="$charLt"/>div id="rowTabs">
     <xsl:value-of select="$charLt"/>ul>
-        <xsl:value-of select="$charLt"/>li><xsl:value-of select="$charLt"/>a href="#rowTabs-<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_DISPLAY_<xsl:value-of select="@tableName"/> %>列表<xsl:value-of select="$charLt"/>/a><xsl:value-of select="$charLt"/>/li>
-        <xsl:value-of select="$charLt"/>li><xsl:value-of select="$charLt"/>a href="#rowTabs-rm_m_message_user">关联用户列表<xsl:value-of select="$charLt"/>/a><xsl:value-of select="$charLt"/>/li>
-    <xsl:value-of select="$charLt"/>/ul>
-    <xsl:value-of select="$charLt"/>div id="rowTabs-<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>">
+<xsl:for-each select="/meta/tables/table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
+			<xsl:text>        </xsl:text>
+			<xsl:value-of select="$charLt"/>li><xsl:value-of select="$charLt"/>a href="#rowTabs-<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_DISPLAY_<xsl:value-of select="@tableName"/> %>列表<xsl:value-of select="$charLt"/>/a><xsl:value-of select="$charLt"/>/li>
+</xsl:for-each>
+		<xsl:text>        </xsl:text>
+		<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0]/middleTable[1]">
+			<xsl:variable name="reftableNameVar" select="../@tableName"/>
+			<xsl:value-of select="$charLt"/>li><xsl:value-of select="$charLt"/>a href="#rowTabs-<xsl:value-of select="lower-case(@tableName)"/>">关联<xsl:value-of select="/meta/tables/table[@tableName=$reftableNameVar]/@tableNameDisplay"/>列表<xsl:value-of select="$charLt"/>/a><xsl:value-of select="$charLt"/>/li>
+</xsl:for-each>
+		<xsl:text>    </xsl:text>
+		<xsl:value-of select="$charLt"/>/ul>
+<xsl:for-each select="/meta/tables/table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
+			<xsl:value-of select="$charLt"/>div id="rowTabs-<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>">
         <xsl:value-of select="$charLt"/>div class="rowContainer">
             <xsl:value-of select="$charLt"/>table class="rowTable" namespace="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>" id="rowTable">
                 <xsl:value-of select="$charLt"/>tr class="trheader">
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("message_id")%><xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("receiver_id")%><xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("is_handle")%><xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("handle_date")%><xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("handle_result")%><xsl:value-of select="$charLt"/>/td>
-                <xsl:value-of select="$charLt"/>/tr>
+<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']">
+				<xsl:text>                  </xsl:text>
+				<xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="../@tableName"/>.get("<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>")%><xsl:value-of select="$charLt"/>/td>
+</xsl:for-each>
+			<xsl:text>                </xsl:text>
+			<xsl:value-of select="$charLt"/>/tr>
             <xsl:value-of select="$charLt"/>c:forEach items="${bean.body}" var="v">
                 <xsl:value-of select="$charLt"/>tr>
-                    <xsl:value-of select="$charLt"/>td>${v.message_id}<xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td>${v.receiver_id}<xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td>${v.is_handle}<xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td>${v.handle_date}<xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td>${v.handle_result}<xsl:value-of select="$charLt"/>/td>
-                <xsl:value-of select="$charLt"/>/tr>
+<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']">
+<xsl:variable name="columnNameFormatLower" select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>
+<xsl:variable name="humanDisplayTypeKeyword" select="str:substring-before2(@humanDisplayTypeKeyword, '=')"/>
+				<xsl:text>                  </xsl:text><xsl:value-of select="$charLt"/>td><xsl:choose>
+					<!--处理rm.dictionary.select checkbox(人性化展现方式)-->
+					<xsl:when test="@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox'"><xsl:value-of select="$charLt"/>bean:define id="<xsl:value-of select="$columnNameFormatLower"/>" name="v" property="<xsl:value-of select="$columnNameFormatLower"/>"/><xsl:value-of select="$charLt"/>%=RmGlobalReference.get(<xsl:value-of select="$ITableNameConstants"/>.DICTIONARY_<xsl:value-of select="$humanDisplayTypeKeyword"/>, <xsl:value-of select="$columnNameFormatLower"/>)%><xsl:value-of select="$charNbsp"/>
+					</xsl:when>
+					<!--处理rm.affix-->
+					<xsl:when test="@humanDisplayType='rm.affix'"><xsl:value-of select="$charLt"/>span class="rm_affix" bs_keyword="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME%>" record_id="<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()%>">${v.<xsl:value-of select="$columnNameFormatLower"/>}<xsl:value-of select="$charNbsp"/>
+					</xsl:when>
+					<!--处理textarea，大于1000个字符-->
+					<xsl:when test="not(@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox') and @dataType='java.lang.String' and @maxLength &gt;= 1000">${v.<xsl:value-of select="$columnNameFormatLower"/>}<xsl:value-of select="$charNbsp"/>
+					</xsl:when>
+					<xsl:otherwise>${v.<xsl:value-of select="$columnNameFormatLower"/>}<xsl:value-of select="$charNbsp"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:value-of select="$charLt"/>/td>
+</xsl:for-each>
+			<xsl:text>                </xsl:text>
+			<xsl:value-of select="$charLt"/>/tr>
             <xsl:value-of select="$charLt"/>/c:forEach>
             <xsl:value-of select="$charLt"/>/table>
         <xsl:value-of select="$charLt"/>/div>
     <xsl:value-of select="$charLt"/>/div>
-    <xsl:value-of select="$charLt"/>div id="rowTabs-rm_m_message_user">
-        <xsl:value-of select="$charLt"/>iframe id="tabInfo_frame" src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/rm_m_message_user?message_id=<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()%>" frameborder="0" width="100%" height="500px" scrolling="yes"/>
+</xsl:for-each>
+		<xsl:text>        </xsl:text>
+		<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0]/middleTable[1]">
+			<xsl:value-of select="$charLt"/>div id="rowTabs-<xsl:value-of select="lower-case(@tableName)"/>">
+        <xsl:value-of select="$charLt"/>iframe id="tabInfo_frame" src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableDirName"/>/<xsl:value-of select="lower-case(@tableName)"/>?<xsl:value-of select="lower-case(@mainColumn)"/>=<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()%>" frameborder="0" width="100%" height="500px" scrolling="yes"/>
     <xsl:value-of select="$charLt"/>/div>
-<xsl:value-of select="$charLt"/>/div>
+</xsl:for-each>
+		<xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>!-- child table end -->
 
 <xsl:value-of select="$charLt"/>/form>

@@ -70,23 +70,24 @@
 <xsl:value-of select="$charLt"/>!-- child table begin -->
 <xsl:value-of select="$charLt"/>div id="rowTabs">
     <xsl:value-of select="$charLt"/>ul>
+<xsl:for-each select="/meta/tables/table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
         <xsl:value-of select="$charLt"/>li><xsl:value-of select="$charLt"/>a href="#rowTabs-<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_DISPLAY_<xsl:value-of select="@tableName"/> %>列表<xsl:value-of select="$charLt"/>/a><xsl:value-of select="$charLt"/>/li>
+</xsl:for-each>
         <xsl:value-of select="$charLt"/>li style="position:relative;float:right;padding-right:10px">
             <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_addRow" value="增行" onclick="javascript:addRow_onClick()" title="增加一行"/>
             <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_removeRow" value="删行" onclick="javascript:removeRow_onClick();" title="删除所选的行"/>
             <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_copyRow" value="复制" onclick="javascript:copyRow_onClick();" title="复制所选的行"/>
         <xsl:value-of select="$charLt"/>/li>
     <xsl:value-of select="$charLt"/>/ul>
+<xsl:for-each select="/meta/tables/table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
     <xsl:value-of select="$charLt"/>div id="rowTabs-<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>">
         <xsl:value-of select="$charLt"/>div class="rowContainer">
             <xsl:value-of select="$charLt"/>table class="rowTable" namespace="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>" id="rowTable">
                 <xsl:value-of select="$charLt"/>tr class="trheader">
                     <xsl:value-of select="$charLt"/>td align="left" style="width:3%;"><xsl:value-of select="$charLt"/>input type="checkbox" class="rowCheckboxControl" style="display:none;"/>选择<xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("message_id")%><xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("receiver_id")%><xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("is_handle")%><xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("handle_date")%><xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("handle_result")%><xsl:value-of select="$charLt"/>/td>
+<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']">
+                    <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="../@tableName"/>.get("<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>")%><xsl:value-of select="$charLt"/>/td>
+</xsl:for-each>
                 <xsl:value-of select="$charLt"/>/tr>
                 <xsl:value-of select="$charLt"/>!-- 新增行原型 -->
                 <xsl:value-of select="$charLt"/>tr class="rowPrototype">
@@ -94,25 +95,16 @@
                         <xsl:value-of select="$charLt"/>input type="checkbox" name="rmRowSelecter"/>
                         <xsl:value-of select="$charLt"/>input type="hidden" name="<xsl:value-of select="$tablePkFormatLower"/>"/>
                     <xsl:value-of select="$charLt"/>/td>
+<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']">
                     <xsl:value-of select="$charLt"/>td>
-                        <xsl:value-of select="$charLt"/>input type="text" name="message_id" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("message_id")%>" value="" />
+                        <xsl:value-of select="$charLt"/>input type="text" name="message_id" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="../@tableName"/>.get("<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>")%>" value="" />
                     <xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td>
-                        <xsl:value-of select="$charLt"/>input type="text" name="receiver_id" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("receiver_id")%>" value="" />
-                    <xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td>
-                        <xsl:value-of select="$charLt"/>input type="text" name="is_handle" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("is_handle")%>" value="" />
-                    <xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td>
-                        <xsl:value-of select="$charLt"/>input type="text" name="handle_date" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("handle_date")%>" value="" />
-                    <xsl:value-of select="$charLt"/>/td>
-                    <xsl:value-of select="$charLt"/>td>
-                        <xsl:value-of select="$charLt"/>input type="text" name="handle_result" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="@tableName"/>.get("handle_result")%>" value="" />
-                    <xsl:value-of select="$charLt"/>/td>
+</xsl:for-each>
                 <xsl:value-of select="$charLt"/>/tr>
             <xsl:value-of select="$charLt"/>/table>
         <xsl:value-of select="$charLt"/>/div>
     <xsl:value-of select="$charLt"/>/div>
+</xsl:for-each>
 <xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>!-- child table end -->
 
@@ -123,7 +115,9 @@
 <xsl:value-of select="$charLt"/>%  //取出要修改的那条记录，并且回写表单
     if(isModify) {  //如果本页面是修改页面
         out.print(RmVoHelper.writeBackMapToForm(RmVoHelper.getMapFromVo(resultVo)));  //输出表单回写方法的脚本
-        out.print(RmVoHelper.writeBackListToRowTable(<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>, resultVo.getBody()));  //输出表单回写方法的脚本
+<xsl:for-each select="/meta/tables/table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
+        out.print(RmVoHelper.writeBackListToRowTable(<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>, resultVo.getBody<xsl:if test="position()>1"><xsl:value-of select="position()"/></xsl:if>()));  //输出表单回写方法的脚本
+</xsl:for-each>
     }
 %>
 <xsl:value-of select="$charLt"/>/script>
