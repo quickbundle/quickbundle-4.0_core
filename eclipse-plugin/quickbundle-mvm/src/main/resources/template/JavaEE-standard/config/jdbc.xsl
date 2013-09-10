@@ -5,7 +5,7 @@
 	<!--忽略xml声明-->
 	<xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
 	<!--处理table-->
-	<xsl:template match="myTables">
+	<xsl:template match="table[1]">
 
 #<xsl:value-of select="$dbProductName"/>
 jdbc.minPoolSize=1

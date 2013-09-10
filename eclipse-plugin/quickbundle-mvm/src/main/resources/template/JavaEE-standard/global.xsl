@@ -14,7 +14,7 @@
 	<xsl:variable name="TableNameVo" select="concat($tableFormatNameUpperFirst, 'Vo')"/>
 	<!--定义包名/目录名-->
 	<xsl:variable name="javaPackageTableDir" select="concat($javaPackageName, '.', $tableDirName)"/>
-	<xsl:variable name="jspSourceTableDir" select="concat($jspSourcePath, '/', $tableDirName)"/>
+	<xsl:variable name="jspSourceTableDir"><xsl:value-of select="$jspSourcePath"/><xsl:if test="not($jspSourcePath='')">/</xsl:if><xsl:value-of select="$tableDirName"/></xsl:variable>
 	<!--自定义函数，获得某个Java文件的非JavaDoc注释，调用java文件或concat字符串实现-->
 	<xsl:function name="str:getJavaFileComment">
 		<xsl:param name="authorNameVar" as="xs:string"/>
@@ -353,30 +353,5 @@
 	</xsl:otherwise>
 			</xsl:choose>
 		</xsl:if>
-	</xsl:template>
-	<!--生成子表、多对多表页签-->
-	<xsl:template name="buildChildTable">
-		<xsl:variable name="customBundleCode" select="@customBundleCode"/>
-		<xsl:variable name="parentChildTable" select="@parentChildTable"/>
-		<xsl:variable name="upperFirstTablePk" select="str:upperFirst($tablePkFormatLower)"/>
-		<xsl:variable name="upperKeyColumnFormatLower" select="str:upperFirst($keyColumnFormatLower)"/>
-		<xsl:variable name="jspSourceTableDir" select="$jspSourceTableDir"/>
-		<xsl:analyze-string select="$parentChildTable" regex=",">
-			<xsl:non-matching-substring>
-				<xsl:analyze-string select="." regex="^\s*([\w_]+)\.([\w_]+)=([\w_]+).([\w_]+)\s*$">
-					<xsl:matching-substring>
-	new Array ('子表<xsl:value-of select="regex-group(3)"/>','<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="regex-group(3)"/>ConditionAction.do?cmd=queryAll<xsl:value-of select="$charAmp"/>
-						<xsl:value-of select="lower-case(regex-group(4))"/>=<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="$upperFirstTablePk"/>()%><xsl:value-of select="$charAmp"/>
-						<xsl:value-of select="lower-case(regex-group(4))"/>_name=<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="$upperKeyColumnFormatLower"/>()%><xsl:if test="contains($customBundleCode, 'readonly')">
-							<xsl:value-of select="$charLt"/>%=isReadOnly ? "<xsl:value-of select="$charAmp"/>" + org.quickbundle.project.IGlobalConstants.REQUEST_IS_READ_ONLY + "=1" : ""%></xsl:if>'),
-						</xsl:matching-substring>
-				</xsl:analyze-string>
-				<xsl:analyze-string select="." regex="^\s*([\w_]+)\.([\w_]+)=([\w_]+)\.([\w_]+)\|([\w_]+)=([\w_]+)\.([\w_]+)\(([\w_]+)\.([\w_]+)\)\s*$">
-					<xsl:matching-substring>
-	new Array ('多对多-<xsl:value-of select="regex-group(6)"/>','<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>/middle/list<xsl:value-of select="str:upperFirst(lower-case(regex-group(3)))"/>.jsp?<xsl:value-of select="lower-case(regex-group(4))"/>=<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="$upperFirstTablePk"/>()%>'),
-						</xsl:matching-substring>
-				</xsl:analyze-string>
-			</xsl:non-matching-substring>
-		</xsl:analyze-string>
 	</xsl:template>
 </xsl:stylesheet>

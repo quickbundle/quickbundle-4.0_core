@@ -7,6 +7,6 @@
 	<!--处理table-->
 	<xsl:template match="table[1]">
 	/* <xsl:value-of select="$tableNameDisplay"/> */
-	rmCodeGeneration<xsl:value-of select="$tableFormatNameUpperFirst"/>_maintenance = insDoc(foldersTree, gLnk("0","<xsl:value-of select="$charNbsp"/><xsl:value-of select="$tableNameDisplay"/>", "<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableFormatNameUpperFirst"/>Action.do?cmd=queryAll", "ftv2link.gif"));
+	rmCodeGeneration<xsl:value-of select="$tableFormatNameUpperFirst"/>_maintenance = insDoc(foldersTree, gLnk("0","<xsl:value-of select="$charNbsp"/><xsl:value-of select="$tableNameDisplay"/>", "<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableDirName"/>", "ftv2link.gif"));
 	</xsl:template>
 </xsl:stylesheet>

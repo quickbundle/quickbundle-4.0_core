@@ -4,7 +4,7 @@
 	<xsl:import href="publicRoot.xsl"/>
 	<!--忽略xml声明-->
 	<xsl:output method="xml" omit-xml-declaration="no" encoding="UTF-8"/>
-	<!--处理myTables-->
+	<!--处理meta-->
 	<xsl:template match="meta">
 		<results>
 			<xsl:apply-templates/>

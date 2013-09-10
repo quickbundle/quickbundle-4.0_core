@@ -7,6 +7,6 @@
 	<!--处理table-->
 	<xsl:template match="table[1]">
 	,
-	{"href":"<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$jspSourceTableDir"/>/ajax/list<xsl:value-of select="$tableFormatNameUpperFirst"/>.jsp","text":"<xsl:value-of select="$tableNameDisplay"/>","id":"<xsl:value-of select="$tableFormatNameUpperFirst"/>","isClass":true,"iconCls":"icon-cmp","cls":"cls","leaf":true}
+	{"href":"<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableDirName"/>/ajax","text":"<xsl:value-of select="$tableNameDisplay"/>","id":"<xsl:value-of select="$tableFormatNameUpperFirst"/>","isClass":true,"iconCls":"icon-cmp","cls":"cls","leaf":true}
 	</xsl:template>
 </xsl:stylesheet>
