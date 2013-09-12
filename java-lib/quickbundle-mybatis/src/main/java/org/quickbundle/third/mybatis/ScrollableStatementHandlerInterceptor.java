@@ -14,6 +14,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
+import org.quickbundle.third.mybatis.dialect.DB2Dialect;
 import org.quickbundle.third.mybatis.dialect.Dialect;
 import org.quickbundle.third.mybatis.dialect.H2Dialect;
 import org.quickbundle.third.mybatis.dialect.MySql5Dialect;
@@ -55,6 +56,9 @@ public class ScrollableStatementHandlerInterceptor implements Interceptor {
 			break;
 		case ORACLE:
 			dialect = new OracleDialect();
+			break;
+		case DB2:
+			dialect = new DB2Dialect();
 			break;
 		}
 
