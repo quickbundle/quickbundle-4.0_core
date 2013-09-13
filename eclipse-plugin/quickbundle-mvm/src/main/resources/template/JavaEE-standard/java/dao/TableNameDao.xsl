@@ -138,7 +138,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
      * @return 总记录数
      */
     public int getCount(String queryCondition) {
-        return getSqlSession().selectOne(namespace("getCount"), queryCondition);
+        return (Integer)getSqlSession().selectOne(namespace("getCount"), queryCondition);
     }
     
     /**
