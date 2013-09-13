@@ -30,7 +30,7 @@ public class DB2Dialect implements Dialect {
 		Matcher matcher = patternSelect.matcher(sql);		
 		if(matcher.find()) {
 			matcher.appendReplacement(result, matcher.toMatchResult().group());
-			result.append("ROW_NUMBER() OVER(").append(orderString).append(") as rownum_,");
+			result.append(" ROW_NUMBER() OVER(").append(orderString).append(") as rownum_,");
 		}
 		matcher.appendTail(result);
 		
