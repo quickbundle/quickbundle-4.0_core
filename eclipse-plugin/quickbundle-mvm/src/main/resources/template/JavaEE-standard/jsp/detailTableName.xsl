@@ -92,7 +92,7 @@
         <xsl:value-of select="$charLt"/>div class="rowContainer">
             <xsl:value-of select="$charLt"/>table class="rowTable" namespace="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>" id="rowTable">
                 <xsl:value-of select="$charLt"/>tr class="trheader">
-<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']">
+<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true' and not(@columnName=/meta/relations/mainTable[@tableName=$tableName]/refTable[@tableName=$tableNameVar]/@refColumn)]">
 				<xsl:text>                  </xsl:text>
 				<xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="../@tableName"/>.get("<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>")%><xsl:value-of select="$charLt"/>/td>
 </xsl:for-each>
@@ -100,7 +100,7 @@
 			<xsl:value-of select="$charLt"/>/tr>
             <xsl:value-of select="$charLt"/>c:forEach items="${bean.body}" var="v">
                 <xsl:value-of select="$charLt"/>tr>
-<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']">
+<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true' and not(@columnName=/meta/relations/mainTable[@tableName=$tableName]/refTable[@tableName=$tableNameVar]/@refColumn)]">
 <xsl:variable name="columnNameFormatLower" select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>
 <xsl:variable name="humanDisplayTypeKeyword" select="str:substring-before2(@humanDisplayTypeKeyword, '=')"/>
 				<xsl:text>                  </xsl:text><xsl:value-of select="$charLt"/>td><xsl:choose>

@@ -80,12 +80,13 @@
         <xsl:value-of select="$charLt"/>/li>
     <xsl:value-of select="$charLt"/>/ul>
 <xsl:for-each select="/meta/tables/table[@tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
+<xsl:variable name="tableNameVar" select="@tableName"/>
     <xsl:value-of select="$charLt"/>div id="rowTabs-<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>">
         <xsl:value-of select="$charLt"/>div class="rowContainer">
             <xsl:value-of select="$charLt"/>table class="rowTable" namespace="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_<xsl:value-of select="@tableName"/>%>" id="rowTable">
                 <xsl:value-of select="$charLt"/>tr class="trheader">
                     <xsl:value-of select="$charLt"/>td align="left" style="width:3%;"><xsl:value-of select="$charLt"/>input type="checkbox" class="rowCheckboxControl" style="display:none;"/>选择<xsl:value-of select="$charLt"/>/td>
-<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']">
+<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true'  and not(@columnName=/meta/relations/mainTable[@tableName=$tableName]/refTable[@tableName=$tableNameVar]/@refColumn)]">
                     <xsl:value-of select="$charLt"/>td align="left" style="width:8%;"><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="../@tableName"/>.get("<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>")%><xsl:value-of select="$charLt"/>/td>
 </xsl:for-each>
                 <xsl:value-of select="$charLt"/>/tr>
@@ -94,8 +95,9 @@
                     <xsl:value-of select="$charLt"/>td align="center"> 
                         <xsl:value-of select="$charLt"/>input type="checkbox" name="rmRowSelecter"/>
                         <xsl:value-of select="$charLt"/>input type="hidden" name="<xsl:value-of select="$tablePkFormatLower"/>"/>
+                        <xsl:value-of select="$charLt"/>input type="hidden" name="<xsl:value-of select="lower-case(/meta/relations/mainTable[@tableName=$tableName]/refTable[@tableName=$tableNameVar]/@refColumn)"/>"/>
                     <xsl:value-of select="$charLt"/>/td>
-<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']"><xsl:text>
+<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true' and not(@columnName=/meta/relations/mainTable[@tableName=$tableName]/refTable[@tableName=$tableNameVar]/@refColumn)]"><xsl:text>
                     </xsl:text><xsl:value-of select="$charLt"/>td>
                         <xsl:value-of select="$charLt"/>input type="text" name="<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="../@tableName"/>.get("<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>")%>" value="" />
                     <xsl:value-of select="$charLt"/>/td></xsl:for-each>
