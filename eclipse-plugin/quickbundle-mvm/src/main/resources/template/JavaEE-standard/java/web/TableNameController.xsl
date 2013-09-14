@@ -52,6 +52,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  *   data                /<xsl:value-of select="@tableDirName"/>/statistic/flash/data
  * import page      GET  /<xsl:value-of select="@tableDirName"/>/import
  * import action    POST /<xsl:value-of select="@tableDirName"/>/import
+ * export custom    GET  /<xsl:value-of select="@tableDirName"/>/export
+ * export action    POST /<xsl:value-of select="@tableDirName"/>/export
  * ajax                  /<xsl:value-of select="@tableDirName"/>/ajax
  */
 
@@ -111,7 +113,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      */
     @RequestMapping(value = "update/{id}", method = RequestMethod.GET)
     public String updateForm(@PathVariable("id") String id, Model model) {
-        <xsl:value-of select="$TableNameVo"/> bean = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.get(new Long(id));
+        <xsl:value-of select="$TableNameVo"/> bean = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.get(new <xsl:value-of select="$tablePkClass"/>(id));
         model.addAttribute(REQUEST_BEAN, bean);  //把vo放入request
         model.addAttribute("action", "update");
         return "<xsl:value-of select="$jspSourceTableDir"/>/insert<xsl:value-of select="$tableFormatNameUpperFirst"/>";
@@ -141,9 +143,9 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         int deleteCount = 0;  //定义成功删除的记录数
         String id = request.getParameter(REQUEST_ID);
         if(id != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> id.length() > 0) {
-            deleteCount = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete(new Long(id));
+            deleteCount = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete(new <xsl:value-of select="$tablePkClass"/>(id));
         } else {
-            Long[] ids = RmJspHelper.getLongArrayFromRequest(request, REQUEST_IDS); //从request获取多条记录id
+            <xsl:value-of select="$tablePkClass"/>[] ids = RmJspHelper.get<xsl:if test="not($tablePkClass='String')"><xsl:value-of select="$tablePkClass"/></xsl:if>ArrayFromRequest(request, REQUEST_IDS); //从request获取多条记录id
             if (ids != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> ids.length != 0) {
                 deleteCount += <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete(ids);  //删除多条记录
             }
@@ -157,7 +159,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      */
     @RequestMapping(value = "detail/{id}")
     public String detail(@PathVariable("id") String id, Model model, HttpServletRequest request) {
-        <xsl:value-of select="$TableNameVo"/> bean = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.get(new Long(id));
+        <xsl:value-of select="$TableNameVo"/> bean = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.get(new <xsl:value-of select="$tablePkClass"/>(id));
         model.addAttribute(REQUEST_BEAN, bean);  //把vo放入request
         if(RM_YES.equals(request.getParameter(REQUEST_IS_READ_ONLY))) {
             model.addAttribute(REQUEST_IS_READ_ONLY, request.getParameter(REQUEST_IS_READ_ONLY));
@@ -243,16 +245,16 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     /**
      * 定制导出
      */
-    @RequestMapping(value = "exportCustom", method = RequestMethod.GET)
-    public String exportCustom(Model model) {
+    @RequestMapping(value = "export", method = RequestMethod.GET)
+    public String exportCustomForm(Model model) {
         return "<xsl:value-of select="$jspSourceTableDir"/>/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_custom";
     }
     
     /**
      * 执行导出
      */
-    @RequestMapping(value = "exportExcel", method = RequestMethod.POST)
-    public String exportExcel(Model model) {
+    @RequestMapping(value = "export", method = RequestMethod.POST)
+    public String exportData(Model model) {
         return "<xsl:value-of select="$jspSourceTableDir"/>/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_excel";
     }
     

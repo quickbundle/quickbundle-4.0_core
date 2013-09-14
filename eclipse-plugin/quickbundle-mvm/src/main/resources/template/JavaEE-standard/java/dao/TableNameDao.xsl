@@ -39,9 +39,9 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
      * @param vo 用于添加的VO对象
      * @return 若添加成功，返回新生成的id
      */
-    public Long insert(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo vo) {
+    public <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/> insert(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo vo) {
         if(vo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>() == null) {
-            vo.set<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>(RmIdFactory.requestIdLong(TABLE_NAME<xsl:if test="/meta/relations/mainTable and not(/meta/relations/mainTable[@tableName=$thisTableName])">_<xsl:value-of select="@tableName"/></xsl:if>)); //获得id
+            vo.set<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>(RmIdFactory.requestId<xsl:if test="not(str:getPkColumnClass(/meta, $tableName, @tablePk)='String')"><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/></xsl:if>(TABLE_NAME<xsl:if test="/meta/relations/mainTable and not(/meta/relations/mainTable[@tableName=$thisTableName])">_<xsl:value-of select="@tableName"/></xsl:if>)); //获得id
         }
         getSqlSession().insert(namespace("insert"), vo);
         return vo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>();
@@ -53,8 +53,8 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
      * @param vos 添加的VO对象数组
      * @return 若添加成功，返回新生成的id数组
      */
-    public Long[] insert(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[] vos) {
-        Long[] ids =RmIdFactory.requestIdLong(TABLE_NAME, vos.length); //批量获得id
+    public <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[] insert(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[] vos) {
+        <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[] ids =RmIdFactory.requestId<xsl:if test="not(str:getPkColumnClass(/meta, $tableName, @tablePk)='String')"><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/></xsl:if>(TABLE_NAME, vos.length); //批量获得id
         for(int i=0; i<xsl:value-of select="$charLt"/>vos.length; i++) {
             vos[i].set<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>(ids[i]);
         }
@@ -72,7 +72,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
      * @param id 用于删除的记录的id
      * @return 成功删除的记录数
      */
-    public int delete(Long id) {
+    public int delete(<xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/> id) {
         return getSqlSession().delete(namespace("delete"), id);
     }
 
@@ -82,13 +82,13 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
      * @param id 用于删除的记录的id
      * @return 成功删除的记录数
      */
-    public int delete(Long ids[]) {
+    public int delete(<xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/> ids[]) {
         if(ids == null || ids.length == 0) {
             return 0;
         }
         int result = 0;
-        List<xsl:value-of select="$charLt"/>Long[]> lIds = RmSqlHelper.splitPagingArray(ids, RmConfig.getSingleton().getMaxSqlInCount());
-        for(Long[] thisIds : lIds) {
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[]> lIds = RmSqlHelper.splitPagingArray(ids, RmConfig.getSingleton().getMaxSqlInCount());
+        for(<xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[] thisIds : lIds) {
             result += getSqlSession().delete(namespace("deleteMulti"), thisIds);
         }
         return result;
@@ -127,7 +127,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
      * @param id 用于查找的id
      * @return 查询到的VO对象
      */
-    public <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo get(Long id) {
+    public <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo get(<xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/> id) {
         return getSqlSession().selectOne(namespace("get"), id);
     }
     

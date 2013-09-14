@@ -39,6 +39,8 @@
 	<xsl:variable name="keyColumnFormat" select="str:getKeyColumnFormat(/meta, $tableName)"/>
 	<xsl:variable name="keyColumnFormatLower" select="str:getKeyColumnFormatLower(/meta, $tableName)"/>
 	<xsl:variable name="keyColumnDisplay" select="str:getKeyColumnDisplay(/meta, $tableName)"/>
+	<!--定义主键的Java类型-->
+    <xsl:variable name="tablePkClass" select="str:getPkColumnClass(/meta, $tableName, $tablePk)"/>
 	<!--定义全局标记分隔符，为了统一过滤并批量替换-->
 	<xsl:variable name="division">RM_FLAG_DIVISION</xsl:variable>
 	<!--定义全局分隔符-->
@@ -317,6 +319,17 @@
 		<xsl:param name="tableNameVar" as="xs:string"/>
 		<xsl:variable name="refColumnVar" select="str:getRefColumn($meta, $tableNameVar)"/>
 		<xsl:sequence select="lower-case((str:filter($refColumnVar, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$refColumnVar]/@filterKeyword, $meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$refColumnVar]/@filterType)))"/>
+	</xsl:function>
+	<!--自定义函数，获得指定表tableName的PK/FK列的Class-->
+	<xsl:function name="str:getPkColumnClass">
+		<xsl:param name="meta"/>
+		<xsl:param name="tableNameVar" as="xs:string"/>
+		<xsl:param name="pkColumnVar" as="xs:string"/>
+		<xsl:choose>
+		  <xsl:when test="$meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$pkColumnVar]/@dataType='java.lang.Long'">Long</xsl:when>
+		  <xsl:when test="$meta/tables/table[@tableName=$tableNameVar]/column[@columnName=$pkColumnVar]/@dataType='java.lang.String'">String</xsl:when>
+		  <xsl:otherwise>String</xsl:otherwise>
+		</xsl:choose>
 	</xsl:function>
 	<!--处理根元素-->
 	<xsl:template match="/">

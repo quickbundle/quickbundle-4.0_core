@@ -89,7 +89,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<xsl:value-of select="$charLt"/>?> get(@PathVariable("id") Long id) {
+    public ResponseEntity<xsl:value-of select="$charLt"/>?> get(@PathVariable("id") <xsl:value-of select="$tablePkClass"/> id) {
         <xsl:value-of select="$TableNameVo"/> task = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.get(id);
         if (task == null) {
             return new ResponseEntity<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>>(HttpStatus.NOT_FOUND);
@@ -113,7 +113,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
         }
         <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insert(vo);
         //按照Restful风格约定，创建指向新任务的url, 也可以直接返回id或对象.
-        Long id = vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>();
+        <xsl:value-of select="$tablePkClass"/> id = vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>();
         URI uri = uriBuilder.path("/api/<xsl:value-of select="@tableDirName"/>/" + id).build().toUri();
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(uri);
@@ -144,7 +144,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") Long id) {
+    public void delete(@PathVariable("id") <xsl:value-of select="$tablePkClass"/> id) {
         <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete(id);
     }
     
@@ -155,7 +155,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>RestController i
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public int delete(HttpServletRequest request) {
-        Long[] ids = RmJspHelper.getLongArrayFromRequest(request, REQUEST_IDS); //从request获取多条记录id
+        <xsl:value-of select="$tablePkClass"/>[] ids = RmJspHelper.get<xsl:if test="not($tablePkClass='String')"><xsl:value-of select="$tablePkClass"/></xsl:if>ArrayFromRequest(request, REQUEST_IDS); //从request获取多条记录id
         if (ids != null <xsl:value-of select="$charAmp"/><xsl:value-of select="$charAmp"/> ids.length != 0) {
             return <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete(ids); //删除多条记录
         }
