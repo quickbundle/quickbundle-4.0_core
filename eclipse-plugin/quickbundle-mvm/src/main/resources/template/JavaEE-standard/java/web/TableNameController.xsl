@@ -263,6 +263,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     }
 
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0]/middleTable[1]">
+<xsl:variable name="refTableNameVar" select="../@tableName"/>
     /**
      * 跳转到中间表<xsl:value-of select="@tableName"/>页
      */
@@ -281,7 +282,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insert<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(<xsl:value-of select="lower-case(@mainColumn)"/>, <xsl:value-of select="lower-case(@refColumn)"/>s).length;
         redirectAttributes.addFlashAttribute("message", "插入了" + count + "条记录!");
         redirectAttributes.addAttribute("<xsl:value-of select="lower-case(@mainColumn)"/>", <xsl:value-of select="lower-case(@mainColumn)"/>);
-        return "redirect:/<xsl:value-of select="@tableDirName"/>/<xsl:value-of select="lower-case(@tableName)"/>";
+        return "redirect:/<xsl:value-of select="$tableDirName"/>/<xsl:value-of select="lower-case(@tableName)"/>";
     }
     
     /**
@@ -294,7 +295,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.delete<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(<xsl:value-of select="lower-case(@mainColumn)"/>, <xsl:value-of select="lower-case(@refColumn)"/>s);
         redirectAttributes.addFlashAttribute("message", "删除了" + count + "条记录!");
         redirectAttributes.addAttribute("<xsl:value-of select="lower-case(@mainColumn)"/>", <xsl:value-of select="lower-case(@mainColumn)"/>);
-        return "redirect:/<xsl:value-of select="@tableDirName"/>/<xsl:value-of select="lower-case(@tableName)"/>";
+        return "redirect:/<xsl:value-of select="$tableDirName"/>/<xsl:value-of select="lower-case(@tableName)"/>";
     }
 </xsl:for-each>
 }

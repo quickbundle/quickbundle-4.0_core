@@ -62,7 +62,7 @@
 		<xsl:value-of select="$charLt"/>/table>
 
 <xsl:value-of select="$charLt"/>input id="head_id" type="hidden" name="<xsl:value-of select="$tablePkFormatLower"/>" value="<xsl:value-of select="$charLt"/>%=RmStringHelper.prt(resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>())%>" />
-
+<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable)>0">
 <xsl:value-of select="$charLt"/>!-- child table begin -->
 <xsl:value-of select="$charLt"/>div id="rowTabs">
     <xsl:value-of select="$charLt"/>ul>
@@ -123,7 +123,7 @@
 </xsl:for-each>
 		<xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>!-- child table end -->
-
+</xsl:if>
 <xsl:value-of select="$charLt"/>/form>
 <xsl:value-of select="$charLt"/>/body>
 <xsl:value-of select="$charLt"/>/html>

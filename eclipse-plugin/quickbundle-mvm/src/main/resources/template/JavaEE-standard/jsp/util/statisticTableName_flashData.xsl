@@ -8,7 +8,7 @@
 	<xsl:template match="table[1]">
 <xsl:value-of select="$charLt"/>%@ page contentType="application/json; charset=UTF-8" language="java" %><xsl:value-of select="$charLt"/>%
     final RmKeyCountList<xsl:value-of select="$charLt"/>String> kc = new RmKeyCountList<xsl:value-of select="$charLt"/>String>(); 
-    RmProjectHelper.getCommonServiceInstance().doQuery("select <xsl:value-of select="@statisticColumnFormatLower"/>  as rm_key, count(*) as rm_count from <xsl:value-of select="@tableName"/> group by <xsl:value-of select="@statisticColumnFormatLower"/> ", new RowMapper() {
+    RmProjectHelper.getCommonServiceInstance().doQuery("select <xsl:value-of select="$statisticColumnFormatLower"/>  as rm_key, count(*) as rm_count from <xsl:value-of select="@tableName"/> group by <xsl:value-of select="$statisticColumnFormatLower"/> ", new RowMapper() {
         public Object mapRow(ResultSet rs, int i) throws SQLException {
             String key = rs.getString("rm_key");
             kc.put(key == null ? "" : key, rs.getLong("rm_count"));
@@ -18,7 +18,7 @@
     System.out.println(kc.getJsonKey());
 %>{
   "title":{
-    "text":  "按<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("<xsl:value-of select="@statisticColumnFormatLower"/> ")%>统计",
+    "text":  "按<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("<xsl:value-of select="$statisticColumnFormatLower"/>")%>统计",
     "style": "{font-size: 20px; color:#0000ff; font-family: Verdana; text-align: center;}"
   },
 
@@ -32,7 +32,7 @@
       "type":      "<xsl:value-of select="$charLt"/>%=request.getParameter("type") != null ? request.getParameter("type") : "pie"%>",
       "alpha":     0.5,
       "colour":    "#9933CC",
-      "text--":      "<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("<xsl:value-of select="@statisticColumnFormatLower"/> ")%>",
+      "text--":      "<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("<xsl:value-of select="$statisticColumnFormatLower"/>")%>",
       "font-size--": 10,
       "values" :   <xsl:value-of select="$charLt"/>%="pie".equals(request.getParameter("type")) ? kc.getJsonKeyCount() : kc.getJsonCount()%>
     }

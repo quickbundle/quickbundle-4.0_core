@@ -8,7 +8,7 @@
 	<!--处理table-->
 	<xsl:template match="table[1]">
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0]/middleTable[1]">
-<xsl:variable name="reftableNameVar" select="../@tableName"/>
+<xsl:variable name="refTableNameVar" select="../@tableName"/>
     <xsl:result-document href="{$targetFullPath}/list{str:upperFirst(lower-case(@tableName))}.jsp" format="rm-text">
 <xsl:value-of select="$charLt"/>%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <xsl:value-of select="$charLt"/>%@ page import="java.util.List" %>
@@ -19,7 +19,7 @@
 <xsl:value-of select="$charLt"/>%@ include file="/jsp/include/web/g.jsp" %>
 <xsl:value-of select="$charLt"/>%  //取出List
     String <xsl:value-of select="lower-case(@mainColumn)"/> = request.getParameter("<xsl:value-of select="lower-case(@mainColumn)"/>");
-    List<xsl:value-of select="$charLt"/>RmCommonVo> lvo = RmProjectHelper.getCommonServiceInstance().doQueryPage("select a.*, b.<xsl:value-of select="/meta/tables/table[@tableName=$reftableNameVar]/@keyColumn"/> as RM_DISPLAY_COLUMN from <xsl:value-of select="@tableName"/> a join <xsl:value-of select="../@tableName"/> b on a.<xsl:value-of select="@refColumn"/> = b.<xsl:value-of select="../@refColumn"/> where a.<xsl:value-of select="@mainColumn"/>=" + <xsl:value-of select="lower-case(@mainColumn)"/>);
+    List<xsl:value-of select="$charLt"/>RmCommonVo> lvo = RmProjectHelper.getCommonServiceInstance().doQueryPage("select a.*, b.<xsl:value-of select="/meta/tables/table[@tableName=$refTableNameVar]/@keyColumn"/> as RM_DISPLAY_COLUMN from <xsl:value-of select="@tableName"/> a join <xsl:value-of select="../@tableName"/> b on a.<xsl:value-of select="@refColumn"/> = b.<xsl:value-of select="../@refColumn"/> where a.<xsl:value-of select="@mainColumn"/>=" + <xsl:value-of select="lower-case(@mainColumn)"/>);
     pageContext.setAttribute(IGlobalConstants.REQUEST_BEANS, lvo);
 %>
 <xsl:value-of select="$charLt"/>!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -39,14 +39,14 @@
             return false;
         }
         form.<xsl:value-of select="lower-case(@refColumn)"/>s.value = ids;
-        form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/delete<xsl:value-of select="str:upperFirst(lower-case(lower-case(@tableName)))"/>";
+        form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableDirName"/>/delete<xsl:value-of select="str:upperFirst(lower-case(lower-case(@tableName)))"/>";
         form.submit();
     }
     function add_onClick() {  //到增加记录页面
         var inputValueName = new Object();
-        getReference(new Array(form.<xsl:value-of select="lower-case(@refColumn)"/>s, inputValueName), '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/', '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="/meta/tables/table[@tableName=$reftableNameVar]/@tableDirName"/>/reference?referenceInputType=checkbox');
+        getReference(new Array(form.<xsl:value-of select="lower-case(@refColumn)"/>s, inputValueName), '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/', '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="/meta/tables/table[@tableName=$refTableNameVar]/@tableDirName"/>/reference?referenceInputType=checkbox');
         if(form.<xsl:value-of select="lower-case(@refColumn)"/>s.value != "") {
-            form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/insert<xsl:value-of select="str:upperFirst(lower-case(lower-case(@tableName)))"/>";
+            form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableDirName"/>/insert<xsl:value-of select="str:upperFirst(lower-case(lower-case(@tableName)))"/>";
             form.submit();
         }
     }
@@ -61,9 +61,9 @@
 <xsl:value-of select="$charLt"/>table class="tableHeader">
   <xsl:value-of select="$charLt"/>tr>
     <xsl:value-of select="$charLt"/>td width="1%"><xsl:value-of select="$charLt"/>img src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/images/bg_mcontentL.gif" /><xsl:value-of select="$charLt"/>/td>
-    <xsl:value-of select="$charLt"/>td class="tableHeaderMiddleTd"><xsl:value-of select="$charLt"/>b>关联的<xsl:value-of select="/meta/tables/table[@tableName=$reftableNameVar]/@tableNameDisplay"/>列表<xsl:value-of select="$charLt"/>/b><xsl:value-of select="$charLt"/>/td>
+    <xsl:value-of select="$charLt"/>td class="tableHeaderMiddleTd"><xsl:value-of select="$charLt"/>b>关联的<xsl:value-of select="/meta/tables/table[@tableName=$refTableNameVar]/@tableNameDisplay"/>列表<xsl:value-of select="$charLt"/>/b><xsl:value-of select="$charLt"/>/td>
     <xsl:value-of select="$charLt"/>td class="tableHeaderMiddleTd" width="60%" align="right">
-		<xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_add" value="新增" onclick="javascript:add_onClick();" title="新增关联的<xsl:value-of select="/meta/tables/table[@tableName=$reftableNameVar]/@tableNameDisplay"/>"/>
+		<xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_add" value="新增" onclick="javascript:add_onClick();" title="新增关联的<xsl:value-of select="/meta/tables/table[@tableName=$refTableNameVar]/@tableNameDisplay"/>"/>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_deleteMulti" value="删除" onclickto="javascript:deleteMulti_onClick();" title="删除所选的记录"/>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_refresh" value="刷新" onclickto="javascript:refresh_onClick();" title="刷新当前页面"/>
     <xsl:value-of select="$charLt"/>/td>
@@ -88,7 +88,7 @@
     <xsl:value-of select="$charLt"/>layout:collectionItem width="8%" title="名称">
         <xsl:value-of select="$charLt"/>bean:define id="rmValue" name="rmBean" property="rm_display_column"/>
 		<xsl:value-of select="$charLt"/>bean:define id="<xsl:value-of select="lower-case(@refColumn)"/>" name="rmBean" property="<xsl:value-of select="lower-case(@refColumn)"/>"/>
-		<xsl:value-of select="$charLt"/>%="<xsl:value-of select="$charLt"/>a class='aul' target='_blank' href='" + request.getContextPath() + "/<xsl:value-of select="/meta/tables/table[@tableName=$reftableNameVar]/@tableDirName"/>/detail/" + <xsl:value-of select="lower-case(@refColumn)"/> + IGlobalConstants.REQUEST_IS_READ_ONLY +  "=1'>"%>
+		<xsl:value-of select="$charLt"/>%="<xsl:value-of select="$charLt"/>a class='aul' target='_blank' href='" + request.getContextPath() + "/<xsl:value-of select="/meta/tables/table[@tableName=$refTableNameVar]/@tableDirName"/>/detail/" + <xsl:value-of select="lower-case(@refColumn)"/> + "?" + IGlobalConstants.REQUEST_IS_READ_ONLY +  "=1'>"%>
         <xsl:value-of select="$charLt"/>%=rmValue%>
         <xsl:value-of select="$charLt"/>%="<xsl:value-of select="$charLt"/>/a>"%>
     <xsl:value-of select="$charLt"/>/layout:collectionItem>
