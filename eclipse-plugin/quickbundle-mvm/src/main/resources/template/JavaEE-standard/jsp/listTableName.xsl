@@ -16,6 +16,14 @@
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.base.web.page.RmPageVo"%>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
+<xsl:value-of select="$charLt"/>%  //判断是否只读
+    boolean isReadOnly = false;
+    if("1".equals(request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY))) {
+        isReadOnly = true;
+    } else if("1".equals(request.getParameter(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY))){
+        isReadOnly = true;
+    } 
+%>
 <xsl:value-of select="$charLt"/>%  //取出List
     List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> lResult = null;  //定义结果列表的List变量
     if(request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_BEANS) != null) {  //如果request中的beans不为空
@@ -28,7 +36,7 @@
         session.setAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION, request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_QUERY_CONDITION).toString());  //把查询条件放到session中
         RmPageVo pageVo = (RmPageVo)request.getAttribute("RM_PAGE_VO");
         session.setAttribute("RECORD_COUNT", String.valueOf(pageVo.getRecordCount()));
-        response.sendRedirect(request.getContextPath() + "/modules/<xsl:value-of select="@tableDirName"/>/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_custom.jsp");  //跳转到定制导出页面
+        response.sendRedirect(request.getContextPath() + "/<xsl:value-of select="$tableDirName"/>/exportCustom");  //跳转到定制导出页面
         return;
     }
 %>
@@ -40,6 +48,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
+<xsl:value-of select="$charLt"/>%if(!isReadOnly) {%>
     function findCheckbox_onClick() {  //从多选框到修改页面
         var ids = findSelections("checkbox_template","id");  //取得多选框的选择项
         if(ids == null) {  //如果ids为空
@@ -64,14 +73,19 @@
         form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/delete?ids=" + ids;
         form.submit();
     }
+  	<xsl:if test="contains(@customBundleCode, 'importExport')">
+    function toImport_onClick() {  //到导入页面
+        window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/import";
+    }</xsl:if>
+    function toAdd_onClick() {  //到增加记录页面
+        window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/insert";
+    }
+<xsl:value-of select="$charLt"/>%} %>
     function list_onClick(){  //简单的模糊查询
         form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>";
         form.submit();
     }
-  	<xsl:if test="contains(@customBundleCode, 'importExport')">
-    function toImport_onClick() {  //到导入页面
-        window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/import";
-    }
+    <xsl:if test="contains(@customBundleCode, 'importExport')">
     function export_onClick(){  //导出
         form.isExport.value="1";
         form.target="_blank";
@@ -79,10 +93,7 @@
         form.target="_self";    
         form.isExport.value="";
     }
-   	</xsl:if>
-    function toAdd_onClick() {  //到增加记录页面
-        window.location="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/insert";
-    }
+    </xsl:if>
     function refresh_onClick() {  //刷新本页
         form.submit();
     }
@@ -119,10 +130,11 @@
     <xsl:value-of select="$charLt"/>td width="1%"><xsl:value-of select="$charLt"/>img src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/images/bg_mcontentL.gif" /><xsl:value-of select="$charLt"/>/td>
     <xsl:value-of select="$charLt"/>td class="tableHeaderMiddleTd"><xsl:value-of select="$charLt"/>b><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_NAME_DISPLAY %>列表<xsl:value-of select="$charLt"/>/b><xsl:value-of select="$charLt"/>/td>
     <xsl:value-of select="$charLt"/>td class="tableHeaderMiddleTd" width="60%" align="right">
+<xsl:value-of select="$charLt"/>%if(!isReadOnly) {%>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_toAdd" value="新增" onclick="javascript:toAdd_onClick();" title="跳转到新增页面"/>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_deleteMulti" value="删除" onclickto="javascript:deleteMulti_onClick();" title="删除所选的记录"/>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_findCheckbox" value="修改" onclick="javascript:findCheckbox_onClick();" title="跳转到修改所选的某条记录"/>
-        <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_toImport" value="导入" onclick="javascript:toImport_onClick()" title="导入数据"/>
+        <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_toImport" value="导入" onclick="javascript:toImport_onClick()" title="导入数据"/> <xsl:value-of select="$charLt"/>%} %>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_export" value="导出" onclick="javascript:export_onClick();" title="按当前查询条件导出数据"/>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_refresh" value="刷新" onclickto="javascript:refresh_onClick();" title="刷新当前页面"/>
     <xsl:value-of select="$charLt"/>/td>
@@ -156,6 +168,7 @@
 <xsl:value-of select="$charLt"/>input type="hidden" name="isExport" value="">
 </xsl:if>
 <xsl:value-of select="$charLt"/>input type="hidden" name="queryCondition" value="">
+<xsl:value-of select="$charLt"/>%=isReadOnly ? "<xsl:value-of select="$charLt"/>input type=\"hidden\" name=\"" + <xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY + "\" value=\"1\">" : ""%>
 
 <xsl:value-of select="$charLt"/>%--begin 生成页面汇总，正式部署前删除以下代码 --%>
 <xsl:value-of select="$charLt"/>div id="div_funcNode" style="padding:20px 10px 10px 0px; display:none" align="right">

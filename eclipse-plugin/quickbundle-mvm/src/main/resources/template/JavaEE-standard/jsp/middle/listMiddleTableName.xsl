@@ -17,6 +17,14 @@
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.RmProjectHelper"%>
 <xsl:value-of select="$charLt"/>%@page import="org.quickbundle.project.IGlobalConstants"%>
 <xsl:value-of select="$charLt"/>%@ include file="/jsp/include/web/g.jsp" %>
+<xsl:value-of select="$charLt"/>%  //判断是否只读
+    boolean isReadOnly = false;
+    if("1".equals(request.getAttribute(IGlobalConstants.REQUEST_IS_READ_ONLY))) {
+        isReadOnly = true;
+    } else if("1".equals(request.getParameter(IGlobalConstants.REQUEST_IS_READ_ONLY))){
+        isReadOnly = true;
+    } 
+%>
 <xsl:value-of select="$charLt"/>%  //取出List
     String <xsl:value-of select="lower-case(@mainColumn)"/> = request.getParameter("<xsl:value-of select="lower-case(@mainColumn)"/>");
     List<xsl:value-of select="$charLt"/>RmCommonVo> lvo = RmProjectHelper.getCommonServiceInstance().doQueryPage("select a.*, b.<xsl:value-of select="/meta/tables/table[@tableName=$refTableNameVar]/@keyColumn"/> as RM_DISPLAY_COLUMN from <xsl:value-of select="@tableName"/> a join <xsl:value-of select="../@tableName"/> b on a.<xsl:value-of select="@refColumn"/> = b.<xsl:value-of select="../@refColumn"/> where a.<xsl:value-of select="@mainColumn"/>=" + <xsl:value-of select="lower-case(@mainColumn)"/>);
@@ -29,6 +37,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
+<xsl:value-of select="$charLt"/>%if(!isReadOnly) {%>
     function deleteMulti_onClick(){  //从多选框物理删除多条记录
         var ids = findSelections("checkbox_template","id");  //取得多选框的选择项
         if(ids == null) {  //如果ids为空
@@ -49,7 +58,7 @@
             form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableDirName"/>/insert<xsl:value-of select="str:upperFirst(lower-case(lower-case(@tableName)))"/>";
             form.submit();
         }
-    }
+    } <xsl:value-of select="$charLt"/>%} %>
     function refresh_onClick() {  //刷新本页
         form.submit();
     }
@@ -63,8 +72,9 @@
     <xsl:value-of select="$charLt"/>td width="1%"><xsl:value-of select="$charLt"/>img src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/images/bg_mcontentL.gif" /><xsl:value-of select="$charLt"/>/td>
     <xsl:value-of select="$charLt"/>td class="tableHeaderMiddleTd"><xsl:value-of select="$charLt"/>b>关联的<xsl:value-of select="/meta/tables/table[@tableName=$refTableNameVar]/@tableNameDisplay"/>列表<xsl:value-of select="$charLt"/>/b><xsl:value-of select="$charLt"/>/td>
     <xsl:value-of select="$charLt"/>td class="tableHeaderMiddleTd" width="60%" align="right">
+<xsl:value-of select="$charLt"/>%if(!isReadOnly) {%>
 		<xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_add" value="新增" onclick="javascript:add_onClick();" title="新增关联的<xsl:value-of select="/meta/tables/table[@tableName=$refTableNameVar]/@tableNameDisplay"/>"/>
-        <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_deleteMulti" value="删除" onclickto="javascript:deleteMulti_onClick();" title="删除所选的记录"/>
+        <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_deleteMulti" value="删除" onclickto="javascript:deleteMulti_onClick();" title="删除所选的记录"/> <xsl:value-of select="$charLt"/>%} %>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_refresh" value="刷新" onclickto="javascript:refresh_onClick();" title="刷新当前页面"/>
     <xsl:value-of select="$charLt"/>/td>
     <xsl:value-of select="$charLt"/>td width="1%" align="right"><xsl:value-of select="$charLt"/>img src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/images/bg_mcontentR.gif" /><xsl:value-of select="$charLt"/>/td>

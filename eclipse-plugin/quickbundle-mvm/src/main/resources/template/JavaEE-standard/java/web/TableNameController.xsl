@@ -206,6 +206,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     public String statisticChart(Model model) {
         return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_chart";
     }
+    
     /**
      * Flash式统计
      */
@@ -213,6 +214,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     public String statisticFlash(Model model) {
         return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_flash";
     }
+    
     /**
      * Flash式统计
      */
@@ -228,6 +230,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     public String importDataForm(Model model) {
         return "<xsl:value-of select="$jspSourceTableDir"/>/import<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
+    
     /**
      * 执行导入
      */
@@ -236,6 +239,23 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         model.addAttribute("isSubmit", "1");
         return "<xsl:value-of select="$jspSourceTableDir"/>/import<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
+    
+    /**
+     * 定制导出
+     */
+    @RequestMapping(value = "exportCustom", method = RequestMethod.GET)
+    public String exportCustom(Model model) {
+        return "<xsl:value-of select="$jspSourceTableDir"/>/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_custom";
+    }
+    
+    /**
+     * 执行导出
+     */
+    @RequestMapping(value = "exportExcel", method = RequestMethod.POST)
+    public String exportExcel(Model model) {
+        return "<xsl:value-of select="$jspSourceTableDir"/>/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_excel";
+    }
+    
     /**
      * 跳转到Ajax页
      */
@@ -243,7 +263,6 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     public String ajax(Model model) {
         return "<xsl:value-of select="$jspSourceTableDir"/>/ajax/list<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
-
     
     /**
      * 从request中获得查询条件

@@ -25,7 +25,7 @@
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
     function export_onClick(){  //导出Excel
-        form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/modules/<xsl:value-of select="@tableDirName"/>/<xsl:value-of select="@tableDirName"/>" + rmJspPath + "/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_excel.jsp";
+        form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableDirName"/>/exportExcel";
         clickAllSelectMultiple(form.custom_column);
         form.submit();
     }

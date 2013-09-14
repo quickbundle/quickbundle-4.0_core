@@ -14,6 +14,14 @@
 <xsl:value-of select="$charLt"/>%@ page import="org.quickbundle.tools.helper.RmStringHelper" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>" %>
 <xsl:value-of select="$charLt"/>%@ page import="<xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>" %>
+<xsl:value-of select="$charLt"/>%  //判断是否只读
+    boolean isReadOnly = false;
+    if("1".equals(request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY))) {
+        isReadOnly = true;
+    } else if("1".equals(request.getParameter(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY))){
+        isReadOnly = true;
+    } 
+%>
 <xsl:value-of select="$charLt"/>%  //取出本条记录
     <xsl:value-of select="$TableNameVo"/> resultVo = null;  //定义一个临时的vo变量
     resultVo = (<xsl:value-of select="$TableNameVo"/>)request.getAttribute(<xsl:value-of select="$ITableNameConstants"/>.REQUEST_BEAN);  //从request中取出vo, 赋值给resultVo
@@ -26,6 +34,7 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
+<xsl:value-of select="$charLt"/>%if(!isReadOnly) {%>
     function find_onClick(){  //直接点到修改页面
         window.location.href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/update/" + $("#head_id").val();
     }
@@ -35,15 +44,16 @@
         }
         form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/delete";
         form.submit();
-    }  
+    } <xsl:value-of select="$charLt"/>%} %>
 <xsl:value-of select="$charLt"/>/script>
 <xsl:value-of select="$charLt"/>/head>
 <xsl:value-of select="$charLt"/>body>
 <xsl:value-of select="$charLt"/>form name="form" method="post">
 
 <xsl:value-of select="$charLt"/>div class="button_area">
+<xsl:value-of select="$charLt"/>%if(!isReadOnly) {%>
     <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_update" value="修改" onclick="javascript:find_onClick();" />
-    <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_delete" value="删除" onclickto="javascript:delete_onClick();" />
+    <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_delete" value="删除" onclickto="javascript:delete_onClick();" /> <xsl:value-of select="$charLt"/>%} %>
     <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_back" value="返回"  onclick="javascript:history.go(-1);" />
 <xsl:value-of select="$charLt"/>/div>
 
@@ -118,7 +128,7 @@
 		<xsl:text>        </xsl:text>
 		<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0]/middleTable[1]">
 			<xsl:value-of select="$charLt"/>div id="rowTabs-<xsl:value-of select="lower-case(@tableName)"/>">
-        <xsl:value-of select="$charLt"/>iframe id="tabInfo_frame" src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableDirName"/>/<xsl:value-of select="lower-case(@tableName)"/>?<xsl:value-of select="lower-case(@mainColumn)"/>=<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()%>" frameborder="0" width="100%" height="500px" scrolling="yes"/>
+        <xsl:value-of select="$charLt"/>iframe id="tabInfo_frame" src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$tableDirName"/>/<xsl:value-of select="lower-case(@tableName)"/>?<xsl:value-of select="lower-case(@mainColumn)"/>=<xsl:value-of select="$charLt"/>%=resultVo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()%><xsl:value-of select="$charLt"/>%if(isReadOnly) {%><xsl:value-of select="$charAmp"/><xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY %>=1<xsl:value-of select="$charLt"/>%} %>" frameborder="0" width="100%" height="500px" scrolling="yes"/>
     <xsl:value-of select="$charLt"/>/div>
 </xsl:for-each>
 		<xsl:value-of select="$charLt"/>/div>
