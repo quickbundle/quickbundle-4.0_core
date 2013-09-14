@@ -100,8 +100,8 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
 					<xsl:value-of select="position()"/>
 				</xsl:if>(RmPopulateHelper.populateVos(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo.class, request, TABLE_PK_<xsl:value-of select="@tableName"/>, TABLE_NAME_<xsl:value-of select="@tableName"/> + RM_NAMESPACE_SPLIT_KEY));
         RmVoHelper.markCreateStamp(request, vo.getBody());
-</xsl:for-each>
-        <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insert(vo);  //插入单条记录
+</xsl:for-each><xsl:text>
+        </xsl:text><xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insert(vo);  //插入单条记录
         redirectAttributes.addFlashAttribute("message", "创建成功");
         return "redirect:/<xsl:value-of select="@tableDirName"/>";
     }
@@ -180,8 +180,8 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      */
     @RequestMapping(value = "statistic/table")
     public String statisticTable(Model model, HttpServletRequest request) {
-        String rowKeyField = "parent_message_id";  //定义行统计关键字
-        String columnKeyField = "id";  //定义列统计关键字
+        String rowKeyField = "<xsl:value-of select="$statisticColumnFormatLower"/>";  //定义行统计关键字
+        String columnKeyField = "<xsl:value-of select="$keyColumnFormatLower"/>";  //定义列统计关键字
         String queryCondition = getQueryCondition(request);  //从request中获得查询条件
         List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> beans = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.list(queryCondition, null);  //查询出全部结果
         StatisticExport sh = new StatisticExport(beans, rowKeyField, columnKeyField, "父消息ID\\主键");
@@ -256,23 +256,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
             queryCondition = request.getAttribute(REQUEST_QUERY_CONDITION).toString();
         } else {
             List<xsl:value-of select="$charLt"/>String> lQuery = new ArrayList<xsl:value-of select="$charLt"/>String>();
-            
-            lQuery.add(RmSqlHelper.buildQueryStr(TABLE_NAME + ".biz_keyword", request.getParameter("biz_keyword"), RmSqlHelper.TYPE_CHAR_LIKE));
-                
-            lQuery.add(RmSqlHelper.buildQueryStr(TABLE_NAME + ".sender_id", request.getParameter("sender_id"), RmSqlHelper.TYPE_CHAR_LIKE));
-                
-            lQuery.add(RmSqlHelper.buildQueryStr(TABLE_NAME + ".parent_message_id", request.getParameter("parent_message_id"), RmSqlHelper.TYPE_CUSTOM, "='", "'"));
-                
-            lQuery.add(RmSqlHelper.buildQueryStr(TABLE_NAME + ".owner_org_id", request.getParameter("owner_org_id"), RmSqlHelper.TYPE_CHAR_LIKE));
-                
-            lQuery.add(RmSqlHelper.buildQueryStr(TABLE_NAME + ".template_id", request.getParameter("template_id"), RmSqlHelper.TYPE_CHAR_LIKE));
-                
-            lQuery.add(RmSqlHelper.buildQueryStr(TABLE_NAME + ".is_affix", request.getParameter("is_affix"), RmSqlHelper.TYPE_CUSTOM, "='", "'"));
-                
-            lQuery.add(RmSqlHelper.buildQueryStr(TABLE_NAME + ".record_id", request.getParameter("record_id"), RmSqlHelper.TYPE_CHAR_LIKE));
-                
-            lQuery.add(RmSqlHelper.buildQueryStr(TABLE_NAME + ".message_xml_context", request.getParameter("message_xml_context"), RmSqlHelper.TYPE_CHAR_LIKE));
-                
+            <xsl:apply-templates mode="buildTableColumn_actionQueryCondition"/>
             queryCondition = RmSqlHelper.appendQueryStr(lQuery.toArray(new String[0]));
         }
         return queryCondition;

@@ -66,7 +66,7 @@
     <xsl:value-of select="$charLt"/>/table>
   
 <xsl:value-of select="$charLt"/>input type="hidden" name="<xsl:value-of select="$tablePkFormatLower"/>" value="" />
-
+<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">
 <xsl:value-of select="$charLt"/>!-- child table begin -->
 <xsl:value-of select="$charLt"/>div id="rowTabs">
     <xsl:value-of select="$charLt"/>ul>
@@ -95,11 +95,10 @@
                         <xsl:value-of select="$charLt"/>input type="checkbox" name="rmRowSelecter"/>
                         <xsl:value-of select="$charLt"/>input type="hidden" name="<xsl:value-of select="$tablePkFormatLower"/>"/>
                     <xsl:value-of select="$charLt"/>/td>
-<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']">
-                    <xsl:value-of select="$charLt"/>td>
-                        <xsl:value-of select="$charLt"/>input type="text" name="message_id" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="../@tableName"/>.get("<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>")%>" value="" />
-                    <xsl:value-of select="$charLt"/>/td>
-</xsl:for-each>
+<xsl:for-each select="column[not(@columnName=../@tablePk) and @isBuild_list='true']"><xsl:text>
+                    </xsl:text><xsl:value-of select="$charLt"/>td>
+                        <xsl:value-of select="$charLt"/>input type="text" name="<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>" inputName="<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY_<xsl:value-of select="../@tableName"/>.get("<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>")%>" value="" />
+                    <xsl:value-of select="$charLt"/>/td></xsl:for-each>
                 <xsl:value-of select="$charLt"/>/tr>
             <xsl:value-of select="$charLt"/>/table>
         <xsl:value-of select="$charLt"/>/div>
@@ -107,7 +106,7 @@
 </xsl:for-each>
 <xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>!-- child table end -->
-
+</xsl:if>
 <xsl:value-of select="$charLt"/>/form>
 <xsl:value-of select="$charLt"/>/body>
 <xsl:value-of select="$charLt"/>/html>

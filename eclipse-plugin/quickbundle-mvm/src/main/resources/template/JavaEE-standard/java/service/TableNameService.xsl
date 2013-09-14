@@ -304,7 +304,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
         <xsl:value-of select="$TableNameVo"/> vo = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.get(id);<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 				<xsl:value-of select="position()"/>
-			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + String.valueOf(id), null, 1, Integer.MAX_VALUE, true));
+			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="$tablePkFormatLower"/>=" + String.valueOf(id), null, 1, Integer.MAX_VALUE, true));
 </xsl:for-each>
         return vo;
     }
@@ -365,7 +365,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 				<xsl:value-of select="position()"/>
-			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("message_id=" + String.valueOf(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()), null, 1, Integer.MAX_VALUE, true));
+			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="$tablePkFormatLower"/>=" + String.valueOf(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()), null, 1, Integer.MAX_VALUE, true));
 </xsl:for-each>
             }
         }</xsl:if>
