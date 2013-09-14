@@ -33,7 +33,7 @@
  */</xsl:text>
 	</xsl:function>
 	<!--开始各种可复用的列循环处理-->
-	<!--处理各列的循环新增输入框，用于condition/insertTableName.jsp,insertTableName.jsp-->
+	<!--处理各列的循环新增输入框，用于insertTableName.jsp-->
 	<xsl:template match="column" mode="buildTableColumn_insertInput">
 		<xsl:param name="columnName" select="@columnName"/>
 		<xsl:param name="columnNameFormat" select="str:filter(@columnName,@filterKeyword,@filterType)"/>

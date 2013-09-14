@@ -43,18 +43,22 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * update action    POST /<xsl:value-of select="@tableDirName"/>/update
  * delete action    POST /<xsl:value-of select="@tableDirName"/>/delete
  * detail                /<xsl:value-of select="@tableDirName"/>/detail/{id}
- * reference             /<xsl:value-of select="@tableDirName"/>/reference
+<xsl:if test="contains(@customBundleCode, 'reference')">
+ * reference             /<xsl:value-of select="@tableDirName"/>/reference</xsl:if>
+<xsl:if test="contains(@customBundleCode, 'statistic')">
  * statistic             /<xsl:value-of select="@tableDirName"/>/statistic
  * statistic table       /<xsl:value-of select="@tableDirName"/>/statistic/table
  *   export              /<xsl:value-of select="@tableDirName"/>/statistic/table/export
  * statistic chart       /<xsl:value-of select="@tableDirName"/>/statistic/chart
  * statistic flash       /<xsl:value-of select="@tableDirName"/>/statistic/flash
- *   data                /<xsl:value-of select="@tableDirName"/>/statistic/flash/data
+ *   data                /<xsl:value-of select="@tableDirName"/>/statistic/flash/data</xsl:if>
+<xsl:if test="contains(@customBundleCode, 'importExport')">
  * import page      GET  /<xsl:value-of select="@tableDirName"/>/import
  * import action    POST /<xsl:value-of select="@tableDirName"/>/import
  * export custom    GET  /<xsl:value-of select="@tableDirName"/>/export
- * export action    POST /<xsl:value-of select="@tableDirName"/>/export
- * ajax                  /<xsl:value-of select="@tableDirName"/>/ajax
+ * export action    POST /<xsl:value-of select="@tableDirName"/>/export</xsl:if>
+<xsl:if test="contains(@customBundleCode, 'ajax')">
+ * ajax                  /<xsl:value-of select="@tableDirName"/>/ajax</xsl:if>
  */
 
 <xsl:value-of select="str:getClassComment($authorName)"/>
@@ -166,7 +170,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         }
         return "<xsl:value-of select="$jspSourceTableDir"/>/detail<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
-    
+<xsl:if test="contains(@customBundleCode, 'reference')">
     /**
      * 参照信息查询，带简单查询，分页显示，支持表单回写
      */
@@ -176,7 +180,8 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         model.addAttribute(REQUEST_REFERENCE_INPUT_TYPE, request.getParameter(REQUEST_REFERENCE_INPUT_TYPE));  //传送输入方式,checkbox或radio
         return "<xsl:value-of select="$jspSourceTableDir"/>/util/reference<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
-
+</xsl:if>
+<xsl:if test="contains(@customBundleCode, 'statistic')">
     /**
      * 表格式统计
      */
@@ -224,7 +229,8 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     public String statisticFlashData(Model model) {
         return "<xsl:value-of select="$jspSourceTableDir"/>/util/statistic<xsl:value-of select="$tableFormatNameUpperFirst"/>_flashData";
     }
-    
+</xsl:if>
+<xsl:if test="contains(@customBundleCode, 'importExport')">
     /**
      * 跳转到导入页
      */
@@ -257,7 +263,8 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     public String exportData(Model model) {
         return "<xsl:value-of select="$jspSourceTableDir"/>/export<xsl:value-of select="$tableFormatNameUpperFirst"/>_excel";
     }
-    
+</xsl:if>
+<xsl:if test="contains(@customBundleCode, 'ajax')">
     /**
      * 跳转到Ajax页
      */
@@ -265,7 +272,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     public String ajax(Model model) {
         return "<xsl:value-of select="$jspSourceTableDir"/>/ajax/list<xsl:value-of select="$tableFormatNameUpperFirst"/>";
     }
-    
+</xsl:if>
     /**
      * 从request中获得查询条件
      * @param request

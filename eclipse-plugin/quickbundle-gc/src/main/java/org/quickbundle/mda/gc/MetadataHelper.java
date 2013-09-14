@@ -16,11 +16,9 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.Node;
 import org.quickbundle.tools.helper.RmStringHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
@@ -237,7 +235,7 @@ public class MetadataHelper {
 			if (table.selectSingleNode("column[@columnName='" + fk + "']") != null) {
 				Element eleFk = (Element) table.selectSingleNode("column[@columnName='" + fk + "']");
 				eleFk.addAttribute("humanDisplayType", "rm.listReference");
-				eleFk.addAttribute("humanDisplayTypeKeyword", getFormatTableName(mFk_parentTablename.get(fk).toString()));
+				eleFk.addAttribute("humanDisplayTypeKeyword", getFormatTableName(mFk_parentTablename.get(fk).toString()).toLowerCase());
 				eleFk.addAttribute("humanDisplayTypeData", "");
 			}
 		}

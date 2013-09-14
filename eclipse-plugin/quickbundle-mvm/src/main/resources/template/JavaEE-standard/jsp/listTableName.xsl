@@ -133,9 +133,11 @@
 <xsl:value-of select="$charLt"/>%if(!isReadOnly) {%>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_toAdd" value="新增" onclick="javascript:toAdd_onClick();" title="跳转到新增页面"/>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_deleteMulti" value="删除" onclickto="javascript:deleteMulti_onClick();" title="删除所选的记录"/>
-        <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_findCheckbox" value="修改" onclick="javascript:findCheckbox_onClick();" title="跳转到修改所选的某条记录"/>
+        <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_findCheckbox" value="修改" onclick="javascript:findCheckbox_onClick();" title="跳转到修改所选的某条记录"/><xsl:value-of select="$charLt"/>%} %>
+<xsl:if test="contains(@customBundleCode, 'importExport')">
+<xsl:value-of select="$charLt"/>%if(!isReadOnly) {%>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_toImport" value="导入" onclick="javascript:toImport_onClick()" title="导入数据"/> <xsl:value-of select="$charLt"/>%} %>
-        <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_export" value="导出" onclick="javascript:export_onClick();" title="按当前查询条件导出数据"/>
+        <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_export" value="导出" onclick="javascript:export_onClick();" title="按当前查询条件导出数据"/></xsl:if>
         <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_refresh" value="刷新" onclickto="javascript:refresh_onClick();" title="刷新当前页面"/>
     <xsl:value-of select="$charLt"/>/td>
     <xsl:value-of select="$charLt"/>td width="1%" align="right"><xsl:value-of select="$charLt"/>img src="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/images/bg_mcontentR.gif" /><xsl:value-of select="$charLt"/>/td>
@@ -180,9 +182,7 @@
     <xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/statistic/flash">Flash图表<xsl:value-of select="$charLt"/>/a>
     <xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/statistic/table">交叉统计<xsl:value-of select="$charLt"/>/a>
 	</xsl:if>
-	<xsl:if test="contains(@customBundleCode, 'readonly')">
     <xsl:value-of select="$charLt"/>a class="aul" target="_blank" href="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>?<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.REQUEST_IS_READ_ONLY%>=1">只读模式<xsl:value-of select="$charLt"/>/a>
-	</xsl:if>
 <xsl:value-of select="$charLt"/>/div>
 <xsl:value-of select="$charLt"/>%--end --%>
 

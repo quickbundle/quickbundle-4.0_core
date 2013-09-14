@@ -44,7 +44,7 @@
     <xsl:value-of select="$charLt"/>/foreach>
   <xsl:value-of select="$charLt"/>/delete>
 
-  <xsl:value-of select="$charLt"/>update id="update" parameterType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+  <xsl:value-of select="$charLt"/>update id="update" parameterType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo">
     update <xsl:value-of select="@tableName"/> set 
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="@columnName"/>=#{<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>}<xsl:if test="not(position()=last())">, </xsl:if>
@@ -54,7 +54,7 @@
     where <xsl:value-of select="$thisTablePk"/>=#{<xsl:value-of select="str:getTablePkFormatLower(/meta, @tableName)"/>}
   <xsl:value-of select="$charLt"/>/update>
 
-  <xsl:value-of select="$charLt"/>select id="get" parameterType="string" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+  <xsl:value-of select="$charLt"/>select id="get" parameterType="string" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo">
     select <xsl:value-of select="@tableName"/>.<xsl:value-of select="$thisTablePk"/>, 
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="../@tableName"/>.<xsl:value-of select="@columnName"/>
@@ -73,7 +73,7 @@
     <xsl:value-of select="$charLt"/>/if>
   <xsl:value-of select="$charLt"/>/select>
   
-  <xsl:value-of select="$charLt"/>select id="list" parameterType="map" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+  <xsl:value-of select="$charLt"/>select id="list" parameterType="map" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo">
     select <xsl:value-of select="@tableName"/>.<xsl:value-of select="$thisTablePk"/>, 
       <xsl:for-each select="column[not(@columnName=$thisTablePk) and @isBuild_list='true']">
 				<xsl:value-of select="../@tableName"/>.<xsl:value-of select="@columnName"/>
@@ -90,7 +90,7 @@
     <xsl:value-of select="$charLt"/>/if>
   <xsl:value-of select="$charLt"/>/select>
   
-  <xsl:value-of select="$charLt"/>select id="listAllColumn" parameterType="map" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+  <xsl:value-of select="$charLt"/>select id="listAllColumn" parameterType="map" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo">
     select <xsl:value-of select="@tableName"/>.<xsl:value-of select="$thisTablePk"/>, 
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="../@tableName"/>.<xsl:value-of select="@columnName"/>
@@ -107,7 +107,7 @@
     <xsl:value-of select="$charLt"/>/if>
   <xsl:value-of select="$charLt"/>/select>
 
-  <xsl:value-of select="$charLt"/>select id="search" parameterType="map" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$TableNameVo"/>">
+  <xsl:value-of select="$charLt"/>select id="search" parameterType="map" resultType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo">
     select <xsl:value-of select="@tableName"/>.<xsl:value-of select="$thisTablePk"/>, 
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="../@tableName"/>.<xsl:value-of select="@columnName"/>

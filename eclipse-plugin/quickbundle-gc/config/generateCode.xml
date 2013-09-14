@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rules rulesVersion="4.0.0-201308311">
+<rules rulesVersion="4.0.0-20130914">
 	<database pdmPath="" dbProductName="MySQL" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost/rmdemo?jdbcCompliantTruncation=false" userName="root" password="" catalog="" schemaPattern="" tableNamePattern="">
 		<!--定义目标表名xml的路径-->
 		<tableTos>
@@ -139,9 +139,7 @@
 	<customBundleCode>
 		<!-- 可定制的组件列表 -->
 		<bundle code="main" name="标准维护" null="true" checked="true">传统Form提交方式的增删改查标准维护，是其它功能的基础。不选则只生成Service层以下的后台代码</bundle>
-		<bundle code="condition" name="带条件页" null="true" depend="main">带着一个查询条件的CRUD，作为子表或按某字段分类维护</bundle>
 		<bundle code="ajax" name="Ajax页" null="true" checked="true" depend="main">ExeJS风格的CRUD</bundle>
-		<bundle code="readonly" name="只读页" null="true" checked="true" depend="main">传统Form提交方式数据只读浏览</bundle>
 		<bundle code="importExport" name="导出导入页" null="true" checked="true" depend="main">Excel导出、导入功能</bundle>
 		<bundle code="reference" name="参照页" null="true" checked="true" depend="main">作为列表查询的参照页</bundle>
 		<bundle code="statistic" name="统计页" null="true" checked="true" depend="main">图表统计、二维表格统计</bundle>

@@ -121,9 +121,10 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
     public int delete(<xsl:value-of select="$tablePkClass"/> id) {<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">
         <xsl:value-of select="$TableNameVo"/> vo = get(id);</xsl:if>
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
-        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>> bodyIdToDelete<xsl:if test="position()>1">
+<xsl:variable name="tableNameVar" select="@tableName"/>
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, /meta/tables/table[@tableName=$tableNameVar]/@tablePk)"/>> bodyIdToDelete<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
-				</xsl:if> = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>>();
+				</xsl:if> = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, /meta/tables/table[@tableName=$tableNameVar]/@tablePk)"/>>();
         if(vo.getBody<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
 				</xsl:if>() != null) {
@@ -140,7 +141,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
 				</xsl:if>.size() > 0) {
             <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(bodyIdToDelete<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
-				</xsl:if>.toArray(new <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[0]));
+				</xsl:if>.toArray(new <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, /meta/tables/table[@tableName=$tableNameVar]/@tablePk)"/>[0]));
         }
 </xsl:for-each>
         int sum = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.delete(id);
@@ -161,9 +162,10 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
     public int delete(<xsl:value-of select="$tablePkClass"/> ids[]) {
 <xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
-        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>> bodyIdToDelete<xsl:if test="position()>1">
+<xsl:variable name="tableNameVar" select="@tableName"/>
+        List<xsl:value-of select="$charLt"/><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, /meta/tables/table[@tableName=$tableNameVar]/@tablePk)"/>> bodyIdToDelete<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
-				</xsl:if> = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>>();
+				</xsl:if> = new ArrayList<xsl:value-of select="$charLt"/><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, /meta/tables/table[@tableName=$tableNameVar]/@tablePk)"/>>();
 </xsl:for-each>
         for(<xsl:value-of select="$tablePkClass"/> id : ids) {
             <xsl:value-of select="$TableNameVo"/> vo = get(id);
@@ -182,10 +184,11 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
 </xsl:for-each>
         }
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+<xsl:variable name="tableNameVar" select="@tableName"/>
         if(bodyIdToDelete<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
 				</xsl:if>.size() > 0) {
-            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(bodyIdToDelete.toArray(new <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[0]));
+            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete(bodyIdToDelete.toArray(new <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, /meta/tables/table[@tableName=$tableNameVar]/@tablePk)"/>[0]));
         }
 </xsl:for-each>
 </xsl:if>
@@ -207,6 +210,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
     @SuppressWarnings({ "rawtypes", "unchecked" })</xsl:if>
     public int update(<xsl:value-of select="$TableNameVo"/> vo) {
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+<xsl:variable name="tableNameVar" select="@tableName"/>
         if(vo.getBody<xsl:if test="position()>1">
                 <xsl:value-of select="position()"/>
             </xsl:if>() != null) {
@@ -214,7 +218,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
                 <xsl:value-of select="position()"/>
             </xsl:if>(), TABLE_PK_<xsl:value-of select="@tableName"/>, "<xsl:value-of select="str:getRefColumnFormatLower(/meta, @tableName)"/>");
             <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert((<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[])result[0].toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
-            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete((<xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[])result[1].toArray(new <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[0]));
+            <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.delete((<xsl:value-of select="str:getPkColumnClass(/meta, $tableName, /meta/tables/table[@tableName=$tableNameVar]/@tablePk)"/>[])result[1].toArray(new <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, /meta/tables/table[@tableName=$tableNameVar]/@tablePk)"/>[0]));
             <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.update((<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[])result[2].toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
         }
 </xsl:for-each>
@@ -304,7 +308,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
         <xsl:value-of select="$TableNameVo"/> vo = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.get(id);<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 				<xsl:value-of select="position()"/>
-			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="$tablePkFormatLower"/>=" + String.valueOf(id), null, 1, Integer.MAX_VALUE, true));
+			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="lower-case(@refColumn)"/>=" + String.valueOf(id), null, 1, Integer.MAX_VALUE, true));
 </xsl:for-each>
         return vo;
     }
@@ -365,7 +369,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 				<xsl:value-of select="position()"/>
-			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="$tablePkFormatLower"/>=" + String.valueOf(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()), null, 1, Integer.MAX_VALUE, true));
+			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="lower-case(@refColumn)"/>=" + String.valueOf(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()), null, 1, Integer.MAX_VALUE, true));
 </xsl:for-each>
             }
         }</xsl:if>
