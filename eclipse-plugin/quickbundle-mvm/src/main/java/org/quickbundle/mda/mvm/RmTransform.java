@@ -4,13 +4,10 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -25,7 +22,7 @@ import org.dom4j.io.SAXReader;
 import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
-public class RmTransformHelper {
+public class RmTransform {
 	/**
 	 * 功能: 从转化中获取String
 	 * 
@@ -62,11 +59,8 @@ public class RmTransformHelper {
 			}
 			transformer.transform(new StreamSource(myTableXml), new StreamResult(outer));
 			returnStr = bytesStream.toString(RmBaseConfig.getSingleton().getDefaultEncode());
-		} catch (TransformerConfigurationException e) {
-			throw new RuntimeException(e); 
-		} catch (TransformerException e) {
-			throw new RuntimeException(e); 
-		} catch (UnsupportedEncodingException e) {
+		} catch (Throwable e) {
+			e.printStackTrace();
 			throw new RuntimeException(e); 
 		} finally {
 			try {
@@ -95,11 +89,8 @@ public class RmTransformHelper {
 			transformer = pss.newTransformer();
 			transformer.transform(new DocumentSource(xmlDoc), new StreamResult(outer));
 			returnStr = bytesStream.toString(RmBaseConfig.getSingleton().getDefaultEncode());
-		} catch (TransformerConfigurationException e) {
-			throw new RuntimeException(e); 
-		} catch (TransformerException e) {
-			throw new RuntimeException(e); 
-		} catch (UnsupportedEncodingException e) {
+		} catch (Throwable e) {
+			e.printStackTrace();
 			throw new RuntimeException(e); 
 		} finally {
 			try {

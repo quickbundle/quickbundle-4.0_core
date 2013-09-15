@@ -117,6 +117,8 @@ public class GenerateCodeWizard extends Wizard implements INewWizard {
             return false;
         } catch (InvocationTargetException e) {
             Throwable realException = e.getTargetException();
+            e.printStackTrace();
+            realException.printStackTrace();
             MessageDialog.openError(getShell(), "Error", realException.getMessage());
             return false;
         }

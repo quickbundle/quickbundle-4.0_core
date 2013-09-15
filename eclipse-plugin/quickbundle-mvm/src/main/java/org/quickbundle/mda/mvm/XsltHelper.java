@@ -48,7 +48,7 @@ public class XsltHelper {
         outputFile = RmXmlHelper.formatToFile(outputFile);
         RmFileHelper.initParentDir(outputFile); //创建父目录
         try {
-            String context = RmTransformHelper.getStringFromTransform(xsltPath, myTableXml);
+            String context = RmTransform.getStringFromTransform(xsltPath, myTableXml);
             if (outputFile.endsWith(".java")) {
                 context = getJavaFileDescComment(outputFile) + context;
             }
@@ -87,7 +87,7 @@ public class XsltHelper {
     	Map<String, Object> mAttribute = new HashMap<String, Object>();
     	mAttribute.put("targetFullPath", RmXmlHelper.formatToUrl(outputFolder));
     	try {
-    		String context = RmTransformHelper.getStringFromTransform(xsltPath, myTableXml, mAttribute);
+    		String context = RmTransform.getStringFromTransform(xsltPath, myTableXml, mAttribute);
     		if(outputFile != null) {
     			if (outputFile.endsWith(".java")) {
     				context = getJavaFileDescComment(outputFile) + context;
@@ -132,7 +132,7 @@ public class XsltHelper {
         RmFileHelper.initParentDir(outputFile); //创建父目录
         String context = "";
         try {
-        	context = RmTransformHelper.getStringFromTransform(xsltPath, myTableXml);
+        	context = RmTransform.getStringFromTransform(xsltPath, myTableXml);
 		} catch (Exception e) {
 			EclipseLog.logError("xslt=" + xsltPath + ", metaXml=" + myTableXml + "," + e.toString(), e);
 			e.printStackTrace();

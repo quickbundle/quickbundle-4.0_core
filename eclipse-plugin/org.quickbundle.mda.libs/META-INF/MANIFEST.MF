@@ -4,17 +4,19 @@ Bundle-Name: org.quickbundle.mda.libs
 Bundle-SymbolicName: org.quickbundle.mda.libs;singleton:=true
 Bundle-Version: 4.0.0
 Eclipse-BundleShape: dir
-Export-Package: org.dom4j,
- org.quickbundle.config,
+Export-Package: org.quickbundle.config,
  org.quickbundle.tools.helper,
  org.quickbundle.tools.helper.xml,
  org.quickbundle.tools.helper.io,
+ javax.xml.parsers,
+ javax.xml.transform,
+ javax.xml.transform.stream,
+ org.dom4j,
+ org.dom4j.io,
  net.sf.saxon,
  net.sf.saxon.value,
- org.dom4j.io,
  org.xml.sax,
  org.xml.sax.helpers,
- javax.xml.parsers,
  com.mysql.jdbc,
  oracle.jdbc.driver,
  com.ibm.db2.jcc,

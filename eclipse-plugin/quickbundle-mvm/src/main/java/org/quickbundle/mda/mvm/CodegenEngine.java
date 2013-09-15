@@ -80,7 +80,7 @@ public class CodegenEngine {
         currentTableXmlPath = RmXmlHelper.formatToUrl(currentTableXmlPath);
         try {
             //Document thisTableDoc = RmXmlHelper.parse(currentTableXmlPath);
-            Document tempResultsDoc = RmTransformHelper.getDocumentFromTransform(templatePath + "buildFilterTableName.xsl", currentTableXmlPath);
+            Document tempResultsDoc = RmTransform.getDocumentFromTransform(templatePath + "buildFilterTableName.xsl", currentTableXmlPath);
             filterTableName = tempResultsDoc.valueOf("/results/result[position()=1]/@tableFormatNameUpperFirst");
         } catch (Exception e) {
             e.printStackTrace();
