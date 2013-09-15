@@ -131,6 +131,11 @@ encoding/<project>=UTF-8]]></content>
 					<projectNameTemplate>[artifactId]-[version]</projectNameTemplate>
 				</configuration>
 			</plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-versions-plugin</artifactId>
+        <version>${tycho-version}</version>
+      </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
