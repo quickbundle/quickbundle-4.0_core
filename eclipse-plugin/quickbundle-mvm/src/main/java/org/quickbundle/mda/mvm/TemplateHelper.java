@@ -14,10 +14,11 @@ import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
+import org.quickbundle.mda.RmTransform;
 import org.quickbundle.tools.helper.io.RmFileHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
-public class XsltHelper {
+public class TemplateHelper {
 
     public static String getJavaFileDescComment(String outputFile) {
         StringBuilder result = new StringBuilder();
@@ -256,5 +257,5 @@ public class XsltHelper {
             }
         }
     }
-    
+
 }

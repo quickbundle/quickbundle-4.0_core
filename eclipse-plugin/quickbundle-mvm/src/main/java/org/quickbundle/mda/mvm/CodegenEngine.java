@@ -7,6 +7,7 @@
 package org.quickbundle.mda.mvm;
 
 import java.io.File;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -16,8 +17,10 @@ import java.util.regex.Pattern;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.quickbundle.mda.RmTransform;
 import org.quickbundle.tools.helper.RmStringHelper;
 import org.quickbundle.tools.helper.io.RmFileHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
@@ -79,14 +82,14 @@ public class CodegenEngine {
         String filterTableName = "";
         currentTableXmlPath = RmXmlHelper.formatToUrl(currentTableXmlPath);
         try {
-            //Document thisTableDoc = RmXmlHelper.parse(currentTableXmlPath);
-            Document tempResultsDoc = RmTransform.getDocumentFromTransform(templatePath + "buildFilterTableName.xsl", currentTableXmlPath);
+        	String finalTemplatePath = templatePath + "buildFilterTableName.xsl";
+        	String result = RmTransform.getStringFromTransform(finalTemplatePath, currentTableXmlPath);
+            Document tempResultsDoc = new SAXReader().read(new StringReader(result));
             filterTableName = tempResultsDoc.valueOf("/results/result[position()=1]/@tableFormatNameUpperFirst");
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-
         return filterTableName;
     }
 
@@ -141,18 +144,18 @@ public class CodegenEngine {
             		String outputFolder = eleFile.valueOf("@outputFolder");
             		outputFolder = fillUpOutput(outputFolder, toTableNameKeyword, eleFile, filterTableName, tableDirName, outPutPath);
             		if("".equals(eleFile.valueOf("@outputFile"))) {
-            			XsltHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, outputFolder);
+            			TemplateHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, outputFolder);
             		} else {
             			if("".equals(eleFile.valueOf("@outputFolder"))) {
             				outputFolder = new File(RmFileHelper.formatToFile(outputFile)).getParent();
             			}
-            			XsltHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, outputFolder, outputFile);
+            			TemplateHelper.outPutFile4ResultDocument(xsltPath, currentTableXmlPath, outputFolder, outputFile);
             		}
             	} else {
-            		XsltHelper.outPutFile(xsltPath, currentTableXmlPath, outputFile);
+            		TemplateHelper.outPutFile(xsltPath, currentTableXmlPath, outputFile);
             	}
             } else { //配置文件
-            	XsltHelper.outPutFile(xsltPath, currentTableXmlPath, outputFile, afterKeyWord, "true".equals(eleFile.valueOf("@rowIsUnique")));                        
+            	TemplateHelper.outPutFile(xsltPath, currentTableXmlPath, outputFile, afterKeyWord, "true".equals(eleFile.valueOf("@rowIsUnique")));                        
             }
             returnLog.append("\r\nxslt = ")
             	.append(RmFileHelper.formatToFile(xsltPath))
