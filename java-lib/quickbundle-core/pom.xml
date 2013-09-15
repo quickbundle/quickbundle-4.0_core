@@ -6,7 +6,7 @@
 		<groupId>org.quickbundle</groupId>
 		<artifactId>java-lib.parent</artifactId>
 		<version>4.0.0-RELEASE</version>
-		<relativePath>../java-lib/pom.xml</relativePath>
+		<relativePath>../java-lib.parent/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>quickbundle-core</artifactId>
