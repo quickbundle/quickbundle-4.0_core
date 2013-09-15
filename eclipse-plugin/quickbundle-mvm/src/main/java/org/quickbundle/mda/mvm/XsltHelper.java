@@ -15,7 +15,6 @@ import java.util.Set;
 import javax.xml.transform.TransformerException;
 
 import org.quickbundle.tools.helper.io.RmFileHelper;
-import org.quickbundle.tools.helper.xml.RmTransformHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 public class XsltHelper {

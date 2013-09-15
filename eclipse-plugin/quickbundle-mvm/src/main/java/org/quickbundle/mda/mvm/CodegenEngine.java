@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.quickbundle.tools.helper.RmStringHelper;
 import org.quickbundle.tools.helper.io.RmFileHelper;
-import org.quickbundle.tools.helper.xml.RmTransformHelper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 /**

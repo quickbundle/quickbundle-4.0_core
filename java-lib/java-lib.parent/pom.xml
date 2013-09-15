@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.quickbundle</groupId>
 	<artifactId>java-lib.parent</artifactId>
-	<version>4.0.0-RELEASE</version>
+	<version>4.0.0</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -12,7 +12,7 @@
 		<BUILD_ALIAS>Final</BUILD_ALIAS>
 		<basedir>./</basedir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<quickbundle.version>4.0.0-RELEASE</quickbundle.version>
+		<quickbundle.version>4.0.0</quickbundle.version>
 		<!-- 主要依赖库的版本定义 -->
 		<struts.version>1.3.10</struts.version>
 		<spring.version>3.2.4.RELEASE</spring.version>
