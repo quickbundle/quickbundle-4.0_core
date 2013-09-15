@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.quickbundle</groupId>
 		<artifactId>java-lib.parent</artifactId>
-		<version>4.0.0-SNAPSHOT</version>
+		<version>4.0.0-RELEASE</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -106,7 +106,7 @@ encoding/<project>=UTF-8]]>
 		<dependency>
 			<groupId>org.quickbundle</groupId>
 			<artifactId>quickbundle-core</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>4.0.0-RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
