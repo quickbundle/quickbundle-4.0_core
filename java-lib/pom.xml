@@ -23,7 +23,6 @@ Contributors:
 	<modules>
         <module>quickbundle-tools</module>
 	    <module>quickbundle-core</module>
-		<module>quickbundle-transform</module>
 		<module>quickbundle-mybatis</module>
 		<module>quickbundle-struts</module>
         <module>quickbundle-springweb</module>

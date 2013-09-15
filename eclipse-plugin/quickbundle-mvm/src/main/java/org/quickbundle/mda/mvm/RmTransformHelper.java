@@ -1,4 +1,4 @@
-package org.quickbundle.tools.helper.xml;
+package org.quickbundle.mda.mvm;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,6 +23,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.io.DocumentSource;
 import org.dom4j.io.SAXReader;
 import org.quickbundle.config.RmBaseConfig;
+import org.quickbundle.tools.helper.xml.RmXmlHelper;
 
 public class RmTransformHelper {
 	/**

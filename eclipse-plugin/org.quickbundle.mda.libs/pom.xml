@@ -58,11 +58,11 @@
 			<artifactId>quickbundle-tools</artifactId>
 			<version>4.0.0-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.quickbundle</groupId>
-			<artifactId>quickbundle-transform</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
-		</dependency>
+        <dependency>
+            <groupId>net.sourceforge.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>9.1.0.8</version>
+        </dependency>
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
