@@ -34,7 +34,9 @@
 			<dbType defaultDriver="com.sybase.jdbc2.jdbc.SybDriver" defaultUrl="jdbc:sybase:Tds:localhost:2638/">Sybase</dbType>
 			<dbType defaultDriver="com.informix.jdbc.IfxDriver" defaultUrl="jdbc:informix-sqli://localhost:1533/test:INFORMIXSERVER=myserver">informix</dbType>
 			<dbType defaultDriver="org.postgresql.Driver" defaultUrl="jdbc:postgresql://localhost/test">PostgreSQL</dbType>
+			<!-- 
 			<dbType defaultDriver="sun.jdbc.odbc.JdbcOdbcDriver" defaultUrl="jdbc:odbc:Driver={MicroSoft Access Driver (*.mdb)};DBQ=yourApplicationRealPath/Data/ReportDemo.mdb">access(*)</dbType>
+			 -->
 			<dbType defaultDriver="undefined driver" defaultUrl="undefined url">other</dbType>
 		</dbTypes>
 		<!--定义关键字的过滤类型-->

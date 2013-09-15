@@ -5,7 +5,6 @@
 	<artifactId>org.quickbundle.mda.parent</artifactId>
 	<version>4.0.0</version>
 	<packaging>pom</packaging>
-	
 	<!-- tycho requires maven >= 3.0 -->
 	<prerequisites>
 		<maven>3.0</maven>
@@ -41,7 +40,7 @@
 				<artifactId>tycho-packaging-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<goals>
-				    <goal>validate-version</goal>				
+					<goal>validate-version</goal>
 				</goals>
 				<configuration>
 					<format>'v'yyyyMMdd-HHmm'-${BUILD_ALIAS}'</format>
@@ -53,7 +52,7 @@
 							<arch>x86</arch>
 						</environment>
 					</environments>
-					<qualifier></qualifier>
+					<qualifier/>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -87,25 +86,6 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/lib</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<excludeScope>provided</excludeScope>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
@@ -131,11 +111,11 @@ encoding/<project>=UTF-8]]></content>
 					<projectNameTemplate>[artifactId]-[version]</projectNameTemplate>
 				</configuration>
 			</plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-versions-plugin</artifactId>
-        <version>${tycho-version}</version>
-      </plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+				<version>${tycho-version}</version>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -183,11 +163,55 @@ encoding/<project>=UTF-8]]></content>
 								</pluginExecution>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-dependency-plugin</artifactId>
-										<versionRange>[2.0,)</versionRange>
+										<groupId>
+											org.eclipse.tycho
+										</groupId>
+										<artifactId>
+											tycho-packaging-plugin
+										</artifactId>
+										<versionRange>
+											[0.18.1,)
+										</versionRange>
 										<goals>
-											<goal>copy-dependencies</goal>
+											<goal>validate-id</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.eclipse.tycho
+										</groupId>
+										<artifactId>
+											tycho-packaging-plugin
+										</artifactId>
+										<versionRange>
+											[0.18.1,)
+										</versionRange>
+										<goals>
+											<goal>validate-version</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.eclipse.tycho
+										</groupId>
+										<artifactId>
+											tycho-packaging-plugin
+										</artifactId>
+										<versionRange>
+											[0.18.1,)
+										</versionRange>
+										<goals>
+											<goal>build-qualifier</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>

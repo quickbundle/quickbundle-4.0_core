@@ -22,8 +22,7 @@ Export-Package: org.dom4j,
  org.h2,
  com.sybase.jdbc2.jdbc,
  com.informix.jdbc,
- org.postgresql,
- sun.jdbc.odbc
+ org.postgresql
 Bundle-Vendor: quickbundle team
 Bundle-ClassPath: .,
  target/classes,
