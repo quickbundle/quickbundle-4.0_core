@@ -15,6 +15,5 @@ Require-Bundle: org.eclipse.ui,
  org.quickbundle.mda.libs,
  org.quickbundle.mda.mvm
 Bundle-ActivationPolicy: lazy
-Import-Package: org.apache.commons.collections.map
 Bundle-ClassPath: .,
  target/classes
