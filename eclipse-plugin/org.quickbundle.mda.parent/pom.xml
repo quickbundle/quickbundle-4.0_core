@@ -108,7 +108,7 @@ encoding/<project>=UTF-8]]></content>
 						<projectnatures>org.eclipse.m2e.core.maven2Nature</projectnatures>
 						<projectnatures>org.eclipse.pde.PluginNature</projectnatures>
 					</additionalProjectnatures>
-					<projectNameTemplate>[artifactId]-[version]</projectNameTemplate>
+					<projectNameTemplate>[artifactId]</projectNameTemplate>
 				</configuration>
 			</plugin>
 			<plugin>
