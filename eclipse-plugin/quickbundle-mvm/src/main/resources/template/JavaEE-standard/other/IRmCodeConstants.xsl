@@ -5,7 +5,7 @@
 	<!--忽略xml声明-->
 	<xsl:output method="text" omit-xml-declaration="yes" encoding="UTF-8"/>
 	<!--处理table-->
-	<xsl:template match="table[1]">
+	<xsl:template match="/meta/tables/table[position()=1 or @tableName=/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]/@tableName]">
 		<xsl:apply-templates mode="dictionary"/>
 	</xsl:template>
 	<!--循环列，如果有数据字典就处理-->

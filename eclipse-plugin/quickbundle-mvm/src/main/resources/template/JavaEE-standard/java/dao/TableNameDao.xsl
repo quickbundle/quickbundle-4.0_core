@@ -54,7 +54,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
      * @return 若添加成功，返回新生成的id数组
      */
     public <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[] insert(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[] vos) {
-        <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[] ids =RmIdFactory.requestId<xsl:if test="not(str:getPkColumnClass(/meta, $tableName, @tablePk)='String')"><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/></xsl:if>(TABLE_NAME, vos.length); //批量获得id
+        <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/>[] ids =RmIdFactory.requestId<xsl:if test="not(str:getPkColumnClass(/meta, $tableName, @tablePk)='String')"><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/></xsl:if>(TABLE_NAME<xsl:if test="/meta/relations/mainTable and not(/meta/relations/mainTable[@tableName=$thisTableName])">_<xsl:value-of select="@tableName"/></xsl:if>, vos.length); //批量获得id
         for(int i=0; i<xsl:value-of select="$charLt"/>vos.length; i++) {
             vos[i].set<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>(ids[i]);
         }
