@@ -210,7 +210,7 @@ third-party archives.
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.core.resources
+      <import plugin="org.eclipse.core.resources"/>
 	  <import plugin="org.eclipse.jface.text"/>
 	  <import plugin="org.eclipse.ui.editors"/>
 	  <import plugin="org.eclipse.ui.ide"/>
