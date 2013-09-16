@@ -14,6 +14,8 @@
     <module>quickbundle-gp</module>
     <module>quickbundle-mvm</module>
     <module>quickbundle-gc</module>
+	<module>org.quickbundle.mda.feature</module>
+	<module>org.quickbundle.mda.updatesite</module>
   </modules>
 
 </project>
