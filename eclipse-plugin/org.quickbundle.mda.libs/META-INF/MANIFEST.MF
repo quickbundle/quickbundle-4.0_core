@@ -16,10 +16,7 @@ Export-Package: org.quickbundle.config,
  net.sourceforge.jtds.jdbc,
  com.sybase.jdbc2.jdbc,
  com.informix.jdbc,
- org.postgresql,
- org.apache.commons.collections.map,
- com.mysql.jdbc,
- org.h2
+ org.postgresql
 Bundle-Vendor: quickbundle team
 Bundle-ClassPath: .,
  target/classes,
