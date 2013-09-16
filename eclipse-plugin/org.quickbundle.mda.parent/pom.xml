@@ -71,6 +71,11 @@
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+				<version>${tycho-version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
@@ -110,11 +115,6 @@ encoding/<project>=UTF-8]]></content>
 					</additionalProjectnatures>
 					<projectNameTemplate>[artifactId]</projectNameTemplate>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-versions-plugin</artifactId>
-				<version>${tycho-version}</version>
 			</plugin>
 		</plugins>
 		<pluginManagement>
