@@ -22,19 +22,35 @@ public interface ICoreConstants {
     public final static String DESC_MODIFY_USER_ID = "modify_user_id";  //描述修改用户ID
 
     //数据库定义
-	public final static String DATABASE_PRODUCT_NAME_MYSQL = "MySQL";
-    public final static String DATABASE_PRODUCT_NAME_ORACLE = "Oracle";
-	public final static String DATABASE_PRODUCT_NAME_DB2 = "DB2";
-	public final static String DATABASE_PRODUCT_NAME_SQLServer = "Microsoft SQL Server";
-	public final static String DATABASE_PRODUCT_NAME_H2 = "H2";
-	public final static String DATABASE_PRODUCT_NAME_HSQL = "HSQL Database Engine";
+    //数据库定义
+	public static enum DatabaseProductType{
+		MYSQL("MySQL"),
+		POSTGRESQL("PostgreSQL"),
+		ORACLE("Oracle"),
+		DB2("DB2"),
+		SQLSERVER("Microsoft SQL Server"),
+		H2("H2"),
+		HSQL("HSQL Database Engine");
+		
+		private String databaseProductName;
+		private DatabaseProductType(String databaseProductName_) {
+			this.databaseProductName = databaseProductName_;
+		}
+		public String getDatabaseProductName() {
+			return databaseProductName;
+		}
+	}
+	
 	public final static Map<String, String> DATABASE_PRODUCT_MAP = new HashMap<String, String>() {
 		{
-			this.put("com.mysql.jdbc.Driver", DATABASE_PRODUCT_NAME_MYSQL);
-			this.put("org.gjt.mm.mysql.Driver", DATABASE_PRODUCT_NAME_MYSQL);
-			this.put("oracle.jdbc.driver.OracleDriver", DATABASE_PRODUCT_NAME_ORACLE);
-			this.put("net.sourceforge.jtds.jdbc.Driver", DATABASE_PRODUCT_NAME_SQLServer);
-			this.put("org.h2.Driver", DATABASE_PRODUCT_NAME_MYSQL);
+			this.put("com.mysql.jdbc.Driver", DatabaseProductType.MYSQL.getDatabaseProductName());
+			this.put("org.postgresql.Driver", DatabaseProductType.POSTGRESQL.getDatabaseProductName());
+			this.put("org.gjt.mm.mysql.Driver", DatabaseProductType.MYSQL.getDatabaseProductName());
+			this.put("oracle.jdbc.driver.OracleDriver", DatabaseProductType.ORACLE.getDatabaseProductName());
+			this.put("com.ibm.db2.jcc.DB2Driver", DatabaseProductType.DB2.getDatabaseProductName());
+			this.put("net.sourceforge.jtds.jdbc.Driver", DatabaseProductType.SQLSERVER.getDatabaseProductName());
+			this.put("org.h2.Driver", DatabaseProductType.H2.getDatabaseProductName());
+			this.put("org.hsqldb.jdbcDriver", DatabaseProductType.HSQL.getDatabaseProductName());
 		}
 	};
 	

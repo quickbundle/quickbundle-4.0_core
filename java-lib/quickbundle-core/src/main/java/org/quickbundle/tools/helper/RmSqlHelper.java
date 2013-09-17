@@ -174,7 +174,7 @@ public class RmSqlHelper {
 			return "";
 		}
 		StringBuilder sb = new StringBuilder();
-		if(ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equalsIgnoreCase(RmBaseConfig.getSingleton().getDatabaseProductName())) {
+		if(ICoreConstants.DatabaseProductType.ORACLE.getDatabaseProductName().equalsIgnoreCase(RmBaseConfig.getSingleton().getDatabaseProductName())) {
 			String valueStr = value.toString().trim();
 			sb.append("to_date('");
 			switch (valueStr.length()) {
@@ -295,11 +295,11 @@ select * from ( select top 200 * from ( select TOP 100000 * from moa_user order 
 	 * @return
 	 */
 	public static String getFunction(Function func, String databaseProductName, Object... args) {
-		if(ICoreConstants.DATABASE_PRODUCT_NAME_MYSQL.equals(databaseProductName)) {
+		if(ICoreConstants.DatabaseProductType.MYSQL.getDatabaseProductName().equals(databaseProductName)) {
 			return getFunctionMysql(func, args);
-		} else if(ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equals(databaseProductName)) {
+		} else if(ICoreConstants.DatabaseProductType.ORACLE.getDatabaseProductName().equals(databaseProductName)) {
 			return getFunctionOracle(func, args);
-		} else if(ICoreConstants.DATABASE_PRODUCT_NAME_SQLServer.equals(databaseProductName)) {
+		} else if(ICoreConstants.DatabaseProductType.SQLSERVER.getDatabaseProductName().equals(databaseProductName)) {
 			return getFunctionSqlserver(func, args);
 		}
 		return null;

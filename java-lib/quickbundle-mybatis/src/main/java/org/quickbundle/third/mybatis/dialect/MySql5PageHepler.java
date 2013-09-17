@@ -48,8 +48,9 @@ public class MySql5PageHepler {
 	 */
 	public static String getLimitString(String querySelect, int offset, int limit) {
 		querySelect = getLineSql(querySelect);
-		String sql = querySelect.replaceAll("[^\\s,]+\\.", "") + " limit " + offset + "," + limit;
-		return sql;
+		StringBuilder sql = new StringBuilder();
+		sql.append(querySelect.replaceAll("[^\\s,]+\\.", "")).append(" limit ").append(offset).append(",").append(limit);
+		return sql.toString();
 
 	}
 

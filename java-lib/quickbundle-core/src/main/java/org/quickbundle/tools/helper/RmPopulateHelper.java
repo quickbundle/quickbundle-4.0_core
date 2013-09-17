@@ -291,7 +291,7 @@ public class RmPopulateHelper<E> {
 		try {
 			Object resultObj = rs.getObject(columnName);
 			if(resultObj instanceof Date) {
-				if(ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equals(RmBaseConfig.getSingleton().getDatabaseProductName())) {
+				if(ICoreConstants.DatabaseProductType.ORACLE.getDatabaseProductName().equals(RmBaseConfig.getSingleton().getDatabaseProductName())) {
 					resultObj = rs.getTimestamp(columnName);
 				}
 			} else if (resultObj instanceof Clob) {

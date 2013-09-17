@@ -286,9 +286,9 @@ public class RmJdbcTemplate extends JdbcTemplate {
 	public List query(String strsql, RowMapper rowMapper, int startIndex, int size, boolean absoluteByNext) {
 		if (RmBaseConfig.getSingleton().getDatabaseProductName() != null &&
 				(getAbsolutePage().equals(EnumBoolean.FALSE) || (getAbsolutePage().equals(EnumBoolean.NULL) && !RmBaseConfig.getSingleton().isAbsolutePage()))) {
-			if (ICoreConstants.DATABASE_PRODUCT_NAME_ORACLE.equalsIgnoreCase(RmBaseConfig.getSingleton().getDatabaseProductName())) {
+			if (ICoreConstants.DatabaseProductType.ORACLE.getDatabaseProductName().equalsIgnoreCase(RmBaseConfig.getSingleton().getDatabaseProductName())) {
 				return (List) query(RmSqlHelper.getSqlPage4Oracle(strsql, startIndex, size), rowMapper);
-			} else if (ICoreConstants.DATABASE_PRODUCT_NAME_MYSQL.equalsIgnoreCase(RmBaseConfig.getSingleton().getDatabaseProductName())) {
+			} else if (ICoreConstants.DatabaseProductType.MYSQL.getDatabaseProductName().equalsIgnoreCase(RmBaseConfig.getSingleton().getDatabaseProductName())) {
 				return (List) query(RmSqlHelper.getSqlPage4Mysql(strsql, startIndex, size), rowMapper);
 			}
 		}

@@ -19,6 +19,7 @@ import org.quickbundle.third.mybatis.dialect.Dialect;
 import org.quickbundle.third.mybatis.dialect.H2Dialect;
 import org.quickbundle.third.mybatis.dialect.MySql5Dialect;
 import org.quickbundle.third.mybatis.dialect.OracleDialect;
+import org.quickbundle.third.mybatis.dialect.PostgreSQLDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,8 +49,12 @@ public class ScrollableStatementHandlerInterceptor implements Interceptor {
 		}
 		Dialect dialect = null;
 		switch (databaseType) {
+		//TODO 新的数据库支持
 		case MYSQL:
 			dialect = new MySql5Dialect();
+			break;
+		case POSTGRESQL:
+			dialect = new PostgreSQLDialect();
 			break;
 		case H2:
 			dialect = new H2Dialect();

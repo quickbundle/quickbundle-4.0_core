@@ -36,6 +36,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 1.0.0
  */
 public class RmIdFactory implements IRmIdFactory{
+	private static String databaseProductName_DB2 = "DB2";
+	private static String databaseProductName_DB2NT = "DB2/NT";
+	
+	
 	//批查询的数量
     public static int MAX_BATCH_SIZE = RmBaseConfig.getSingleton().getDefaultBatchSize();
     
@@ -117,11 +121,22 @@ public class RmIdFactory implements IRmIdFactory{
 		sql.append("max_id from ");
 		sql.append(tableName);
 		sql.append(" where ");
-		sql.append(idName);
+		sql.append(parseColumn(idName));
 		sql.append(" like '");
 		sql.append(tablePrefix);
 		sql.append("%'");
     	return sql.toString();
+    }
+    
+    private String parseColumn(String idName) {
+    	StringBuilder result = new StringBuilder();
+    	if(databaseProductName_DB2.equals(RmBaseConfig.getSingleton().getDatabaseProductName())
+    			|| databaseProductName_DB2NT.equals(RmBaseConfig.getSingleton().getDatabaseProductName())) {
+    		result.append("char(").append(idName).append(")");
+    		return result.toString();
+    	} else {
+    		return idName;
+    	}
     }
     
     void doInitIdBatch(Map<String, Element> mTableName_Ele) {
