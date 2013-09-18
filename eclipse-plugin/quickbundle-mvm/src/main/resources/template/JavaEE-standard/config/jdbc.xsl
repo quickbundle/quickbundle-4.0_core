@@ -10,12 +10,15 @@
 #<xsl:value-of select="$dbProductName"/>
 jdbc.minPoolSize=1
 jdbc.maxPoolSize=50
-jdbc.validateTestSql=select 0 from dual
+jdbc.validateTestSql=<xsl:choose>
+<xsl:when test="upper-case($dbProductName)='DB2' or upper-case($dbProductName)='DB2/NT'">select current timestamp from sysibm.sysdummy1</xsl:when>
+<xsl:otherwise>select 0 from dual</xsl:otherwise>
+</xsl:choose>
 hibernate.dialect=org.hibernate.dialect.<xsl:choose>
 <xsl:when test="upper-case($dbProductName)='MYSQL'">MySQLDialect</xsl:when>
 <xsl:when test="upper-case($dbProductName)='POSTGRESQL'">PostgreSQL82Dialect</xsl:when>
 <xsl:when test="upper-case($dbProductName)='ORACLE'">Oracle10gDialect</xsl:when>
-<xsl:when test="upper-case($dbProductName)='DB2' or lower-case($dbProductName)='DB2/NT'">DB2Dialect</xsl:when>
+<xsl:when test="upper-case($dbProductName)='DB2' or upper-case($dbProductName)='DB2/NT'">DB2Dialect</xsl:when>
 <xsl:when test="upper-case($dbProductName)='MICROSOFT SQL SERVER'">SQLServerDialect</xsl:when>
 <xsl:when test="upper-case($dbProductName)='H2'">H2Dialect</xsl:when>
 <xsl:when test="upper-case($dbProductName)='HSQL DATABASE ENGINE'">HSQLDialect</xsl:when>
@@ -25,7 +28,7 @@ mybatis.dialect=<xsl:choose>
 <xsl:when test="upper-case($dbProductName)='MYSQL'">MYSQL</xsl:when>
 <xsl:when test="upper-case($dbProductName)='POSTGRESQL'">POSTGRESQL</xsl:when>
 <xsl:when test="upper-case($dbProductName)='ORACLE'">ORACLE</xsl:when>
-<xsl:when test="upper-case($dbProductName)='DB2' or lower-case($dbProductName)='DB2/NT'">DB2</xsl:when>
+<xsl:when test="upper-case($dbProductName)='DB2' or upper-case($dbProductName)='DB2/NT'">DB2</xsl:when>
 <xsl:when test="upper-case($dbProductName)='MICROSOFT SQL SERVER'">SQLSERVER</xsl:when>
 <xsl:when test="upper-case($dbProductName)='H2'">H2</xsl:when>
 <xsl:when test="upper-case($dbProductName)='HSQL DATABASE ENGINE'">HSQL</xsl:when>

@@ -13,6 +13,8 @@ public class RmDataBinding implements WebBindingInitializer {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(dateFormat, true));
+		
+		binder.registerCustomEditor(java.sql.Date.class, new org.quickbundle.third.spring.web.bind.CustomSqlDateEditor(dateFormat, true));
 
 		SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		datetimeFormat.setLenient(false);

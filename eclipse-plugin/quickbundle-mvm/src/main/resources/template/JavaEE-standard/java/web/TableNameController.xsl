@@ -30,6 +30,7 @@ import org.quickbundle.tools.helper.RmVoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -100,7 +101,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      * 从页面表单获取信息注入vo，并插入单条记录
      */
     @RequestMapping(value = "insert", method = RequestMethod.POST)
-    public String insert(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
+    public String insert(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, Errors errors, RedirectAttributes redirectAttributes) {
         RmVoHelper.markCreateStamp(request,vo);  //打创建时间,IP戳<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
@@ -127,7 +128,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      * 从页面表单获取信息注入vo，并修改单条记录
      */
     @RequestMapping(value = "update", method = RequestMethod.POST)
-    public String update(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
+    public String update(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, Errors errors, RedirectAttributes redirectAttributes) {
         RmVoHelper.markModifyStamp(request,vo);  //打修改时间,IP戳<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
@@ -304,7 +305,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
      * 插入中间表<xsl:value-of select="@tableName"/>数据
      */
     @RequestMapping(value = "insert<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>", method = RequestMethod.POST)
-    public String insert<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, RedirectAttributes redirectAttributes) {
+    public String insert<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, Errors errors, RedirectAttributes redirectAttributes) {
         String <xsl:value-of select="lower-case(@mainColumn)"/> = request.getParameter("<xsl:value-of select="lower-case(@mainColumn)"/>");
         String[] <xsl:value-of select="lower-case(@refColumn)"/>s = request.getParameter("<xsl:value-of select="lower-case(@refColumn)"/>s").split(",");
         int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insert<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(<xsl:value-of select="lower-case(@mainColumn)"/>, <xsl:value-of select="lower-case(@refColumn)"/>s).length;

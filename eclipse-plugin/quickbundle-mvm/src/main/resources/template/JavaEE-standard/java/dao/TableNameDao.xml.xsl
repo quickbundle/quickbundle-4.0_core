@@ -47,7 +47,10 @@
   <xsl:value-of select="$charLt"/>update id="update" parameterType="<xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo">
     update <xsl:value-of select="@tableName"/> set 
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
-				<xsl:value-of select="@columnName"/>=#{<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/>}<xsl:if test="not(position()=last())">, </xsl:if>
+				<xsl:value-of select="@columnName"/>=#{<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/><xsl:choose>
+							<xsl:when test="@dataTypeDb='VARCHAR' or @dataTypeDb='CHAR' or @dataTypeDb='DATE' or @dateTypeDb='DECIMAL'">,jdbcType=<xsl:value-of select="@dataTypeDb"/></xsl:when>
+							<xsl:otherwise></xsl:otherwise>
+						</xsl:choose>}<xsl:if test="not(position()=last())">, </xsl:if>
 				<xsl:if test="position() mod 4=0"><xsl:text>
       </xsl:text></xsl:if>
 			</xsl:for-each>  

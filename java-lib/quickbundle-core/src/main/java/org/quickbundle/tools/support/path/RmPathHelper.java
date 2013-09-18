@@ -13,10 +13,15 @@ package org.quickbundle.tools.support.path;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.quickbundle.base.web.servlet.RmHolderServlet;
@@ -110,11 +115,22 @@ public class RmPathHelper {
 		} catch (java.lang.NoClassDefFoundError e) {
 			//ignore
 		}
-		if (defaultServletContextName != null) {
-			return defaultServletContextName;
-		} else {
-			return getWarDir().getName();
+		if(defaultServletContextName == null || defaultServletContextName.length() == 0) {
+			try {
+	            //web.xml命名空间
+	            Map<String, String> defaultNameSpaceMap = new HashMap<String, String>();  
+	            defaultNameSpaceMap.put("q", "http://java.sun.com/xml/ns/javaee");
+	            //读入web.xml
+	            Document docWebXml = RmXmlHelper.parse(getWebInfDir() + File.separator + "web.xml", defaultNameSpaceMap);
+	            defaultServletContextName = docWebXml.valueOf("/q:web-app/q:display-name");
+			} catch (Exception e) {
+				//ignore
+			}
 		}
+		if(defaultServletContextName == null || defaultServletContextName.length() == 0) {
+			defaultServletContextName = getWarDir().getName();
+		}
+		return defaultServletContextName;
 	}
 
 	/**
