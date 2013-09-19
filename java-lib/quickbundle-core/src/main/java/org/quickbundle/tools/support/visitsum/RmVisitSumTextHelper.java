@@ -56,7 +56,7 @@ public class RmVisitSumTextHelper {
     
     private static List<String> lSessionId = null;
     
-    private static String visitSumPropertyPath = RmPathHelper.getWebInfDir() + File.separator + "config" + File.separator + "rm" + File.separator + "visit_sum.properties";
+    private static String visitSumPropertyPath = RmPathHelper.getWebInfDir() + File.separator + "config" + File.separator + "rm" + File.separator + "visitSum.properties";
 
     /**
      * isInit 表示: 标识是否被初始化
