@@ -26,7 +26,7 @@ public class RmExceptionHandler extends ExceptionHandler {
     private static volatile Document exceptionDoc = null;
     
     private static Document getExcpetionDoc() throws Exception {
-        String xmlPath = RmPathHelper.getWarDir() + "/WEB-INF/config/exception/rm.exception.xml";
+        String xmlPath = RmPathHelper.getWarDir() + "/WEB-INF/config/rm/rm.exception.xml";
         xmlPath = RmXmlHelper.formatToUrl(xmlPath);
         if(exceptionDoc == null) {
             synchronized (RmExceptionHandler.class) {
