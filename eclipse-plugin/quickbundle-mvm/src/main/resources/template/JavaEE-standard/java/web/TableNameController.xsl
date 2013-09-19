@@ -10,7 +10,9 @@
 package <xsl:value-of select="$javaPackageTableDir"/>.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,12 +30,16 @@ import org.quickbundle.tools.helper.RmPopulateHelper;</xsl:if>
 import org.quickbundle.tools.helper.RmSqlHelper;
 import org.quickbundle.tools.helper.RmVoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -100,18 +106,23 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     /**
      * 从页面表单获取信息注入vo，并插入单条记录
      */
-    @RequestMapping(value = "insert", method = RequestMethod.POST)
-    public String insert(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, Errors errors, RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "insert", method = RequestMethod.POST, 
+			consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<xsl:value-of select="$charLt"/>?> insert(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, Errors errors) {
         RmVoHelper.markCreateStamp(request,vo);  //打创建时间,IP戳<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
 				</xsl:if>(RmPopulateHelper.populateVos(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo.class, request, TABLE_PK_<xsl:value-of select="@tableName"/>, TABLE_NAME_<xsl:value-of select="@tableName"/> + RM_NAMESPACE_SPLIT_KEY));
-        RmVoHelper.markCreateStamp(request, vo.getBody());
+        RmVoHelper.markCreateStamp(request, vo.getBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>());
 </xsl:for-each><xsl:text>
         </xsl:text><xsl:value-of select="$tableFormatNameLowerFirst"/>Service.insert(vo);  //插入单条记录
-        redirectAttributes.addFlashAttribute("message", "创建成功");
-        return "redirect:/<xsl:value-of select="@tableDirName"/>";
-    }
+        Map<xsl:value-of select="$charLt"/>String, String> result = new HashMap<xsl:value-of select="$charLt"/>String, String>();
+        result.put("message", "新增成功: " + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
+		return new ResponseEntity<xsl:value-of select="$charLt"/>Map<xsl:value-of select="$charLt"/>String, String>>(result, HttpStatus.CREATED);
+	}
     
     /**
      * 从页面的表单获取单条记录id，查出这条记录的值，并跳转到修改页面
@@ -127,18 +138,23 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
     /**
      * 从页面表单获取信息注入vo，并修改单条记录
      */
-    @RequestMapping(value = "update", method = RequestMethod.POST)
-    public String update(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, Errors errors, RedirectAttributes redirectAttributes) {
-        RmVoHelper.markModifyStamp(request,vo);  //打修改时间,IP戳<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
+	@RequestMapping(value = "update", method = RequestMethod.POST, 
+			consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<xsl:value-of select="$charLt"/>?> update(HttpServletRequest request, @Valid <xsl:value-of select="$TableNameVo"/> vo, Errors errors) {
+		RmVoHelper.markModifyStamp(request,vo);  //打修改时间,IP戳<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
 				</xsl:if>(RmPopulateHelper.populateVos(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo.class, request, TABLE_PK_<xsl:value-of select="@tableName"/>, TABLE_NAME_<xsl:value-of select="@tableName"/> + RM_NAMESPACE_SPLIT_KEY));
-        RmVoHelper.markModifyStamp(request, vo.getBody());
+        RmVoHelper.markModifyStamp(request, vo.getBody<xsl:if test="position()>1">
+					<xsl:value-of select="position()"/>
+				</xsl:if>());
 </xsl:for-each>
-        int count = <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.update(vo);  //更新单条记录
-        redirectAttributes.addFlashAttribute("message", "更新成功: " + count);
-        return "redirect:/<xsl:value-of select="@tableDirName"/>";
-    }
+        <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.update(vo);  //更新单条记录
+        Map<xsl:value-of select="$charLt"/>String, String> result = new HashMap<xsl:value-of select="$charLt"/>String, String>();
+        result.put("message", "修改成功: " + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
+		return new ResponseEntity<xsl:value-of select="$charLt"/>Map<xsl:value-of select="$charLt"/>String, String>>(result, HttpStatus.CREATED);
+	}
     
     /**
      * 从页面的表单获取单条记录id并删除，如request.id为空则删除多条记录（request.ids）

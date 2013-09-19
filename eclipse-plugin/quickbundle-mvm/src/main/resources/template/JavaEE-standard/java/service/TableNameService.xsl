@@ -8,15 +8,15 @@
 	<xsl:template match="table[1]">
 		<xsl:value-of select="str:getJavaFileComment($authorName)"/>
 package <xsl:value-of select="$javaPackageTableDir"/>.service;
-
+<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0])>0">
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;</xsl:if>
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import <xsl:value-of select="$javaPackageTableDir"/>.<xsl:value-of select="$ITableNameConstants"/>;
 import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="$tableFormatNameUpperFirst"/>Dao;
@@ -25,12 +25,13 @@ import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="$T
 import <xsl:value-of select="$javaPackageTableDir"/>.dao.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Dao;
 import <xsl:value-of select="$javaPackageTableDir"/>.vo.<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo;
 </xsl:for-each>
-import org.quickbundle.project.RmProjectHelper;
+import org.quickbundle.project.RmProjectHelper;<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0])>0">
 import org.quickbundle.project.common.service.IRmCommonService;
-import org.quickbundle.tools.helper.RmStringHelper;<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">
+import org.quickbundle.tools.helper.RmStringHelper;</xsl:if>
+<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable)>0">
 import org.quickbundle.tools.helper.RmVoHelper;</xsl:if>
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.beans.factory.annotation.Autowired;<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)>0])>0">
+import org.springframework.jdbc.core.RowMapper;</xsl:if>
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

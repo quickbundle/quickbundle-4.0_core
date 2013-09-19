@@ -32,24 +32,47 @@
 <xsl:value-of select="$charLt"/>meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <xsl:value-of select="$charLt"/>title><xsl:value-of select="$charLt"/>bean:message key="qb.web_title"/><xsl:value-of select="$charLt"/>/title>
 <xsl:value-of select="$charLt"/>script type="text/javascript">
-    var rmActionName = "<xsl:value-of select="$tableFormatNameUpperFirst"/>Action";
-    function insert_onClick(){  //插入单条数据
-        form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/insert";
-        form.submit();
-    }
-    function update_onClick(id){  //保存修改后的单条数据
-        if(!getConfirm()) {  //如果用户在确认对话框中点"取消"
-            return false;
-        }
-        form.action="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/update";
-        form.submit();
-    }
+	var options = {
+		target: '#msgdlg',
+		success: showResponse,
+		error: showError,
+		contentType : 'application/x-www-form-urlencoded; charset=utf-8',
+		dataType:  'json',
+		redirectUrl: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>'
+    };
+	function showResponse(responseText, statusText, xhr, $form) {
+	  	showMessage(responseText.message, options);
+	}
+	function showError(xhr, ajaxOptions, thrownError) {
+	  	var result = JSON.parse(xhr.responseText);
+	  	showErrorMessage(result.error);
+		hideWait();
+		enableAllButton();
+	}
+	
+	function insertNext_onClick(){  //插入单条数据，成功后继续新增
+		options.url="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/insert";
+		options.redirectUrl = "<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/insert";
+		$("#form").ajaxSubmit(options);
+	}
+	function insert_onClick(){  //插入单条数据
+		options.url="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/insert";
+		$("#form").ajaxSubmit(options);
+	}
+  	function update_onClick(id){  //保存修改后的单条数据
+    	if(!getConfirm()) {  //如果用户在确认对话框中点"取消"
+  			return false;
+		}
+    	options.url="<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="@tableDirName"/>/update";
+    	$("#form").ajaxSubmit(options);
+	}
 <xsl:value-of select="$charLt"/>/script>
 <xsl:value-of select="$charLt"/>/head>
 <xsl:value-of select="$charLt"/>body>
-<xsl:value-of select="$charLt"/>form name="form" method="post">
+<xsl:value-of select="$charLt"/>form name="form" id="form" method="post">
 
 <xsl:value-of select="$charLt"/>div class="button_area">
+<xsl:value-of select="$charLt"/>c:if test="${action=='insert'}">	<xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_save_next" value="保存并新增" onclickto="javascript:${action}Next_onClick()"/><xsl:value-of select="$charLt"/>/c:if>
     <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_save" value="保存" onclickto="javascript:${action}_onClick()"/>
     <xsl:value-of select="$charLt"/>input type="button" class="button_ellipse" id="button_cancel" value="取消" onclick="javascript:history.go(-1)"/>
     <xsl:value-of select="$charLt"/>input type="reset" class="button_ellipse" id="button_reset" value="重置"/>
