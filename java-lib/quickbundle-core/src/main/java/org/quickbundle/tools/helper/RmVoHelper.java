@@ -439,7 +439,7 @@ public final class RmVoHelper implements ICoreConstants {
     		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
             SegmentedStringWriter sw = new SegmentedStringWriter(objectMapper.getFactory()._getBufferRecycler());
-    		JsonGenerator generator = objectMapper.getFactory().createJsonGenerator(sw);
+    		JsonGenerator generator = objectMapper.getFactory().createGenerator(sw);
     		RmBeanSerializerFactory rmBeanFactory = RmBeanSerializerFactory.instance;
     		if(ignoreName != null) {
     			rmBeanFactory.setFilterId("executeFilter");
