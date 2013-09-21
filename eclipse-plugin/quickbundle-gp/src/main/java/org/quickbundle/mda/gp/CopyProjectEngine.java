@@ -53,8 +53,6 @@ public class CopyProjectEngine {
 	public void doFinish(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask("preparing...", 1);
 		String strSource = gpRule.getProjectTemplatePath().toString();
-//		Map<String, String> mReplaceInFile = getKeywordReplaceInFile();
-//		Map<String, String> mReplacePath = getKeywordReplacePath();
 		Set<String> sFileType = getFilterFileType();
 		QbGenerateProjectPlugin.log("strSource:" + RmXmlHelper.formatToFile(strSource));
 		globalTotalFileSum = getFileSum(RmXmlHelper.formatToFile(strSource));
@@ -391,22 +389,41 @@ public class CopyProjectEngine {
 		File projectFolder = new File(gpRule.getProjectPathValue());
 		if (projectFolder.exists() && projectFolder.isDirectory()) {
 			if(new File(projectFolder.toString() + File.separator + ".project").exists()) {
-				boolean result = doOpenProject(projectFolder.toString() + File.separator + ".project");
-				if(result) {
+				boolean successOpen = doOpenProject(projectFolder.toString() + File.separator + ".project");
+				if(successOpen) {
 					return;
 				}
 			}
-			File[] folders = projectFolder.listFiles(new FileFilter() {
-				public boolean accept(File pathname) {
-					return pathname.isDirectory();
-				}
-			});
+			File[] folders = listProjectFolder(projectFolder);
 			for (File folder : folders) {
 				if(new File(folder.toString() + File.separator + ".project").exists()) {
 					doOpenProject(folder.toString() + File.separator + ".project");
 				}
 			}
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private File[] listProjectFolder(File projectFolder) {
+		File projectTemplatePath = new File(gpRule.getProjectTemplatePath());
+		final Set<String> possibleFolders = new HashSet<String>();
+		projectTemplatePath.listFiles(new FileFilter() {
+			public boolean accept(File pathname) {
+				if(pathname.isDirectory()) {
+					possibleFolders.add(pathname.getName());
+				}
+				return false;
+			}
+		});
+		List<Element> items = gpRule.getProjectRule().selectNodes("/rules/keywordReplace/items/item");
+		for(Element item : items) {
+			possibleFolders.add(item.valueOf("text()"));
+		}
+		return projectFolder.listFiles(new FileFilter() {
+			public boolean accept(File pathname) {
+				return pathname.isDirectory() && possibleFolders.contains(pathname.getName());
+			}
+		});
 	}
 
 	private boolean doOpenProject(String dotProjectPath) {

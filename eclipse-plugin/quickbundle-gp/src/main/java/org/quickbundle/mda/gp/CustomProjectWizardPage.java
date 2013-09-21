@@ -59,7 +59,7 @@ public class CustomProjectWizardPage extends WizardPage {
 		GridData gd = null;
 
 		Label label = new Label(container, SWT.NULL);
-		label.setText("生成到:");
+		label.setText("生成到");
 
 		projectPath = new Text(container, SWT.BORDER | SWT.SINGLE);
 		final Text projectPathFinal = projectPath;

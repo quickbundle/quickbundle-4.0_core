@@ -20,10 +20,7 @@
 			<folder>/QbRmWebDemo/src/test/java/?$</folder>
 		</module>
 		<module key="system" isBuild="true" name="系统组件" description="业务日志、锁、系统参数、公告(7张表)" isNecessary="true"/>
-		<module key="system" isBuild="true" name="源代码" description="lib下jar包的源代码" isNecessary="false">
-			<file>/QbRmWebDemo/doc/source/.*</file>
-		</module>
-		<module key="orgauth" isBuild="true" name="组织权限" description="通用的组织结构、功能数据权限模块(19张表)" isNecessary="false">
+		<module key="orgauth" isBuild="true" name="组织权限" description="通用的组织结构、功能数据权限模块(19张表)" isNecessary="true">
 			<file>/QbRmWebDemo/rmdemo/WEB\-INF/config/sql/(mysql/rm_orgauth\.mysql|oracle/rm_orgauth\.oracle)\.sql</file>
 			<file>/QbRmWebDemo/rmdemo/WEB\-INF/config/spring/rm\.orgauth\.applicationContext\.xml</file>
 			<file>/QbRmWebDemo/rmdemo/WEB\-INF/config/struts/rm\.orgauth\.struts\-config\.xml</file>
@@ -48,7 +45,7 @@
 				<key p="true"><![CDATA[//orgauth [\w ]*begin.*?//orgauth [\w ]*end]]></key>
 			</file>
 		</module>
-		<module key="quartz" isBuild="true" name="分布式调度" description="可执行定时任务、触发式调度(13张表)" isNecessary="false">
+		<module key="quartz" isBuild="true" name="分布式调度" description="可执行定时任务、触发式调度(13张表)" isNecessary="true">
 			<file>/QbRmWebDemo/rmdemo/WEB\-INF/config/sql/(mysql/quartz_mysql_innodb|oracle/quartz_oracle)\.sql</file>
 			<file>/QbRmWebDemo/rmdemo/WEB\-INF/config/sql/(mysql/rm_quartz\.mysql|oracle/rm_quartz\.oracle)\.sql</file>
 			<file>/QbRmWebDemo/rmdemo/WEB\-INF/config/spring/rm\.scheduler\.applicationContext\.xml</file>
@@ -70,27 +67,6 @@
 			</file>
 			<file>/QbRmWebDemo/src/main/java/org/quickbundle/project/listener/RmContextLoaderListener\.java
 				<key p="true"><![CDATA[//quartz begin.*?//quartz end]]></key>
-			</file>
-		</module>
-		<module key="workflow" isBuild="true" name="工作流" description="功能齐全的工作流引擎模块(18张表)" isNecessary="false">
-			<file>/QbRmWebDemo/rmdemo/WEB\-INF/config/sql/(mysql/jbpm\.mysql|oracle/jbpm\.oracle)\.create\.sql</file>
-			<file>/QbRmWebDemo/rmdemo/WEB\-INF/config/sql/(mysql/rm_bpm\.mysql|oracle/rm_bpm\.oracle)\.sql</file>
-			<file>/QbRmWebDemo/(rmdemo/WEB\-INF/lib|src/third/support/source)/(antlr|javassist|jaxen|jbpm|jta|juel\-impl|livetribe\-jsr223|slf4j\-api|slf4j\-log4j12)[.-0-9]*\.jar</file>
-			<file>/QbRmWebDemo/rmdemo/WEB\-INF/resource/jbpm/.*</file>
-			<file>/QbRmWebDemo/rmdemo/third/jbpm/.*</file>
-			<file>/QbRmWebDemo/src/main/java/ut/support/bpm/.*</file>
-			<file>/QbRmWebDemo/src/main/resources/(jbpm.*|logging\.properties)</file>
-			<file>/QbRmWebDemo/src/third/java/org/jbpm.*</file>
-			<file>/QbRmWebDemo/rmdemo/jsp/funcTree_bundle\.jsp
-				<key p="true"><![CDATA[//workflow begin.*//workflow end]]></key>
-			</file>
-			<file>/QbRmWebDemo/rmdemo/WEB\-INF/config/spring/rm\.public\.applicationContext\.xml
-				<key p="true"><![CDATA[<!\-\- Transaction manager for a single JDBC DataSource.*factory\-method="createProcessEngine" />]]>
-					<replace><![CDATA[<!-- Transaction manager for a single JDBC DataSource -->
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>]]></replace>
-				</key>
 			</file>
 		</module>
 	</modules>
