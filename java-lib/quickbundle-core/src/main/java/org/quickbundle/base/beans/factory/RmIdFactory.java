@@ -130,9 +130,9 @@ public class RmIdFactory implements IRmIdFactory{
     private String parseColumn(String idName) {
     	StringBuilder result = new StringBuilder();
     	String dpn = RmBaseConfig.getSingleton().getDatabaseProductName();
-    	if(dpn != null 
-    			&& databaseProductName_DB2.equals(dpn)
-    			&& dpn.startsWith(databaseProductName_DB2 + "/")) {
+    	if(dpn == null 
+    			|| databaseProductName_DB2.equals(dpn)
+    			|| dpn.startsWith(databaseProductName_DB2 + "/")) {
     		result.append("char(").append(idName).append(")");
     		return result.toString();
     	} else {
