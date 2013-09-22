@@ -12,9 +12,12 @@ quickbundle核心组件
 	
 ### Eclipse插件
 		eclipse-plugin/org.quickbundle.mda.libs  osgi下的jar包接入点
-		eclipse-plugin/quickbundle-gp 项目生成器
-		eclipse-plugin/quickbundle-mvm 模型虚拟机
-		eclipse-plugin/quickbundle-gc 代码生成器
+		eclipse-plugin/quickbundle-gp  项目生成器
+		eclipse-plugin/quickbundle-mvm  模型虚拟机
+		eclipse-plugin/quickbundle-gc  代码生成器
+		
+		eclipse-plugin/org.quickbundle.mda.feature  Eclipse插件组合的feature工程
+		eclipse-plugin/org.quickbundle.mda.updatesite  Eclipse插件的在线/离线安装包的组合工程
 
 编译打包
 ----------------------------------------------------
@@ -34,4 +37,4 @@ eclipse/plugins目录格式，直接复制到Eclipse下，安装快
 		
 视频教程
 ----------------------------------------------------
-1.[到quickbundle主页看视频教程](http://www.quickbundle.org)<br/>
+1.[到quickbundle主页看视频教程(即将发布)](http://www.quickbundle.org)<br/>
