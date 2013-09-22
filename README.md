@@ -1,17 +1,21 @@
 quickbundle核心组件
 ====================================================
 包含基础jar包5个:
+```
 	java-lib/quickbundle-tools  
 	java-lib/quickbundle-core  
 	java-lib/quickbundle-mybatis  
 	java-lib/quickbundle-springweb  
 	java-lib/quickbundle-struts  
+```
 	
 Eclipse插件
+```
 	eclipse-plugin/org.quickbundle.mda.libs
 	eclipse-plugin/quickbundle-gp
 	eclipse-plugin/quickbundle-mvm
 	eclipse-plugin/quickbundle-gc
+```
 
 一键编译qb-core的方式一？
 ----------------------------------------------------
