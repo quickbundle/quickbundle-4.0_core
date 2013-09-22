@@ -11,58 +11,24 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.io.SAXReader;
 import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.support.cn2spell.Cn2Spell;
 import org.quickbundle.tools.support.log.RmLogHelper;
 import org.quickbundle.tools.support.unicode.UnicodeReader;
-import org.quickbundle.util.RmString;
 
 /**
- * 功能、用途、现存BUG: 帮助实现一些通用的字符串处理
- * 
- * @author
+ * 功能: 帮助实现一些通用的字符串处理
  * @version 1.0.0
- * @see 需要参见的其它类
- * @since 1.0.0
  */
 public class RmStringHelper {
-
-	/**
-	 * 将字符串以指定字符串切割后,分配到List中
-	 * 
-     * @param strValue-->输入字符串
-	 * @return List
-	 */
-	public static List<String> getTokenizerList(String strValue, String delim) {
-		List<String> myList = new ArrayList<String>();
-		StringTokenizer stChat = new StringTokenizer(strValue, delim);
-		int iLength = stChat.countTokens();
-		for (int i = 0; i < iLength; i++) {
-			String strTemp = stChat.nextToken();
-			if (strTemp == null)
-				strTemp = "";
-			myList.add(strTemp);
-		}
-		return myList;
-	}
 
 	/**
 	 * 将Object[]中的对象的字符串，以逗号分割后拼成一个字符串,不带有单引号
@@ -91,7 +57,7 @@ public class RmStringHelper {
 	}
 
 	/**
-	 * 将Object[]中的对象的字符串，以以逗号分割后拼成一个字符串,带有单引号
+	 * 将Object[]中的对象的字符串，以以逗号分割后拼成一个字符串,带有单引号''
 	 * 
      * @param strArray 输入字符串数组
 	 * @return String
@@ -113,9 +79,45 @@ public class RmStringHelper {
         	sb.append(strArray[strArray.length - 1].toString());
         	sb.append("'");
         }
+        if(sb.toString().trim().length() == 0) {
+        	return "-1";
+        }
         return sb.toString();
 	}
 
+
+	/**
+	 * 将String[]中字符串以","分割后拼成一个字符串
+	 * 
+     * @param strArray-->输入字符串数组
+	 * @return String
+	 */
+	public static<T> String parseToString(T[] strArray) {
+		if (strArray == null || strArray.length == 0) {
+			return "";
+		} else if (strArray.length == 1) {
+			return String.valueOf(strArray[0]);
+		}
+
+		return parseToSQLString(strArray);
+	}
+	
+	/**
+	 * 将String[]中字符串以","分割后拼成一个字符串, 带有单引号''
+	 * 
+	 * @param strArray-->输入字符串数组
+	 * @return String
+	 */
+	public static<T> String parseToStringApos(T[] strArray) {
+		if (strArray == null || strArray.length == 0) {
+			return "";
+		} else if (strArray.length == 1) {
+			return String.valueOf(strArray[0]);
+		}
+		
+		return parseToSQLStringApos(strArray);
+	}
+	
 	/**
 	 * 功能: 把"123,234,567"转为new String[]{"123", "234", "567"}
 	 * 
@@ -154,6 +156,32 @@ public class RmStringHelper {
 		return result;
 	}
 	
+
+	/**
+	 * 字符串转成数组，并过滤空值
+	 * 
+	 * @param strs
+	 * @return
+	 */
+	public static String[] parseToArrayIgnoreEmpty(String strs, String splitKey) {
+		if (RmStringHelper.checkEmpty(strs)) {
+			return null;
+		}
+		String[] str1s = strs.split(splitKey);
+		StringBuilder strAlls = new StringBuilder();
+		for (int i = 0; i < str1s.length; i++) {
+			if (RmStringHelper.checkNotEmpty(str1s[i])) {
+				strAlls.append(str1s[i]);
+				strAlls.append(",");
+			}
+		}
+		if (strAlls.length() > 1) {
+			return strAlls.substring(0, strAlls.length() - 1).split(",");
+		} else {
+			return null;
+		}
+	}
+	
 	/**
 	 * 功能: 把"123,234,567"转为new Long[]{"123", "234", "567"}
 	 * 
@@ -177,59 +205,6 @@ public class RmStringHelper {
 	}
 
 	/**
-	 * 将String[]中字符串以","分割后拼成一个字符串
-	 * 
-     * @param strArray-->输入字符串数组
-	 * @return String
-	 */
-	public static<T> String parseToString(T[] strArray) {
-		if (strArray == null || strArray.length == 0) {
-			return "";
-		} else if (strArray.length == 1) {
-			return String.valueOf(strArray[0]);
-		}
-
-		return parseToSQLString(strArray);
-	}
-
-	/**
-	 * 将ISO字符串转换为GBK编码的字符串。
-	 * 
-     * @param str-->输入字符串
-	 * @return 经编码后的字符串，如果有异常，则返回原编码字符串
-	 */
-	public static String iso2Gbk(String original) {
-		if (original != null) {
-			try {
-				return new String(original.getBytes("iso8859-1"), "gbk");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 将iso-8859-1字符串转换为UTF-8编码的字符串。
-	 * 
-     * @param original-->输入字符串
-	 * @return 经编码后的字符串，如果有异常，则返回原编码字符串
-	 */
-	public static String iso2Utf8(String original) {
-		if (original != null) {
-
-			try {
-				return new String(original.getBytes("iso8859-1"), "utf-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * 功能: 把指定字符串original 从encode1 转化到encode2
 	 * 
 	 * @param original
@@ -242,25 +217,6 @@ public class RmStringHelper {
 		if (original != null) {
 			try {
 				return new String(original.getBytes(encode1), encode2);
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 功能: 以encode1的编码方式获得original
-	 * 
-	 * @param original
-	 * @param encode1
-	 * @return
-	 */
-	public static String getStringByEncode(String original, String encode1) {
-		if (original != null) {
-			try {
-				return new String(original.getBytes(), encode1);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 				return null;
@@ -293,29 +249,6 @@ public class RmStringHelper {
 		}
 		sbDest.append(strSource);
 		return sbDest.toString();
-	}
-
-	/**
-	 * 把strSource中的第1个strFrom替换为strTo
-	 * @deprecated 弃用
-	 * 
-	 * @param strSource
-	 * @param strFrom
-	 * @param strTo
-	 * @return
-	 */
-    static String replaceFirst_(String strSource, String strFrom, String strTo) {
-		StringBuilder strDest = new StringBuilder();
-		int intFromLen = strFrom.length();
-		int intPos;
-		while ((intPos = strSource.indexOf(strFrom)) != -1) {
-			strDest.append(strSource.substring(0, intPos));
-			strDest.append(strTo);
-			strSource = strSource.substring(intPos + intFromLen);
-			break;
-		}
-		strDest.append(strSource);
-		return strDest.toString();
 	}
 
 	/**
@@ -366,16 +299,6 @@ public class RmStringHelper {
 			return str;
 		result.append(str.substring(copyStart));
 		return result.toString();
-	}
-
-	/**
-	 * 对regix转义成字符串
-	 * @param s
-	 * @return
-	 */
-	//TODO 扩展为对所有regex关键字的支持
-	public static String replaceAll4RegexEscape(String s) {
-		return s.replaceAll("([\\$])", "\\\\$1");
 	}
 
 	/**
@@ -546,8 +469,7 @@ public class RmStringHelper {
 	 * 显示数据前过滤掉null，截取一定位数
 	 * 
 	 * @param myString
-	 * @param index
-	 *            最大显示的长度
+	 * @param index 最大显示的长度
 	 * @return
 	 */
 	public static String prt(String myString, int index) {
@@ -722,47 +644,6 @@ public class RmStringHelper {
 	}
 
 	/**
-	 * 功能: 把Map中的值依次取出来，以URL传值的方式拼成字符串
-	 * 
-	 * @param mValue
-	 * @return
-	 */
-	public static String encodeUrlParameter(Map<String, Object> mValue) {
-		return encodeUrlParameter(mValue, new String[0]);
-	}
-
-	/**
-	 * 功能: 把Map中的值依次取出来，以URL传值的方式拼成字符串
-	 * 
-	 * @param mValue
-     * @param ignoreName 忽略的field
-	 * @return
-	 */
-    public static String encodeUrlParameter(Map<String, Object> mValue, String[] ignoreName) {
-		StringBuilder str = new StringBuilder();
-        for(Iterator itMValue = mValue.keySet().iterator(); itMValue.hasNext(); ) {
-			String tempKey = String.valueOf(itMValue.next());
-            String tempValue = (mValue.get(tempKey) == null) ? "" : String.valueOf(mValue.get(tempKey));
-			if (tempKey.startsWith("RM") || tempKey.startsWith("RANMIN")) {
-				// TODO
-                if(!tempKey.equals(RmBaseConfig.PageKey.RM_PAGE_SIZE.key())&&!tempKey.equals(RmBaseConfig.PageKey.RM_CURRENT_PAGE.key())&& !tempKey.equals(RmBaseConfig.PageKey.RM_ORDER_STR.key())){
-					continue;
-				}
-			}
-            if (RmStringHelper.arrayContainString(ignoreName, tempKey)) {
-				continue;
-			}
-			if (str.length() > 0) {
-				str.append("&");
-			}
-			str.append(tempKey);
-			str.append("=");
-			str.append(encodeUrl(tempValue));
-		}
-		return str.toString();
-	}
-
-	/**
 	 * 功能: 从一个文件中读出字符串
 	 * 
 	 * @param file
@@ -812,131 +693,6 @@ public class RmStringHelper {
 			e.printStackTrace();
 		}
 		return file;
-	}
-
-	public static String fileToString(File file) throws IOException {
-		StringBuilder str = new StringBuilder();
-		long totalSize = 0;
-		str.append("卷（");
-		str.append(file.toString());
-		str.append("）的文件夹 PATH 列表\n");
-		str.append("卷信息\t");
-		str.append(" 存在:");
-		str.append(file.exists());
-		str.append("  是文件夹:");
-		str.append(file.isDirectory());
-		str.append("  能读:");
-		str.append(file.canRead());
-		str.append("  能写:");
-		str.append(file.canWrite());
-		str.append("  是否隐藏:");
-		str.append(file.isHidden());
-		str.append("  最后修改时间:");
-		str.append(getFormatDateTimeDesc(file.lastModified()));
-		str.append("\n");
-		str.append(file.getAbsoluteFile());
-		str.append("\n");
-		RmString rmstr = listFileRecursive(file, "│├─", totalSize);
-		str.append(rmstr.toString());
-		str.append("\n总大小:");
-		str.append(((Long)rmstr.getAttribute("totalSize")).longValue() / 1024);
-		str.append(" k, ");
-		str.append(((Long)rmstr.getAttribute("totalSize")).longValue());
-		str.append("B.");
-		return str.toString();
-	}
-
-    private static RmString listFileRecursive(File file, String sign, long totalSize) throws IOException {
-		RmString rmstr = new RmString();
-		if (rmstr.getAttribute("totalSize") == null) {
-			rmstr.addAttribute("totalSize", new Long(0));
-		}
-		StringBuilder str = new StringBuilder();
-		File[] fileChild = file.listFiles();
-		if (fileChild != null) {
-			int fileSum = 0, folderSum = 0;
-			{ // 计算文件和文件夹个数
-				for (int i = 0; i < fileChild.length; i++) {
-					if (fileChild[i].isFile()) {
-						fileSum++;
-					} else if (fileChild[i].isDirectory()) {
-						folderSum++;
-					}
-				}
-			}
-			for (int i = 0; i < fileChild.length; i++) {
-				if (fileChild[i].isFile()) {
-					fileSum++;
-					if (folderSum > 0) {
-                        str.append(sign.replaceAll("│├─", "│  "));
-                        str.append(fileChild[i].getName());
-                        str.append("\n");
-					} else {
-						str.append(sign.replaceAll("│├─", "   "));
-						str.append(fileChild[i].getName());
-						str.append("\n");
-					}
-					{ // 计算大小
-                        long currentSize = ((Long)rmstr.getAttribute("totalSize")).longValue() + fileChild[i].length();
-						rmstr.addAttribute("totalSize", new Long(currentSize));
-					}
-				}
-			}
-			if (fileSum > 0 && folderSum > 0) {
-				str.append(sign.replaceAll("│├─", "│  "));
-				str.append("\n");
-			}
-			int tempFolderIndex = 0;
-			for (int i = 0; i < fileChild.length; i++) {
-				if (fileChild[i].isDirectory()) {
-					RmString tempRmstr = null;
-					if (tempFolderIndex == folderSum - 1) {
-						str.append(sign.replaceAll("│├─", "└──"));
-						str.append(fileChild[i].getName());
-						str.append("\n");
-                        tempRmstr = listFileRecursive(fileChild[i], (sign + "   ").replaceAll("│├─   ", "   │├─"), totalSize);
-					} else {
-						str.append(sign.replaceAll("│├─", "├──"));
-						str.append(fileChild[i].getName());
-						str.append("\n");
-                        tempRmstr = listFileRecursive(fileChild[i], (sign + "   ").replaceAll("│├─   ", "│  │├─"), totalSize);
-					}
-					{
-                        long currentSize = ((Long)rmstr.getAttribute("totalSize")).longValue() + ((Long)tempRmstr.getAttribute("totalSize")).longValue();
-						rmstr.addAttribute("totalSize", new Long(currentSize));
-						str.append(tempRmstr);
-					}
-					tempFolderIndex++;
-				}
-			}
-		}
-		rmstr.setValue(str.toString());
-		return rmstr;
-	}
-
-	/**
-	 * 功能: 从ruleXml读取到Document
-	 * 
-	 * @param ruleXml
-	 * @return
-	 * @throws MalformedURLException
-	 * @throws DocumentException
-	 */
-    public static Document parseXml(String ruleXml) throws MalformedURLException, DocumentException {
-		if (ruleXml == null || ruleXml.length() == 0) {
-			throw new NullPointerException("xml路径是空!");
-		}
-		SAXReader reader = new SAXReader();
-		Document document = null;
-		if (ruleXml.startsWith("file:")) {
-			document = reader.read(new URL(ruleXml));
-		} else if (ruleXml.startsWith("http://")) {
-			document = reader.read(new URL(ruleXml));
-		} else {
-			document = reader.read(new File(ruleXml));
-		}
-
-		return document;
 	}
 
 	/**
@@ -1004,7 +760,6 @@ public class RmStringHelper {
 		if(value == null){
 			return "";
 		}
-		
 		return defaultFormatDouble(value.doubleValue(), fractionDigits);
 	}
 	/**
@@ -1020,131 +775,6 @@ public class RmStringHelper {
 		nf.setMinimumFractionDigits(fractionDigits);
 		nf.setMaximumFractionDigits(fractionDigits);
 		return nf.format(value);
-	}
-
-	/**
-	 * 功能: 把15位的身份证号码升级为18位
-	 * 
-	 * @param oldIdCard
-	 * @return
-	 */
-	public static String updateIdCard(String oldIdCard) {
-		String newIdCard = "";
-		StringBuffer tempStrOld = new StringBuffer();
-		tempStrOld.append(oldIdCard);
-		int cOld[] = new int[17];
-		int iSum = 0;
-		oldIdCard = oldIdCard.substring(0,6) + "19" + oldIdCard.substring(6,oldIdCard.length());
-		try {
-			if (oldIdCard.length() != 17) {
-				throw new Exception();
-			}
-			for (int i = 0; i < 17; i++) {
-				cOld[i] = Integer.parseInt(String.valueOf(oldIdCard.charAt(i)));
-			}
-			int wi[] = new int[] { 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8,
-					4, 2 };
-			iSum = 0;
-			for (int i = 0; i < 17; i++) {
-				iSum = iSum + cOld[i] * wi[i];
-			}
-		} catch (Exception e) {
-			throw new RuntimeException("请输入正确格式的身份证号码!");
-		}
-		int y = iSum % 11;
-		String strVer = new String("10X98765432");
-		newIdCard = oldIdCard + strVer.substring(y, y + 1);
-		return newIdCard;
-	}
-
-	/**
-	 * 功能: 得到指定长度的int的字符串
-	 * 
-	 * @param myInt
-	 * @param length
-	 * @return
-	 */
-	public static String getFormatLengthInt(int myInt, int length) {
-		String str = String.valueOf(myInt);
-		if (str.length() < length) {
-			int offLength = length - str.length();
-			for (int j = 0; j < offLength; j++) {
-				str = "0" + str;
-			}
-		}
-		return str;
-	}
-
-	public static String getAvg(Object apprcount, Object submitcount) {
-
-		float count = 0;
-		float scount = 0;
-		float avg = 0;
-
-		if (!"".equals(apprcount) && apprcount != null) {
-			count = new Float(apprcount.toString()).floatValue();
-		}
-
-		if (!"".equals(submitcount) && submitcount != null) {
-			scount = new Float(submitcount.toString()).floatValue();
-		}
-
-		if (scount != 0) {
-			avg = count / scount * 100;
-		}
-		return avg + "";
-	}
-
-    public static String getExcelResult(Object apprcount,Object submitcount,Object avg,Object totalAvg){
-
-		float count = 0;
-		float scount = 0;
-		float result = 0;
-
-		if (!"".equals(apprcount) && apprcount != null) {
-			count = new Float(apprcount.toString()).floatValue();
-		}
-
-		if (!"".equals(submitcount) && submitcount != null) {
-			scount = new Float(submitcount.toString()).floatValue();
-		}
-
-		if (scount != 0) {
-			result = count / scount * 100;
-		}
-
-		float avgValue = 0;
-		float totalAvgValue = 0;
-
-		if (!"".equals(avg) && avg != null) {
-			avgValue = new Float(avg.toString()).floatValue();
-		}
-
-		if (!"".equals(totalAvg) && totalAvg != null) {
-			totalAvgValue = new Float(totalAvg.toString()).floatValue();
-		}
-
-		return result - 2 * avgValue + 2 * totalAvgValue + "";
-	}
-
-	public static String getSummitratio(String submitcount, String groupcount) {
-
-		float submitcountValue = 0;
-		float groupcountValue = 0;
-		float summitratio = 0;
-
-		if (!"".equals(submitcount) && submitcount != null) {
-			submitcountValue = new Float(submitcount.toString()).floatValue();
-		}
-
-		if (!"".equals(groupcount) && groupcount != null) {
-			groupcountValue = new Float(groupcount.toString()).floatValue();
-		}
-
-		if (groupcountValue != 0) {
-			summitratio = submitcountValue / groupcountValue * 100;
-		}
-		return summitratio + "";
 	}
 
 	/**
@@ -1237,34 +867,6 @@ public class RmStringHelper {
 		return str.toString();
 	}
 
-
-	/**
-	 * 功能: 获得格式化的日期和时间描述
-	 * 
-     * @param longDate 时间的长整数
-	 * @return YYYY-MM-DD HH24:MI:SS 格式的字符串
-	 */
-	public static String getFormatDateTimeDesc(long longDate) {
-		return new Timestamp(longDate).toString().substring(0, 19);
-	}
-
-	/**
-	 * 简单分析文件名后缀
-	 * 
-	 * @param str
-	 * @return
-	 */
-	public static String getSuffix(String str) {
-		if (str == null || str.length() == 0) {
-			return "";
-		}
-		if (Pattern.compile("gif|jpg|png|xls|doc|docx|zip|rar|swf|txt", Pattern.CASE_INSENSITIVE).matcher(str.trim()).find()) {
-			return str;
-		} else {
-			return "ot";
-		}
-	}
-
 	/**
 	 * 判断不为空null 和 “”
 	 * 
@@ -1289,31 +891,6 @@ public class RmStringHelper {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * 字符串转成数组，并过滤空值
-	 * 
-	 * @param strs
-	 * @return
-	 */
-	public static String[] strSplits(String strs, String eStr) {
-		if (RmStringHelper.checkEmpty(strs)) {
-			return null;
-		}
-		String[] str1s = strs.split(eStr);
-		StringBuilder strAlls = new StringBuilder();
-		for (int i = 0; i < str1s.length; i++) {
-			if (RmStringHelper.checkNotEmpty(str1s[i])) {
-				strAlls.append(str1s[i]);
-				strAlls.append(",");
-			}
-		}
-		if (strAlls.length() > 1) {
-			return strAlls.substring(0, strAlls.length() - 1).split(",");
-		} else {
-			return null;
-		}
 	}
 	
     /**

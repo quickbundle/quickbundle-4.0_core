@@ -215,7 +215,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
         if(vo.getBody<xsl:if test="position()>1">
                 <xsl:value-of select="position()"/>
             </xsl:if>() != null) {
-            List[] result = RmVoHelper.mergeVos(vo, TABLE_PK, <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="str:getRefColumnFormatLower(/meta, @tableName)"/>=" + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(), null, 1, Integer.MAX_VALUE, true), vo.getBody<xsl:if test="position()>1">
+            List[] result = RmVoHelper.mergeVos(vo, TABLE_PK, <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="@refColumn"/>=<xsl:if test="str:getPkColumnClass(/meta, @tableName, @refColumn)='String'">'</xsl:if>" + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()<xsl:if test="str:getPkColumnClass(/meta, @tableName, @refColumn)='String'"> + "'"</xsl:if>, null, 1, Integer.MAX_VALUE, true), vo.getBody<xsl:if test="position()>1">
                 <xsl:value-of select="position()"/>
             </xsl:if>(), TABLE_PK_<xsl:value-of select="@tableName"/>, "<xsl:value-of select="str:getRefColumnFormatLower(/meta, @tableName)"/>");
             <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.insert((<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[])result[0].toArray(new <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo[0]));
@@ -248,7 +248,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
             if(vo.getBody<xsl:if test="position()>1">
                 <xsl:value-of select="position()"/>
             </xsl:if>() != null) {
-                List[] result = RmVoHelper.mergeVos(vo, TABLE_PK, <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="str:getRefColumnFormatLower(/meta, @tableName)"/>=" + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>(), null, 1, Integer.MAX_VALUE, true), vo.getBody<xsl:if test="position()>1">
+                List[] result = RmVoHelper.mergeVos(vo, TABLE_PK, <xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="@refColumn"/>=<xsl:if test="str:getPkColumnClass(/meta, @tableName, @refColumn)='String'">'</xsl:if>" + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()<xsl:if test="str:getPkColumnClass(/meta, @tableName, @refColumn)='String'"> + "'"</xsl:if>, null, 1, Integer.MAX_VALUE, true), vo.getBody<xsl:if test="position()>1">
                 <xsl:value-of select="position()"/>
             </xsl:if>(), TABLE_PK_<xsl:value-of select="@tableName"/>, "<xsl:value-of select="str:getRefColumnFormatLower(/meta, @tableName)"/>");
                 toInsert.addAll(result[0]);
@@ -309,7 +309,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
         <xsl:value-of select="$TableNameVo"/> vo = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.get(id);<xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 				<xsl:value-of select="position()"/>
-			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="lower-case(@refColumn)"/>=" + String.valueOf(id), null, 1, Integer.MAX_VALUE, true));
+			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="@refColumn"/>=<xsl:if test="str:getPkColumnClass(/meta, @tableName, @refColumn)='String'">'</xsl:if>" + id<xsl:if test="str:getPkColumnClass(/meta, @tableName, @refColumn)='String'"> + "'"</xsl:if>, null, 1, Integer.MAX_VALUE, true));
 </xsl:for-each>
         return vo;
     }
@@ -361,8 +361,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      * @param allColumn 是否查询所有列，即 SELECT * FROM ...(适用于导出)
      * @return 查询到的VO列表
      */
-    public List<xsl:value-of select="$charLt"/>
-		<xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr, int startIndex, int size, boolean allColumn) {
+    public List<xsl:value-of select="$charLt"/><xsl:value-of select="$TableNameVo"/>> list(String queryCondition, String orderStr, int startIndex, int size, boolean allColumn) {
         List<xsl:value-of select="$charLt"/>
 		<xsl:value-of select="$TableNameVo"/>> lResult = <xsl:value-of select="$tableFormatNameLowerFirst"/>Dao.list(queryCondition, orderStr, startIndex, size, allColumn);<xsl:if test="count(/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0])>0">
         if(allColumn) {
@@ -370,7 +369,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
 <xsl:for-each select="/meta/relations/mainTable[@tableName=$tableName]/refTable[count(middleTable)=0]">
         vo.setBody<xsl:if test="position()>1">
 				<xsl:value-of select="position()"/>
-			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="lower-case(@refColumn)"/>=" + String.valueOf(vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()), null, 1, Integer.MAX_VALUE, true));
+			</xsl:if>(<xsl:value-of select="str:getTableFormatNameLowerFirst(/meta, @tableName)"/>Dao.list("<xsl:value-of select="lower-case(@refColumn)"/>=<xsl:if test="str:getPkColumnClass(/meta, @tableName, @refColumn)='String'">'</xsl:if>" + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>()<xsl:if test="str:getPkColumnClass(/meta, @tableName, @refColumn)='String'"> + "'"</xsl:if>, null, 1, Integer.MAX_VALUE, true));
 </xsl:for-each>
             }
         }</xsl:if>
@@ -408,7 +407,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
             return new String[0];
         }
         IRmCommonService cs = RmProjectHelper.getCommonServiceInstance();
-        List<xsl:value-of select="$charLt"/>String> lExistId = cs.doQuery("select * from <xsl:value-of select="@tableName"/> where <xsl:value-of select="@mainColumn"/>=" + <xsl:value-of select="lower-case(@mainColumn)"/> + " and <xsl:value-of select="@refColumn"/> in(" + RmStringHelper.parseToString(<xsl:value-of select="lower-case(@refColumn)"/>s) + ")", new RowMapper() {
+        List<xsl:value-of select="$charLt"/>String> lExistId = cs.doQuery("select * from <xsl:value-of select="@tableName"/> where <xsl:value-of select="@mainColumn"/>=<xsl:if test="str:getPkColumnClass(/meta, $tableName, $tablePk)='String'">'</xsl:if>" + <xsl:value-of select="lower-case(@mainColumn)"/> + "<xsl:if test="str:getPkColumnClass(/meta, $tableName, $tablePk)='String'">'</xsl:if> and <xsl:value-of select="@refColumn"/> in(" + RmStringHelper.parseToString<xsl:if test="str:getPkColumnClass(/meta, ../@tableName, ../@refColumn)='String'">Apos</xsl:if>(<xsl:value-of select="lower-case(@refColumn)"/>s) + ")", new RowMapper() {
             public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return rs.getString("<xsl:value-of select="@refColumn"/>");
             }
@@ -441,7 +440,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
      */
     public int delete<xsl:value-of select="str:upperFirst(lower-case(@tableName))"/>(String <xsl:value-of select="lower-case(@mainColumn)"/>, String[] <xsl:value-of select="lower-case(@refColumn)"/>s) {
         IRmCommonService cs = RmProjectHelper.getCommonServiceInstance();
-        return cs.doUpdate("delete from <xsl:value-of select="@tableName"/> where <xsl:value-of select="@mainColumn"/>=" + <xsl:value-of select="lower-case(@mainColumn)"/> + " and <xsl:value-of select="@refColumn"/> in(" + RmStringHelper.parseToString(<xsl:value-of select="lower-case(@refColumn)"/>s) + ")");
+        return cs.doUpdate("delete from <xsl:value-of select="@tableName"/> where <xsl:value-of select="@mainColumn"/>=<xsl:if test="str:getPkColumnClass(/meta, $tableName, $tablePk)='String'">'</xsl:if>" + <xsl:value-of select="lower-case(@mainColumn)"/> + "<xsl:if test="str:getPkColumnClass(/meta, $tableName, $tablePk)='String'">'</xsl:if> and <xsl:value-of select="@refColumn"/> in(" + RmStringHelper.parseToString<xsl:if test="str:getPkColumnClass(/meta, ../@tableName, ../@refColumn)='String'">Apos</xsl:if>(<xsl:value-of select="lower-case(@refColumn)"/>s) + ")");
     }
 </xsl:for-each>
 }

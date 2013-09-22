@@ -3,6 +3,7 @@ package org.quickbundle.third.struts;
 import java.util.Map;
 
 import org.apache.struts.action.ActionForward;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.tools.helper.RmStringHelper;
 import org.quickbundle.util.RmSequenceMap;
 
@@ -85,12 +86,52 @@ public class RmActionHelper {
 	    myForward.setPath(forward.getPath());
 	    myForward.setRedirect(forward.getRedirect());
 	    if(myForward.getPath() != null && myForward.getPath().indexOf("?") > 0) {
-	        myForward.setPath(myForward.getPath() + "&" + RmStringHelper.encodeUrlParameter(mValue));
+	        myForward.setPath(myForward.getPath() + "&" + encodeUrlParameter(mValue));
 	    } else {
-	        myForward.setPath(myForward.getPath() + "?" + RmStringHelper.encodeUrlParameter(mValue));
+	        myForward.setPath(myForward.getPath() + "?" + encodeUrlParameter(mValue));
 	    }
 	    return myForward;
 	}
 
 
+	/**
+	 * 功能: 把Map中的值依次取出来，以URL传值的方式拼成字符串
+	 * 
+	 * @param mValue
+	 * @return
+	 */
+	public static String encodeUrlParameter(Map<String, Object> mValue) {
+		return encodeUrlParameter(mValue, new String[0]);
+	}
+
+	/**
+	 * 功能: 把Map中的值依次取出来，以URL传值的方式拼成字符串
+	 * 
+	 * @param mValue
+     * @param ignoreName 忽略的field
+	 * @return
+	 */
+    public static String encodeUrlParameter(Map<String, Object> mValue, String[] ignoreName) {
+		StringBuilder str = new StringBuilder();
+        for(Map.Entry<String, Object> en : mValue.entrySet()) {
+			String tempKey = en.getKey();
+            String tempValue = en.getValue() == null ? "" : en.getValue().toString();
+			if (tempKey.startsWith("RM") || tempKey.startsWith("RANMIN")) {
+				// TODO
+                if(!tempKey.equals(RmBaseConfig.PageKey.RM_PAGE_SIZE.key())&&!tempKey.equals(RmBaseConfig.PageKey.RM_CURRENT_PAGE.key())&& !tempKey.equals(RmBaseConfig.PageKey.RM_ORDER_STR.key())){
+					continue;
+				}
+			}
+            if (RmStringHelper.arrayContainString(ignoreName, tempKey)) {
+				continue;
+			}
+			if (str.length() > 0) {
+				str.append("&");
+			}
+			str.append(tempKey);
+			str.append("=");
+			str.append(RmStringHelper.encodeUrl(tempValue));
+		}
+		return str.toString();
+	}
 }

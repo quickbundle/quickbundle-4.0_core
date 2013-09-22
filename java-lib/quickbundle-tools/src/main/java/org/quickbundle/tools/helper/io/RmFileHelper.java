@@ -24,6 +24,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.quickbundle.config.RmBaseConfig;
+import org.quickbundle.tools.helper.RmDateHelper;
+import org.quickbundle.util.RmString;
 
 public class RmFileHelper {
 	
@@ -715,6 +717,108 @@ public class RmFileHelper {
             // ignore
         }
     }
+    
+
+	public static String fileToString(File file) throws IOException {
+		StringBuilder str = new StringBuilder();
+		long totalSize = 0;
+		str.append("卷（");
+		str.append(file.toString());
+		str.append("）的文件夹 PATH 列表\n");
+		str.append("卷信息\t");
+		str.append(" 存在:");
+		str.append(file.exists());
+		str.append("  是文件夹:");
+		str.append(file.isDirectory());
+		str.append("  能读:");
+		str.append(file.canRead());
+		str.append("  能写:");
+		str.append(file.canWrite());
+		str.append("  是否隐藏:");
+		str.append(file.isHidden());
+		str.append("  最后修改时间:");
+		str.append(RmDateHelper.getFormatDateTimeDesc(file.lastModified()));
+		str.append("\n");
+		str.append(file.getAbsoluteFile());
+		str.append("\n");
+		RmString rmstr = listFileRecursive(file, "│├─", totalSize);
+		str.append(rmstr.toString());
+		str.append("\n总大小:");
+		str.append(((Long)rmstr.getAttribute("totalSize")).longValue() / 1024);
+		str.append(" k, ");
+		str.append(((Long)rmstr.getAttribute("totalSize")).longValue());
+		str.append("B.");
+		return str.toString();
+	}
+
+    private static RmString listFileRecursive(File file, String sign, long totalSize) throws IOException {
+		RmString rmstr = new RmString();
+		if (rmstr.getAttribute("totalSize") == null) {
+			rmstr.addAttribute("totalSize", new Long(0));
+		}
+		StringBuilder str = new StringBuilder();
+		File[] fileChild = file.listFiles();
+		if (fileChild != null) {
+			int fileSum = 0, folderSum = 0;
+			{ // 计算文件和文件夹个数
+				for (int i = 0; i < fileChild.length; i++) {
+					if (fileChild[i].isFile()) {
+						fileSum++;
+					} else if (fileChild[i].isDirectory()) {
+						folderSum++;
+					}
+				}
+			}
+			for (int i = 0; i < fileChild.length; i++) {
+				if (fileChild[i].isFile()) {
+					fileSum++;
+					if (folderSum > 0) {
+                        str.append(sign.replaceAll("│├─", "│  "));
+                        str.append(fileChild[i].getName());
+                        str.append("\n");
+					} else {
+						str.append(sign.replaceAll("│├─", "   "));
+						str.append(fileChild[i].getName());
+						str.append("\n");
+					}
+					{ // 计算大小
+                        long currentSize = ((Long)rmstr.getAttribute("totalSize")).longValue() + fileChild[i].length();
+						rmstr.addAttribute("totalSize", new Long(currentSize));
+					}
+				}
+			}
+			if (fileSum > 0 && folderSum > 0) {
+				str.append(sign.replaceAll("│├─", "│  "));
+				str.append("\n");
+			}
+			int tempFolderIndex = 0;
+			for (int i = 0; i < fileChild.length; i++) {
+				if (fileChild[i].isDirectory()) {
+					RmString tempRmstr = null;
+					if (tempFolderIndex == folderSum - 1) {
+						str.append(sign.replaceAll("│├─", "└──"));
+						str.append(fileChild[i].getName());
+						str.append("\n");
+                        tempRmstr = listFileRecursive(fileChild[i], (sign + "   ").replaceAll("│├─   ", "   │├─"), totalSize);
+					} else {
+						str.append(sign.replaceAll("│├─", "├──"));
+						str.append(fileChild[i].getName());
+						str.append("\n");
+                        tempRmstr = listFileRecursive(fileChild[i], (sign + "   ").replaceAll("│├─   ", "│  │├─"), totalSize);
+					}
+					{
+                        long currentSize = ((Long)rmstr.getAttribute("totalSize")).longValue() + ((Long)tempRmstr.getAttribute("totalSize")).longValue();
+						rmstr.addAttribute("totalSize", new Long(currentSize));
+						str.append(tempRmstr);
+					}
+					tempFolderIndex++;
+				}
+			}
+		}
+		rmstr.setValue(str.toString());
+		return rmstr;
+	}
+    
 
 	public static void main(String[] args) {
 		List<String> lf = getFiles("E:/platform/myProject/qbrm/code/QbRmWebDemo/src/main/*/vo/Rm*java,E:/platform/myProject/qbrm/code/QbRmWebDemo/src/test/*/*java");

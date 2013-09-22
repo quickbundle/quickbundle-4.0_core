@@ -149,8 +149,8 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Controller imple
         RmVoHelper.markModifyStamp(request, vo.getBody<xsl:if test="position()>1">
 					<xsl:value-of select="position()"/>
 				</xsl:if>());
-</xsl:for-each>
-        <xsl:value-of select="$tableFormatNameLowerFirst"/>Service.update(vo);  //更新单条记录
+</xsl:for-each><xsl:text>
+        </xsl:text><xsl:value-of select="$tableFormatNameLowerFirst"/>Service.update(vo);  //更新单条记录
         Map<xsl:value-of select="$charLt"/>String, String> result = new HashMap<xsl:value-of select="$charLt"/>String, String>();
         result.put("message", "修改成功: " + vo.get<xsl:value-of select="str:upperFirst($tablePkFormatLower)"/>());
 		return new ResponseEntity<xsl:value-of select="$charLt"/>Map<xsl:value-of select="$charLt"/>String, String>>(result, HttpStatus.CREATED);
