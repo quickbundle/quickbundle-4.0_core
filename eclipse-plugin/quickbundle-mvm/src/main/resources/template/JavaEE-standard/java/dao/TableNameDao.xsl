@@ -40,7 +40,7 @@ public class <xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tabl
      * @return 若添加成功，返回新生成的id
      */
     public <xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/> insert(<xsl:value-of select="str:getTableFormatNameUpperFirst(/meta, @tableName)"/>Vo vo) {
-        if(vo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>() == null) {
+        if(vo.get<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>() == null<xsl:if test="str:getPkColumnClass(/meta, $tableName, @tablePk)='String'"> || vo.getId().length() == 0</xsl:if>) {
             vo.set<xsl:value-of select="str:upperFirst(str:getTablePkFormatLower(/meta, @tableName))"/>(RmIdFactory.requestId<xsl:if test="not(str:getPkColumnClass(/meta, $tableName, @tablePk)='String')"><xsl:value-of select="str:getPkColumnClass(/meta, $tableName, @tablePk)"/></xsl:if>(TABLE_NAME<xsl:if test="/meta/relations/mainTable and not(/meta/relations/mainTable[@tableName=$thisTableName])">_<xsl:value-of select="@tableName"/></xsl:if>)); //获得id
         }
         getSqlSession().insert(namespace("insert"), vo);
