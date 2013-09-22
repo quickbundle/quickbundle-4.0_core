@@ -37,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class RmIdFactory implements IRmIdFactory{
 	private static String databaseProductName_DB2 = "DB2";
-	private static String databaseProductName_DB2NT = "DB2/NT";
 	
 	
 	//批查询的数量
@@ -130,8 +129,10 @@ public class RmIdFactory implements IRmIdFactory{
     
     private String parseColumn(String idName) {
     	StringBuilder result = new StringBuilder();
-    	if(databaseProductName_DB2.equals(RmBaseConfig.getSingleton().getDatabaseProductName())
-    			|| databaseProductName_DB2NT.equals(RmBaseConfig.getSingleton().getDatabaseProductName())) {
+    	String dpn = RmBaseConfig.getSingleton().getDatabaseProductName();
+    	if(dpn != null 
+    			&& databaseProductName_DB2.equals(dpn)
+    			&& dpn.startsWith(databaseProductName_DB2 + "/")) {
     		result.append("char(").append(idName).append(")");
     		return result.toString();
     	} else {
