@@ -3,6 +3,7 @@ package org.quickbundle.tools.helper;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -471,6 +472,19 @@ public final class RmVoHelper implements ICoreConstants {
     	return result;
     }
     
+    static void setDateField(BeanWrapper bw, PropertyDescriptor pd) {
+    	String className = bw.getPropertyType(pd.getName()).getName();
+        if(Timestamp.class.getName().equals(className)) {
+            bw.setPropertyValue(pd.getName(), RmDateHelper.getSysTimestamp()); 
+        } else if(java.sql.Date.class.getName().equals(className)) {
+        	bw.setPropertyValue(pd.getName(), new java.sql.Date(System.currentTimeMillis())); 
+        } else if(java.util.Date.class.getName().equals(className)) {
+        	bw.setPropertyValue(pd.getName(), new java.util.Date(System.currentTimeMillis())); 
+        } else {
+            bw.setPropertyValue(pd.getName(), RmDateHelper.getSysDateTimeMillis()); 
+        }
+    }
+    
     /**
      * 对Object打创建的时间和IP戳
      * 
@@ -482,11 +496,7 @@ public final class RmVoHelper implements ICoreConstants {
             public int transctVo(BeanWrapper bw, PropertyDescriptor pd) {
                 if (!pd.getName().equals("class")) {
 					if (RmStringHelper.arrayContainString(DESC_CREATE_DATE, pd.getName())) {
-                        if(bw.getPropertyType(pd.getName()).getName().equals("java.sql.Timestamp")) {
-                            bw.setPropertyValue(pd.getName(), RmDateHelper.getSysTimestamp()); 
-                        } else {
-                            bw.setPropertyValue(pd.getName(), RmDateHelper.getSysDateTimeMillis()); 
-                        }
+						setDateField(bw, pd);
                         return 1;
                     } else if (pd.getName().equals(DESC_CREATE_IP) && request != null) {
                         String create_ip = getIp(request);
@@ -585,11 +595,7 @@ public final class RmVoHelper implements ICoreConstants {
             public int transctVo(BeanWrapper bw, PropertyDescriptor pd) {
                 if (!pd.getName().equals("class")) {
 					if (RmStringHelper.arrayContainString(DESC_MODIFY_DATE, pd.getName())) {
-                        if(bw.getPropertyType(pd.getName()).getName().equals("java.sql.Timestamp")) {
-                            bw.setPropertyValue(pd.getName(), RmDateHelper.getSysTimestamp()); 
-                        } else {
-                            bw.setPropertyValue(pd.getName(), RmDateHelper.getSysDateTimeMillis()); 
-                        }
+                        setDateField(bw, pd);
                         return 1;
                     } else if (pd.getName().equals(DESC_USABLE_STATUS)) {  //数据还活着，加上了打逻辑删除标记启用的戳，数据设为可用
                         bw.setPropertyValue(pd.getName(), RM_YES);

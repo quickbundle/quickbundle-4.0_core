@@ -36,11 +36,12 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 1.0.0
  */
 public class RmIdFactory implements IRmIdFactory{
+	
+	//db2需要char(columnName) like '10001000%'
 	private static String databaseProductName_DB2 = "DB2";
 	
-	
 	//批查询的数量
-    public static int MAX_BATCH_SIZE = RmBaseConfig.getSingleton().getDefaultBatchSize();
+    private static int MAX_BATCH_SIZE = RmBaseConfig.getSingleton().getDefaultBatchSize();
     
 	//表名tableName-->ID
 	private Map<String, AtomicLong> mId = null;
@@ -50,9 +51,6 @@ public class RmIdFactory implements IRmIdFactory{
 
 	private File getIdXml() {
 		File idXml = new File(RmPathHelper.getWebInfDir() + "/config/rm/id.xml");
-		if(!idXml.exists()) {
-			idXml = new File(RmPathHelper.getWebInfDir() + "/config/jdbc/id.xml");
-		}
 		return idXml;
 	}
 	
