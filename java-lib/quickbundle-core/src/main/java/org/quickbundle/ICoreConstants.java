@@ -41,6 +41,7 @@ public interface ICoreConstants {
 		}
 	}
 	
+	@SuppressWarnings("serial")
 	public final static Map<String, String> DATABASE_PRODUCT_MAP = new HashMap<String, String>() {
 		{
 			this.put("com.mysql.jdbc.Driver", DatabaseProductType.MYSQL.getDatabaseProductName());
