@@ -1,7 +1,7 @@
 package org.quickbundle.itf.base;
 
 public interface IRmIdWrapper {
-	public String firstValue();
-	public String nextValue();
+	public void init();
+	public String[] nextValue(int length);
 	
 }

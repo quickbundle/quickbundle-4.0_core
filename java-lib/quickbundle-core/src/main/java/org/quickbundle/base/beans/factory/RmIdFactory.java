@@ -17,12 +17,22 @@ public class RmIdFactory {
             synchronized (RmIdFactory.class) {
                 if(!isInitId) {
                 	idGenerator = (IRmIdGenerator) RmBeanFactory.getBean("org.quickbundle.itf.base.IRmIdGenerator");
-                	idGenerator.initBeanFactory();
+                	idGenerator.init();
                     isInitId = true;
                 }
             }
         }
         return idGenerator;
+    }
+    
+    /**
+     * 获取单个唯一ID，Long格式
+     * 
+     * @param tableName 表名
+     * @return 返回内存中自增长的ID，未找到返回null
+     */
+    public static Long requestIdLong(String tableName) {
+    	return new Long(requestId(tableName));
     }
 
     /**
@@ -37,16 +47,6 @@ public class RmIdFactory {
     		return null;
     	}
     	return ids[0];
-    }
-    
-    /**
-     * 获取单个唯一ID，Long格式
-     * 
-     * @param tableName 表名
-     * @return 返回内存中自增长的ID，未找到返回null
-     */
-    public static Long requestIdLong(String tableName) {
-    	return new Long(requestId(tableName));
     }
     
     /**

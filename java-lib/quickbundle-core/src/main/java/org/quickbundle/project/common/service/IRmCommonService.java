@@ -107,10 +107,29 @@ public interface IRmCommonService {
      * 通用的方法，返回自己控制的对象
      *
      * @param sql 要执行的sql语句
+     * @param requiredType 需要的类型
+     * @return
+     */
+    public <T> T doQueryForObject(String sql, Class<T> requiredType);
+    
+    /**
+     * sql带?及参数，执行查询，返回T
+     * 
+     * @param sql 要执行的sql语句
+     * @param args ?对应的值
+     * @param requiredType 需要的类型
+     * @return
+     */
+    public <T>T doQueryForObject(String sql, Object[] args, Class<T> requiredType);
+    
+    /**
+     * 通用的方法，返回自己控制的对象
+     *
+     * @param sql 要执行的sql语句
      * @param rowMapper 回调方法
      * @return 单个对象
      */
-    public Object doQueryForObject(String sql, RowMapper rowMapper);
+    public <T> T doQueryForObject(String sql, RowMapper<T> rowMapper);
     
     /**
      * 通用的方法，执行查询，返回int
@@ -119,15 +138,6 @@ public interface IRmCommonService {
      * @return 查询结果int
      */
     public int doQueryForInt(String sql);
-    
-    /**
-     * sql带?及参数，执行查询，返回int
-     *
-     * @param sql 要执行的sql语句
-     * @param aObj ?对应的值
-     * @return 查询结果int
-     */
-    public int doQueryForInt(String sql, Object[] aObj);
     
     /**
      * 通用的方法，执行查询，返回long

@@ -17,11 +17,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.quickbundle.ICoreConstants;
+import org.quickbundle.base.dao.RmJdbcTemplate;
 import org.quickbundle.base.exception.RmRuntimeException;
 import org.quickbundle.base.service.RmService;
 import org.quickbundle.base.web.page.RmPageVo;
 import org.quickbundle.itf.IExecuteCode;
-import org.quickbundle.project.common.dao.IRmCommonDao;
+import org.quickbundle.project.common.dao.RmCommonDao;
 import org.quickbundle.project.common.service.IRmCommonService;
 import org.quickbundle.project.common.vo.RmCommonVo;
 import org.quickbundle.project.listener.RmRequestMonitor;
@@ -56,14 +57,14 @@ public class RmCommonService extends RmService implements IRmCommonService {
     /**
      * dao 表示: 数据访问层的实例
      */
-    private IRmCommonDao dao = null;
+    private RmCommonDao dao = null;
 
     /**
      * 设置数据访问接口
      * 
      * @return
      */
-    public IRmCommonDao getDao() {
+    public RmCommonDao getDao() {
         return dao;
     }
 
@@ -72,7 +73,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * 
      * @param dao
      */
-    public void setDao(IRmCommonDao dao) {
+    public void setDao(RmCommonDao dao) {
         this.dao = dao;
     }
 
@@ -94,7 +95,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return 自己控制的对象列表
      */
     public List doQuery(String sql, RowMapper rowMapper) {
-        return getDao().doQuery(sql, rowMapper);
+        return getDao().query(sql, rowMapper);
     }
 
     /**
@@ -149,7 +150,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return 对象列表
      */
     public List doQueryStartIndex(String sql, RowMapper rowMapper, int startIndex, int size) {
-    	return getDao().doQueryStartIndex(sql, rowMapper, startIndex, size);
+    	return getDao().query(sql, rowMapper, startIndex, size);
     }
 
 	/**
@@ -179,8 +180,32 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return RmCommonVo对象
      */
     public RmCommonVo doQueryForObject(String sql) {
-        return (RmCommonVo)getDao().doQueryForObject(sql, getDefaultRowMapper(RmCommonVo.class));
+        return (RmCommonVo)getDao().queryForObject(sql, getDefaultRowMapper(RmCommonVo.class));
     }
+    
+    /**
+     * 通用的方法，返回自己控制的对象
+     *
+     * @param sql 要执行的sql语句
+     * @param requiredType 需要的类型
+     * @return
+     */
+    public <T> T doQueryForObject(String sql, Class<T> requiredType) {
+    	return getDao().doQueryForObject(sql, requiredType);
+    }
+    
+    /**
+     * sql带?及参数，执行查询，返回T
+     * 
+     * @param sql 要执行的sql语句
+     * @param args ?对应的值
+     * @param requiredType 需要的类型
+     * @return
+     */
+    public <T>T doQueryForObject(String sql, Object[] args, Class<T> requiredType) {
+    	return getDao().queryForObject(sql, args, requiredType);
+    }
+    
     
     /**
      * 通用的方法，返回自己控制的对象
@@ -189,8 +214,8 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @param rowMapper 回调方法
      * @return 自己控制的对象
      */
-    public Object doQueryForObject(String sql, RowMapper rowMapper) {
-        return getDao().doQueryForObject(sql, rowMapper);
+    public <T> T doQueryForObject(String sql, RowMapper<T> rowMapper) {
+        return getDao().queryForObject(sql, rowMapper);
     }
     
     /**
@@ -200,18 +225,12 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return 查询结果int
      */
     public int doQueryForInt(String sql) {
-        return getDao().doQueryForInt(sql);
-    }
-    
-    /**
-     * sql带?及参数，执行查询，返回int
-     *
-     * @param sql 要执行的sql语句
-     * @param aObj ?对应的值
-     * @return 查询结果int
-     */
-    public int doQueryForInt(String sql, Object[] aObj) {
-        return getDao().doQueryForInt(sql, aObj);
+        Integer value = getDao().queryForObject(sql, Integer.class);
+        if(value == null) {
+        	return 0;
+        } else {
+        	return value.intValue();
+        }
     }
     
     /**
@@ -221,7 +240,12 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return 查询结果long
      */
     public long doQueryForLong(String sql) {
-        return getDao().doQueryForLong(sql);
+        Long value = getDao().queryForObject(sql, Long.class);
+        if(value == null) {
+        	return 0;
+        } else {
+        	return value.longValue();
+        }
     }
     
     /**
@@ -231,7 +255,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return 更新记录条数
      */
     public int doUpdate(String sql) {
-        return getDao().doUpdate(sql);
+        return getDao().update(sql);
     }
     
     /**
@@ -242,7 +266,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return
      */
     public int doUpdate(String sql, Object[] aObj) {
-        return getDao().doUpdate(sql, aObj);
+        return getDao().update(sql, aObj);
     }
     
     /**
@@ -252,7 +276,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return
      */
 	public int[] doUpdateBatch(String[] sql) {
-		return getDao().doBatchUpdate(sql);
+		return getDao().batchUpdate(sql);
 	}
 	
 	/** 执行批量更新，带?及参数，返回更新的记录条数
@@ -261,7 +285,11 @@ public class RmCommonService extends RmService implements IRmCommonService {
 	 * @return
 	 */
 	public int[] doUpdateBatch(String sql, Object[][] aaObj) {
-		return getDao().doBatchUpdate(sql, aaObj);
+		return getDao().batchUpdate(sql, aaObj, new RmJdbcTemplate.CircleVoArray() {
+			public Object[] getArgs(Object obj) {
+				return (Object[])obj;
+			}
+		});
 	}
 
 	/**

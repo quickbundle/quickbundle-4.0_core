@@ -1,6 +1,6 @@
 package org.quickbundle.itf.base;
 
 public interface IRmIdGenerator {
-	public void initBeanFactory();
+	public void init();
 	public String[] requestIdInner(String tableName, int length);
 }
