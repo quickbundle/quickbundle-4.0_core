@@ -1,5 +1,6 @@
 package org.quickbundle.base.beans;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.quickbundle.ICoreConstants;
@@ -29,8 +30,8 @@ public class DefaultIdWrapper implements IRmIdWrapper {
     		sqlSelectMax = sql;
     	}  else {
     		try {
-    			String maxId = RmBeanHelper.getCommonServiceInstance().doQueryForObject(sql, String.class);
-    			long lTableId = getMaxIdOrDefault(maxId);
+    			List<String> maxIds = RmBeanHelper.getCommonServiceInstance().queryForList(sql, String.class);
+    			long lTableId = getMaxIdOrDefault(maxIds.size()==0 ? null : maxIds.get(0));
     			atomicLong = new AtomicLong(lTableId);
     		} catch (Exception e) {
     			e.printStackTrace();
@@ -66,8 +67,8 @@ public class DefaultIdWrapper implements IRmIdWrapper {
 	public synchronized String[] nextValue(int length) {
         //generateIdFromDb模式下每次都查询的sql
         if(RmBaseConfig.getSingleton().isGenerateIdFromDb()) {
-            String maxId = RmBeanHelper.getCommonServiceInstance().doQueryForObject(sqlSelectMax, String.class);
-            long lTableId = getMaxIdOrDefault(maxId);
+            List<String> maxIds = RmBeanHelper.getCommonServiceInstance().queryForList(sqlSelectMax, String.class);
+            long lTableId = getMaxIdOrDefault(maxIds.size()==0 ? null : maxIds.get(0));
             if(atomicLong == null || atomicLong.longValue() < lTableId) {
             	atomicLong = new AtomicLong(lTableId);
             }
@@ -83,11 +84,9 @@ public class DefaultIdWrapper implements IRmIdWrapper {
     //根据<table table_code="2003" table_name="RM_AFFIX" id_name="ID"/>和clusterIdPrefix，获得查询最大值的sql
     String getSqlSelectMax() {
 		StringBuilder sql = new StringBuilder();
-		sql.append("select ");
-		sql.append("max(");
+		sql.append("select max(");
 		sql.append(ruleVo.getIdName());
-		sql.append(") ");
-		sql.append("max_id from ");
+		sql.append(") max_id from ");
 		sql.append(ruleVo.getTableName());
 		sql.append(" where ");
 		sql.append(parseColumn(ruleVo.getIdName()));

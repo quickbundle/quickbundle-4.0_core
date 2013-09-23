@@ -498,14 +498,14 @@ public final class RmVoHelper implements ICoreConstants {
 					if (RmStringHelper.arrayContainString(DESC_CREATE_DATE, pd.getName())) {
 						setDateField(bw, pd);
                         return 1;
-                    } else if (pd.getName().equals(DESC_CREATE_IP) && request != null) {
+                    } else if (RmStringHelper.arrayContainString(DESC_CREATE_IP, pd.getName()) && request != null) {
                         String create_ip = getIp(request);
                         bw.setPropertyValue(pd.getName(), create_ip);
                         return 1;
                     } else if (pd.getName().equals(DESC_USABLE_STATUS)) {  //加上了打逻辑删除标记启用的戳，数据设为可用
                         bw.setPropertyValue(pd.getName(), RM_YES);
                         return 1;
-                    } else if (pd.getName().equals(DESC_CREATE_USER_ID) && request != null) {
+                    } else if (RmStringHelper.arrayContainString(DESC_CREATE_USER_ID, pd.getName()) && request != null) {
                         String create_user_id = null;
                         try {
                             create_user_id = getRmUserId(request);

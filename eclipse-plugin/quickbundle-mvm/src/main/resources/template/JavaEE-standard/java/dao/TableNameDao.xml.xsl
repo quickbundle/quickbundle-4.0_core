@@ -25,7 +25,7 @@
 			</xsl:for-each>)
     values ( #{<xsl:value-of select="str:getTablePkFormatLower(/meta, @tableName)"/>}, 
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">#{<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/><xsl:choose>
-							<xsl:when test="@dataTypeDb='VARCHAR' or @dataTypeDb='CHAR' or @dataTypeDb='DATE' or @dataTypeDb='DECIMAL'">,jdbcType=<xsl:value-of select="@dataTypeDb"/></xsl:when>
+							<xsl:when test="@dataTypeDb='VARCHAR' or @dataTypeDb='CHAR' or @dataTypeDb='DATE' or @dataTypeDb='DATETIME' or @dataTypeDb='DECIMAL'">,jdbcType=<xsl:value-of select="@dataTypeDb"/></xsl:when>
 							<xsl:otherwise></xsl:otherwise>
 						</xsl:choose>}<xsl:if test="not(position()=last())">, </xsl:if>
 				<xsl:if test="position() mod 4=0"><xsl:text>
@@ -48,7 +48,7 @@
     update <xsl:value-of select="@tableName"/> set 
       <xsl:for-each select="column[not(@columnName=$thisTablePk)]">
 				<xsl:value-of select="@columnName"/>=#{<xsl:value-of select="str:getColumnNameFormatLower(/meta, ../@tableName, @columnName)"/><xsl:choose>
-							<xsl:when test="@dataTypeDb='VARCHAR' or @dataTypeDb='CHAR' or @dataTypeDb='DATE' or @dataTypeDb='DECIMAL'">,jdbcType=<xsl:value-of select="@dataTypeDb"/></xsl:when>
+							<xsl:when test="@dataTypeDb='VARCHAR' or @dataTypeDb='CHAR' or @dataTypeDb='DATE' or @dataTypeDb='DATETIME' or @dataTypeDb='DECIMAL'">,jdbcType=<xsl:value-of select="@dataTypeDb"/></xsl:when>
 							<xsl:otherwise></xsl:otherwise>
 						</xsl:choose>}<xsl:if test="not(position()=last())">, </xsl:if>
 				<xsl:if test="position() mod 4=0"><xsl:text>

@@ -14,9 +14,9 @@ import java.util.Map;
 public interface ICoreConstants {
      
     //系统级定义    
-    public final static String[] DESC_CREATE_DATE = new String[]{"modify_date", "ts"};  //描述创建时间
-    public final static String DESC_CREATE_IP = "modify_ip";  //描述创建IP
-    public final static String DESC_CREATE_USER_ID = "modify_user_id";  //描述创建用户ID
+    public final static String[] DESC_CREATE_DATE = new String[]{"create_date", "modify_date", "ts"};  //描述创建时间
+    public final static String[] DESC_CREATE_IP = new String[]{"create_ip", "modify_ip"};  //描述创建IP
+    public final static String[] DESC_CREATE_USER_ID = new String[]{"create_user_id", "modify_user_id"};  //描述创建用户ID
     public final static String[] DESC_MODIFY_DATE = new String[]{"modify_date", "ts"};  //描述修改时间
     public final static String DESC_MODIFY_IP = "modify_ip";  //描述修改IP
     public final static String DESC_MODIFY_USER_ID = "modify_user_id";  //描述修改用户ID

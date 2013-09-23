@@ -15,6 +15,7 @@ package org.quickbundle.project.common.service.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.quickbundle.ICoreConstants;
 import org.quickbundle.base.dao.RmJdbcTemplate;
@@ -27,52 +28,22 @@ import org.quickbundle.project.common.service.IRmCommonService;
 import org.quickbundle.project.common.vo.RmCommonVo;
 import org.quickbundle.project.listener.RmRequestMonitor;
 import org.quickbundle.tools.helper.RmPopulateHelper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
- * 功能、用途、现存BUG:
+ * 功能: 通用的JDBC方法，do开头的方法有特殊的业务含义，非do开头的转发JdbcTemplate
  * 
  * @author 白小勇
- * @version 1.0.0
- * @see 需要参见的其它类
- * @since 1.0.0
  */
 public class RmCommonService extends RmService implements IRmCommonService {
-    private RowMapper getDefaultRowMapper(final Class className) {
-    	return new RowMapper() {
-			public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Object obj = null;
-				try {
-					obj = className.newInstance();
-					RmPopulateHelper.populate(obj, rs);
-				} catch (InstantiationException e) {
-					throw new RmRuntimeException("反射错误", e);
-				} catch (IllegalAccessException e) {
-					throw new RmRuntimeException("反射错误", e);
-				}
-				return obj;
-			}
-		};
-    }
     /**
      * dao 表示: 数据访问层的实例
      */
     private RmCommonDao dao = null;
-
-    /**
-     * 设置数据访问接口
-     * 
-     * @return
-     */
     public RmCommonDao getDao() {
         return dao;
     }
-
-    /**
-     * 获取数据访问接口
-     * 
-     * @param dao
-     */
     public void setDao(RmCommonDao dao) {
         this.dao = dao;
     }
@@ -84,7 +55,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
 	 * @return
 	 */
     public List<RmCommonVo> doQuery(String sql) {
-    	return doQuery(sql, getDefaultRowMapper(RmCommonVo.class));
+    	return query(sql, getDefaultRowMapper(RmCommonVo.class));
     }
     
     /**
@@ -94,7 +65,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @param rowMapper 回调方法
      * @return 自己控制的对象列表
      */
-    public List doQuery(String sql, RowMapper rowMapper) {
+    public List query(String sql, RowMapper rowMapper) {
         return getDao().query(sql, rowMapper);
     }
 
@@ -173,6 +144,56 @@ public class RmCommonService extends RmService implements IRmCommonService {
 		return doQuery(sql, getDefaultRowMapper(className), pageVo.getCurrentPage(), pageVo.getPageSize());
 	}
 	
+	/**
+	 * 通用的方法，返回自己控制的对象
+	 * 
+	 * @param sql 要执行的sql语句
+	 * @param elementType 需要的类型
+	 * @return 对象列表
+	 * @throws DataAccessException
+	 */
+	public <T> List<T> queryForList(String sql, Class<T> elementType) throws DataAccessException {
+		return getDao().queryForList(sql, elementType);
+	}
+
+	/**
+	 * 通用的方法，返回自己控制的对象
+	 * 
+	 * @param sql 要执行的sql语句
+	 * @return 对象列表
+	 * @throws DataAccessException
+	 */
+	public List<Map<String, Object>> queryForList(String sql) throws DataAccessException {
+		return getDao().queryForList(sql);
+	}
+	
+	/**
+	 * 通用的方法，返回自己控制的对象
+	 * 
+	 * @param sql 要执行的sql语句
+	 * @param args ?对应的值
+	 * @param argTypes ?对应的值的类型
+	 * @param elementType 需要的类型
+	 * @return 对象列表
+	 * @throws DataAccessException
+	 */
+	public <T> List<T> queryForList(String sql, Object[] args, int[] argTypes, Class<T> elementType) throws DataAccessException {
+		return getDao().queryForList(sql, args, argTypes, elementType);
+	}
+
+	/**
+	 * 通用的方法，返回自己控制的对象
+	 * 
+	 * @param sql 要执行的sql语句
+	 * @param args ?对应的值
+	 * @param elementType 需要的类型
+	 * @return 对象列表
+	 * @throws DataAccessException
+	 */
+	public <T> List<T> queryForList(String sql, Object[] args, Class<T> elementType) throws DataAccessException {
+		return getDao().queryForList(sql, args, elementType);
+	}
+	
     /**
      * 通用的方法，返回自己控制的对象
      *
@@ -190,8 +211,8 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @param requiredType 需要的类型
      * @return
      */
-    public <T> T doQueryForObject(String sql, Class<T> requiredType) {
-    	return getDao().doQueryForObject(sql, requiredType);
+    public <T> T queryForObject(String sql, Class<T> requiredType) {
+    	return getDao().queryForObject(sql, requiredType);
     }
     
     /**
@@ -202,7 +223,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @param requiredType 需要的类型
      * @return
      */
-    public <T>T doQueryForObject(String sql, Object[] args, Class<T> requiredType) {
+    public <T> T queryForObject(String sql, Object[] args, Class<T> requiredType) {
     	return getDao().queryForObject(sql, args, requiredType);
     }
     
@@ -214,7 +235,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @param rowMapper 回调方法
      * @return 自己控制的对象
      */
-    public <T> T doQueryForObject(String sql, RowMapper<T> rowMapper) {
+    public <T> T queryForObject(String sql, RowMapper<T> rowMapper) {
         return getDao().queryForObject(sql, rowMapper);
     }
     
@@ -255,6 +276,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return 更新记录条数
      */
     public int doUpdate(String sql) {
+    	//TODO 业务日志
         return getDao().update(sql);
     }
     
@@ -266,6 +288,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return
      */
     public int doUpdate(String sql, Object[] aObj) {
+    	//TODO 业务日志
         return getDao().update(sql, aObj);
     }
     
@@ -276,6 +299,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
      * @return
      */
 	public int[] doUpdateBatch(String[] sql) {
+		//TODO 业务日志
 		return getDao().batchUpdate(sql);
 	}
 	
@@ -285,6 +309,7 @@ public class RmCommonService extends RmService implements IRmCommonService {
 	 * @return
 	 */
 	public int[] doUpdateBatch(String sql, Object[][] aaObj) {
+		//TODO 业务日志
 		return getDao().batchUpdate(sql, aaObj, new RmJdbcTemplate.CircleVoArray() {
 			public Object[] getArgs(Object obj) {
 				return (Object[])obj;
@@ -325,6 +350,23 @@ public class RmCommonService extends RmService implements IRmCommonService {
 	 */
 	@SuppressWarnings("unchecked")
 	public String[][] paseToArrays(String sql, RowMapper rowMapper) {
-		return (String[][])doQuery(sql, rowMapper).toArray(new String[0][0]);
+		return (String[][])query(sql, rowMapper).toArray(new String[0][0]);
 	}
+	
+    private RowMapper getDefaultRowMapper(final Class className) {
+    	return new RowMapper() {
+			public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Object obj = null;
+				try {
+					obj = className.newInstance();
+					RmPopulateHelper.populate(obj, rs);
+				} catch (InstantiationException e) {
+					throw new RmRuntimeException("反射错误", e);
+				} catch (IllegalAccessException e) {
+					throw new RmRuntimeException("反射错误", e);
+				}
+				return obj;
+			}
+		};
+    }
 }

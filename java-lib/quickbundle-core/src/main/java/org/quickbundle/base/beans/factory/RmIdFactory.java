@@ -12,7 +12,7 @@ public class RmIdFactory {
      * 获得单例
      * @return
      */
-    static IRmIdGenerator getIdGenerator() {
+    public static IRmIdGenerator getIdGenerator() {
         if(!isInitId) {
             synchronized (RmIdFactory.class) {
                 if(!isInitId) {

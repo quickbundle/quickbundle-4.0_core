@@ -407,7 +407,7 @@ public class <xsl:value-of select="$tableFormatNameUpperFirst"/>Service implemen
             return new String[0];
         }
         IRmCommonService cs = RmProjectHelper.getCommonServiceInstance();
-        List<xsl:value-of select="$charLt"/>String> lExistId = cs.doQuery("select * from <xsl:value-of select="@tableName"/> where <xsl:value-of select="@mainColumn"/>=<xsl:if test="str:getPkColumnClass(/meta, $tableName, $tablePk)='String'">'</xsl:if>" + <xsl:value-of select="lower-case(@mainColumn)"/> + "<xsl:if test="str:getPkColumnClass(/meta, $tableName, $tablePk)='String'">'</xsl:if> and <xsl:value-of select="@refColumn"/> in(" + RmStringHelper.parseToString<xsl:if test="str:getPkColumnClass(/meta, ../@tableName, ../@refColumn)='String'">Apos</xsl:if>(<xsl:value-of select="lower-case(@refColumn)"/>s) + ")", new RowMapper() {
+        List<xsl:value-of select="$charLt"/>String> lExistId = cs.query("select * from <xsl:value-of select="@tableName"/> where <xsl:value-of select="@mainColumn"/>=<xsl:if test="str:getPkColumnClass(/meta, $tableName, $tablePk)='String'">'</xsl:if>" + <xsl:value-of select="lower-case(@mainColumn)"/> + "<xsl:if test="str:getPkColumnClass(/meta, $tableName, $tablePk)='String'">'</xsl:if> and <xsl:value-of select="@refColumn"/> in(" + RmStringHelper.parseToString<xsl:if test="str:getPkColumnClass(/meta, ../@tableName, ../@refColumn)='String'">Apos</xsl:if>(<xsl:value-of select="lower-case(@refColumn)"/>s) + ")", new RowMapper() {
             public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return rs.getString("<xsl:value-of select="@refColumn"/>");
             }

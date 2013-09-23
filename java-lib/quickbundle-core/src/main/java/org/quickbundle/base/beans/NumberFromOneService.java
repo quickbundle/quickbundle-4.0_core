@@ -1,5 +1,7 @@
 package org.quickbundle.base.beans;
 
+import java.util.List;
+
 import org.quickbundle.tools.context.RmBeanHelper;
 import org.springframework.dao.OptimisticLockingFailureException;
 
@@ -7,25 +9,25 @@ public class NumberFromOneService {
 
 	public long initIdPool(TableIdRuleVo ruleVo, long blocksize) {
 		long oldId;
-		Long oldPoolLastId = RmBeanHelper.getCommonServiceInstance().doQueryForObject("select LAST_ID from RM_ID_POOL where ID=?",
+		List<Long> oldPoolLastIds = RmBeanHelper.getCommonServiceInstance().queryForList("select LAST_ID from RM_ID_POOL where ID=?",
 				new String[] { ruleVo.getTableName() }, Long.class);
-		if(oldPoolLastId == null) {
+		if(oldPoolLastIds.size() == 0) {
 			oldId = getMaxIdFromTable(ruleVo);
 		} else {
-			oldId = oldPoolLastId.longValue();
+			oldId = oldPoolLastIds.get(0).longValue();
 		}
 		long newPoolLastId = oldId + blocksize;
-		if(oldPoolLastId == null) {
+		if(oldPoolLastIds.size() == 0) {
 			RmBeanHelper.getCommonServiceInstance().doUpdate("insert into RM_ID_POOL (ID, VERSION, LAST_ID) values(?, ?, ?)",
 					new Object[] { ruleVo.getTableName(), 1, newPoolLastId });
 		} else {
 			int updateCount = RmBeanHelper.getCommonServiceInstance().doUpdate("update RM_ID_POOL set LAST_ID=?, VERSION=VERSION+1 where ID=? and LAST_ID=?",
-					new Object[] { newPoolLastId, ruleVo.getTableName(), oldPoolLastId });
+					new Object[] { newPoolLastId, ruleVo.getTableName(),  oldPoolLastIds.get(0) });
 			if(updateCount == 0) {
 				throw new OptimisticLockingFailureException("can not update lastId that read this time: " + ruleVo.getTableName());
 			}
 		}
-		return oldPoolLastId;
+		return oldId;
 	}
 
 	private long getMaxIdFromTable(TableIdRuleVo ruleVo) {
@@ -34,26 +36,26 @@ public class NumberFromOneService {
 		sql.append(ruleVo.getIdName());
 		sql.append(") max_id from ");
 		sql.append(ruleVo.getTableName());
-		Long maxIdObj = RmBeanHelper.getCommonServiceInstance().doQueryForObject(sql.toString(), Long.class);
+		List<Long> maxIdObjs = RmBeanHelper.getCommonServiceInstance().queryForList(sql.toString(), Long.class);
 		long maxId;
-		if (maxIdObj == null) {
+		if (maxIdObjs.size() == 0 || maxIdObjs.get(0) == null) {
 			maxId = 0;
 		} else {
-			maxId = maxIdObj.longValue();
+			maxId = maxIdObjs.get(0).longValue();
 		}
 		maxId++;
 		return maxId;
 	}
 
 	public long acquireId(TableIdRuleVo ruleVo, long blocksize) {
-		long oldPoolLastId = RmBeanHelper.getCommonServiceInstance().doQueryForObject("select LAST_ID from RM_ID_POOL where ID=?",
+		List<Long> oldPoolLastIds = RmBeanHelper.getCommonServiceInstance().queryForList("select LAST_ID from RM_ID_POOL where ID=?",
 				new String[] { ruleVo.getTableName() }, Long.class);
-		long newPoolLastId = oldPoolLastId + blocksize;
+		long newPoolLastId = oldPoolLastIds.get(0) + blocksize;
 		int updateCount = RmBeanHelper.getCommonServiceInstance().doUpdate("update RM_ID_POOL set LAST_ID=?, VERSION=VERSION+1 where ID=? and LAST_ID=?",
-				new Object[] { newPoolLastId, ruleVo.getTableName(), oldPoolLastId });
+				new Object[] { newPoolLastId, ruleVo.getTableName(), oldPoolLastIds.get(0) });
 		if (updateCount == 0) {
 			throw new OptimisticLockingFailureException("can not update lastId that read this time: " + ruleVo.getTableName());
 		}
-		return oldPoolLastId;
+		return oldPoolLastIds.get(0).longValue();
 	}
 }
