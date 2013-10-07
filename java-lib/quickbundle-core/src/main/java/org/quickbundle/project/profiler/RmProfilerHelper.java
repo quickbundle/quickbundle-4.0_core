@@ -19,7 +19,7 @@ public class RmProfilerHelper {
 		try {
 			long startTime = System.currentTimeMillis();
 			Map mData = new HashMap();
-			InputStreamReader isr = new InputStreamReader(new FileInputStream(new File("D:/qb_home/cg_home/sql.log.1"))); 
+			InputStreamReader isr = new InputStreamReader(new FileInputStream(new File("/tmp/cg_home/sql.log.1"))); 
 			BufferedReader br = new BufferedReader(isr);//接收输入存至缓冲区，参数是System.inint c;
 			List<String> lines = new ArrayList<String>();
 			String line = null;

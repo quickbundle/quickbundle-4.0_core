@@ -7,7 +7,7 @@ public class RmBaseConfigVo {
 		super();
 	}
 	
-	private String warHome = "/qb_home/default";
+	private String warHome = System.getProperty("user.home") + "/.qbhome/default";
 	
 	/**
 	 * 	<!-- cloud node info collected automatically? or read from rm.xml? #change in production -->

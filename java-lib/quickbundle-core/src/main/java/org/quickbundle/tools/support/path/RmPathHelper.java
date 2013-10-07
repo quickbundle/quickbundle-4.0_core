@@ -72,7 +72,7 @@ public class RmPathHelper {
 			if(cl == null) {
 				cl = ClassLoader.getSystemClassLoader();
 			}
-			Class clz = cl.loadClass("org.quickbundle.project.RmProjectHelper");
+			Class clz = cl.loadClass("org.quickbundle.config.RmLoadConfig");
 			Method customMethod = clz.getDeclaredMethod("getWarDirCustom",new Class[]{});
 	        if(customMethod != null) {
 	        	result = (File)customMethod.invoke(null ,new Object[]{});
