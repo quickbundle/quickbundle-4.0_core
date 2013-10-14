@@ -5,7 +5,6 @@
 	<artifactId>java-lib.parent</artifactId>
 	<version>4.0.0</version>
 	<packaging>pom</packaging>
-
 	<properties>
 		<encoding>UTF-8</encoding>
 		<jdk.version>1.5</jdk.version>
@@ -25,7 +24,6 @@
 		<junit.version>4.11</junit.version>
 		<ant.version>1.9.2</ant.version>
 	</properties>
-	
 	<licenses>
 		<license>
 			<name>Apache 2</name>
@@ -42,14 +40,12 @@
 		<system>Bugzilla</system>
 		<url>http://bugs.quickbundle.org</url>
 	</issueManagement>
-	
 	<scm>
 		<connection>scm:git:https://github.com/quickbundle/qb-core.git</connection>
 		<developerConnection>scm:git:https://github.com/quickbundle/qb-core.git</developerConnection>
 		<url>https://github.com/quickbundle/qb-core/tree/master/java-lib</url>
 	</scm>
-
-		<build>
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -69,10 +65,8 @@
 					<additionalConfig>
 						<file>
 							<name>.settings/org.eclipse.core.resources.prefs</name>
-							<content>
-<![CDATA[eclipse.preferences.version=1
-encoding/<project>=UTF-8]]>
-							</content>
+							<content><![CDATA[eclipse.preferences.version=1
+encoding/<project>=UTF-8]]></content>
 						</file>
 					</additionalConfig>
 					<additionalBuildcommands>
@@ -169,6 +163,18 @@ encoding/<project>=UTF-8]]>
 				</configuration>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>${jdk.version}</source>
+						<target>${jdk.version}</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
-
 </project>
