@@ -15,11 +15,6 @@ public class RmBaseConfigVo {
 	 * @return 是集群模式？或单机？
 	 */
 	private boolean clusterMode = false;
-
-	/**
-	 * @return 云节点信息是自动采集？还是从rm.xml中读取
-	 */
-	private boolean cloudNodeInfoAuto = false;
     
     /**
      * 获得默认数据源的数据库类型，默认数据库类型是NULL
@@ -140,20 +135,6 @@ public class RmBaseConfigVo {
 	 */
 	void setClusterMode(boolean clusterMode) {
 		this.clusterMode = clusterMode;
-	}
-
-	/**
-	 * @return 云节点信息是自动采集？还是从rm.xml中读取
-	 */
-	public boolean isCloudNodeInfoAuto() {
-		return cloudNodeInfoAuto;
-	}
-
-	/**
-	 * @param cloudNodeInfoAuto the cloudNodeInfoAuto to set
-	 */
-	void setCloudNodeInfoAuto(boolean cloudNodeInfoAuto) {
-		this.cloudNodeInfoAuto = cloudNodeInfoAuto;
 	}
 
 	/**

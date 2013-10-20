@@ -11,7 +11,6 @@ import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.quickbundle.third.mybatis.dialect.DB2Dialect;
@@ -31,7 +30,7 @@ public class ScrollableStatementHandlerInterceptor implements Interceptor {
 	public Object intercept(Invocation invocation) throws Throwable {
 		StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
 		BoundSql boundSql = statementHandler.getBoundSql();
-		MetaObject metaStatementHandler = SystemMetaObject.forObject(statementHandler);
+		MetaObject metaStatementHandler = MetaObject.forObject(statementHandler);
 		RowBounds rowBounds = (RowBounds) metaStatementHandler.getValue("delegate.rowBounds");
 		if (rowBounds == null || rowBounds == RowBounds.DEFAULT || rowBounds.getOffset() < 0 || rowBounds.getLimit() < 0) {
 			return invocation.proceed();

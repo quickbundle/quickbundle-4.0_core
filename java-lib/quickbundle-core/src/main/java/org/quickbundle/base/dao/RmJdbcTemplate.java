@@ -167,8 +167,9 @@ public class RmJdbcTemplate extends JdbcTemplate {
 					}
 					else {
 						if(this.argTypes[i] == Types.BLOB) {
-							ByteArrayInputStream bais = new ByteArrayInputStream((byte[])this.args[i]);
-							ps.setBinaryStream(argIndx++, bais);
+							byte[] bytes = (byte[])this.args[i];
+							ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+							ps.setBinaryStream(argIndx++, bais, bytes.length);
 						} else {
 							StatementCreatorUtils.setParameterValue(ps, argIndx++, this.argTypes[i], arg);
 						}

@@ -419,6 +419,7 @@ select * from ( select top 200 * from ( select TOP 100000 * from moa_user order 
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static<T> List<T[]> splitPagingArray(T[] array, int maxSqlInCount) {
 		if(array == null) {
 			return null;
@@ -430,13 +431,26 @@ select * from ( select top 200 * from ( select TOP 100000 * from moa_user order 
 			if(end > array.length) {
 				end = array.length;
 			}
-			T[] split = Arrays.copyOfRange(array, position, end);
+			T[] split = copyOfRange(array, position, end, (Class<T[]>)array.getClass());
 			result.add(split);
 			position += maxSqlInCount;
 		}
 		
 		return result;
 	}
+	
+    @SuppressWarnings("unchecked")
+	public static <T,U> T[] copyOfRange(U[] original, int from, int to, Class<? extends T[]> newType) {
+        int newLength = to - from;
+        if (newLength < 0)
+            throw new IllegalArgumentException(from + " > " + to);
+        T[] copy = ((Object)newType == (Object)Object[].class)
+            ? (T[]) new Object[newLength]
+            : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+        System.arraycopy(original, from, copy, 0,
+                         Math.min(original.length - from, newLength));
+        return copy;
+    }
 	
 	public static void main(String[] args) {
 		List<String> lvo = new ArrayList<String>();
