@@ -9,7 +9,9 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.quickbundle.base.beans.factory.RmIdFactory;
+import org.quickbundle.base.beans.idwrapper.MaxInDbWrapper;
 import org.quickbundle.base.beans.idwrapper.ShardingInCacheWrapper;
+import org.quickbundle.config.RmBaseConfig;
 import org.quickbundle.itf.base.IRmIdGenerator;
 import org.quickbundle.itf.base.IRmIdWrapper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
@@ -76,7 +78,7 @@ public class RmIdGenerator implements IRmIdGenerator {
         	//如果指定了wrapper_class
         	String wrapperClass = ruleVo.getWrapperClass();
         	if(wrapperClass == null || wrapperClass.length() == 0) {
-        		mapWrapper.put(tableName, new ShardingInCacheWrapper(ruleVo));
+        		mapWrapper.put(tableName, RmBaseConfig.getSingleton().isSystemDebugMode() ? new MaxInDbWrapper(ruleVo) : new ShardingInCacheWrapper(ruleVo));
         	} else {
         		try {
 					Class clazz = this.getClass().getClassLoader().loadClass(wrapperClass);
