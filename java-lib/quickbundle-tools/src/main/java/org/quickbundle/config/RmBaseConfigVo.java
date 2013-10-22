@@ -297,27 +297,31 @@ public class RmBaseConfigVo {
 
 	//未加入rm.xml文件的配置
 	/**
-	 * 系统缓存检查周期
-	 * @return
+	 * @return 系统缓存检查周期
 	 */
 	public long getCacheCheckInterval() {
 		return 1000 * 2;
 	}
 	
 	/**
-	 * 是否全局监控
-	 * @return
+	 * @return 是否全局监控
 	 */
 	public boolean isGlobalMonitor() {
 		return true;
 	}
 	
 	/**
-	 * 系统缓存刷新周期
-	 * @return
+	 * @return 系统缓存刷新周期
 	 */
 	public long getCacheFlushInterval() {
 		return 1000 * 60 * 5;
+	}
+	
+	/**
+	 * @return 节点心跳间隔
+	 */
+	public long getNodeHeartbeatInterval() {
+		return 1000 * 60;
 	}
 	
     /**
