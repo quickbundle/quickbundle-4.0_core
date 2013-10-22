@@ -1,4 +1,4 @@
-package org.quickbundle.project.multidb;
+package org.quickbundle.project.sharding;
 
 import org.quickbundle.base.beans.factory.RmBeanFactory;
 import org.quickbundle.base.exception.RmRuntimeException;
@@ -8,18 +8,18 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 
-public class RmMultiDataSource {
+public class RmShardingDataSource {
 	private static String dataSource_slave_key = "";
 	private static String dataSource_slave_url = "";
 	private static volatile boolean isInitCreateBean = false;
 
-	public RmMultiDataSource() {
+	public RmShardingDataSource() {
 		super();
 	}
 
 	public void init(){
         if(!isInitCreateBean) {
-            synchronized (RmMultiDataSource.class) {
+            synchronized (RmShardingDataSource.class) {
                 if(!isInitCreateBean) {
                 	try {
                         if(RmBeanFactory.getBeanFactory() instanceof BeanDefinitionRegistry) {
@@ -43,7 +43,7 @@ public class RmMultiDataSource {
                             	RmLogHelper.getLogger(this.getClass()).info("registerBeanDefinition:" + aChannelKey[i] + "-->" + bd_dataSourceChannel);
             				}
                         } else {
-                        	RmLogHelper.getLogger(RmMultiDataSource.class).error("RmBeanFactory.getBeanFactory() instanceof BeanDefinition = false");
+                        	RmLogHelper.getLogger(RmShardingDataSource.class).error("RmBeanFactory.getBeanFactory() instanceof BeanDefinition = false");
                         	throw new RmRuntimeException("RmBeanFactory.getBeanFactory() instanceof BeanDefinitionRegistry = false");
                         }
                         isInitCreateBean = true;
@@ -63,7 +63,7 @@ public class RmMultiDataSource {
 	}
 
 	public void setDataSource_slave_url(String dataSource_slave_url) {
-		RmMultiDataSource.dataSource_slave_url = dataSource_slave_url;
+		RmShardingDataSource.dataSource_slave_url = dataSource_slave_url;
 	}
 	
 	public String getDataSource_slave_key() {
@@ -71,6 +71,6 @@ public class RmMultiDataSource {
 	}
 
 	public void setDataSource_slave_key(String dataSource_slave_key) {
-		RmMultiDataSource.dataSource_slave_key = dataSource_slave_key;
+		RmShardingDataSource.dataSource_slave_key = dataSource_slave_key;
 	}
 }

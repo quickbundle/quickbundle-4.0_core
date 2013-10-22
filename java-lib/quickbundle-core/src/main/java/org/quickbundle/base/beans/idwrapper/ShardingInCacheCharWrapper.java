@@ -1,12 +1,14 @@
-package org.quickbundle.base.beans;
+package org.quickbundle.base.beans.idwrapper;
 
-public class CharIdWrapper extends DefaultIdWrapper {
+import org.quickbundle.base.beans.TableIdRuleVo;
+
+public class ShardingInCacheCharWrapper extends ShardingInCacheWrapper {
 	
 	private int charLength;
 	private final static String BEGIN_KEY = "char(";
 	private final static String END_KEY = ")";
 	
-	public CharIdWrapper(TableIdRuleVo ruleVo) {
+	public ShardingInCacheCharWrapper(TableIdRuleVo ruleVo) {
 		super(ruleVo);
 		String format = ruleVo.getWrapperClassFormat();
 		if(format != null && format.indexOf(BEGIN_KEY) > -1 && format.indexOf(END_KEY) > format.indexOf(BEGIN_KEY)) {

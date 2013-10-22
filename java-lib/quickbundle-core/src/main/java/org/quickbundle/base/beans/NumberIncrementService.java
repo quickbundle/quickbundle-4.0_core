@@ -5,7 +5,7 @@ import java.util.List;
 import org.quickbundle.tools.context.RmBeanHelper;
 import org.springframework.dao.OptimisticLockingFailureException;
 
-public class NumberFromOneService {
+public class NumberIncrementService {
 
 	public long initIdPool(TableIdRuleVo ruleVo, long blocksize) {
 		long oldId;

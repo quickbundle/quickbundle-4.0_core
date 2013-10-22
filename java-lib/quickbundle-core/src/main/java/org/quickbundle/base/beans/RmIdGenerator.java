@@ -9,6 +9,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.quickbundle.base.beans.factory.RmIdFactory;
+import org.quickbundle.base.beans.idwrapper.ShardingInCacheWrapper;
 import org.quickbundle.itf.base.IRmIdGenerator;
 import org.quickbundle.itf.base.IRmIdWrapper;
 import org.quickbundle.tools.helper.xml.RmXmlHelper;
@@ -31,11 +32,6 @@ public class RmIdGenerator implements IRmIdGenerator {
             loadRule();
             initMapWrapper();
             doInitId();
-            
-            /*
-            if(RmBaseConfig.getSingleton().isInitIdBatch()) { //Batch模式下批量查询maxId
-            	doInitIdBatch();
-            }*/
             
             RmLogHelper.getLogger(this.getClass()).info("init " + mapWrapper.size() + " tables, cost " + (System.currentTimeMillis()-startTime) + " milliseconds!");
         } catch (Exception e) {
@@ -80,7 +76,7 @@ public class RmIdGenerator implements IRmIdGenerator {
         	//如果指定了wrapper_class
         	String wrapperClass = ruleVo.getWrapperClass();
         	if(wrapperClass == null || wrapperClass.length() == 0) {
-        		mapWrapper.put(tableName, new DefaultIdWrapper(ruleVo));
+        		mapWrapper.put(tableName, new ShardingInCacheWrapper(ruleVo));
         	} else {
         		try {
 					Class clazz = this.getClass().getClassLoader().loadClass(wrapperClass);
@@ -94,7 +90,6 @@ public class RmIdGenerator implements IRmIdGenerator {
         	
         }
 	}
-
     
     private void doInitId() {
         for (Map.Entry<String, IRmIdWrapper> en: mapWrapper.entrySet()) {
@@ -107,5 +102,4 @@ public class RmIdGenerator implements IRmIdGenerator {
     	IRmIdWrapper wrapper = mapWrapper.get(tableName);
     	return wrapper.nextValue(length);
     }
-    
 }

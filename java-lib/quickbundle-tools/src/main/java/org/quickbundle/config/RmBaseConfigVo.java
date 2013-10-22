@@ -23,11 +23,6 @@ public class RmBaseConfigVo {
 	private String databaseProductName = null;
 	
     /**
-     * 是否水平拆分数据库，默认不拆分数据库
-     */
-    private boolean multiDb = false;
-	
-    /**
      * 系统是否开发调试状态(性能很低，便利于开发调试。同时sql的?替换输出，日志记录了sql真实数据)
      * 默认不是开发调试状态，是正式运行状态
      */
@@ -36,17 +31,7 @@ public class RmBaseConfigVo {
 	/**
 	 * 本集群节点RmIdFactory产生的主键前缀
 	 */
-	private String clusterIdPrefix = "1000";
-
-	/**
-	 * 是否RmIdFactory每次从数据库中读取，生成id (用于多人clusterIdPrefix相同，而且要同时开发)
-	 */
-	private boolean generateIdFromDb = false;
-	
-	/**
-	 * RmIdFactory init id batch, union all?
-	 */
-	private boolean initIdBatch = false;
+	private String shardingPrefix = "1000";
 
 	/**
 	 * 系统用户是否唯一登录，同时登录会强制踢出第一个用户
@@ -63,11 +48,6 @@ public class RmBaseConfigVo {
 	 * 默认的批处理条数，用于sql的union all条数
 	 */
 	private int defaultBatchSize = 10;
-	
-	/**
-	 * 是否启动任务调度
-	 */
-	private boolean schedulerStart = false;
 	
 	/**
 	 * 得到系统描述
@@ -152,20 +132,6 @@ public class RmBaseConfigVo {
 	}
 
 	/**
-	 * @return 是否水平拆分数据库
-	 */
-	public boolean isMultiDb() {
-		return multiDb;
-	}
-
-	/**
-	 * @param multiDb the multiDb to set
-	 */
-	void setMultiDb(boolean multiDb) {
-		this.multiDb = multiDb;
-	}
-
-	/**
 	 * @return 系统是否开发调试状态(系统综合运行性能较低，优化了应用启动速度。同时sql的?替换输出，日志记录了sql真实数据)
 	 */
 	public boolean isSystemDebugMode() {
@@ -182,37 +148,14 @@ public class RmBaseConfigVo {
 	/**
 	 * @return 本集群节点RmIdFactory产生的主键前缀
 	 */
-	public String getClusterIdPrefix() {
-		return clusterIdPrefix;
+	public String getShardingPrefix() {
+		return shardingPrefix;
 	}
-
 	/**
-	 * @param clusterIdPrefix the clusterIdPrefix to set
+	 * @param shardingPrefix the shardingPrefix to set
 	 */
-	void setClusterIdPrefix(String clusterIdPrefix) {
-		this.clusterIdPrefix = clusterIdPrefix;
-	}
-
-	/**
-	 * @return 是否RmIdFactory每次从数据库中读取，生成id (用于多人clusterIdPrefix相同，而且要同时开发)
-	 */
-	public boolean isGenerateIdFromDb() {
-		return generateIdFromDb;
-	}
-
-	/**
-	 * @param generateIdFromDb the generateIdFromDb to set
-	 */
-	void setGenerateIdFromDb(boolean generateIdFromDb) {
-		this.generateIdFromDb = generateIdFromDb;
-	}
-
-	public boolean isInitIdBatch() {
-		return initIdBatch;
-	}
-
-	void setInitIdBatch(boolean initIdBatch) {
-		this.initIdBatch = initIdBatch;
+	public void setShardingPrefix(String shardingPrefix) {
+		this.shardingPrefix = shardingPrefix;
 	}
 	
 	/**
@@ -255,20 +198,6 @@ public class RmBaseConfigVo {
 	 */
 	void setDefaultBatchSize(int defaultBatchSize) {
 		this.defaultBatchSize = defaultBatchSize;
-	}
-
-	/**
-	 * @return 是否启动任务调度
-	 */
-	public boolean isSchedulerStart() {
-		return schedulerStart;
-	}
-
-	/**
-	 * @param schedulerStart the schedulerStart to set
-	 */
-	void setSchedulerStart(boolean schedulerStart) {
-		this.schedulerStart = schedulerStart;
 	}
 
 	/**

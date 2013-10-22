@@ -1,7 +1,9 @@
-package org.quickbundle.base.beans;
+package org.quickbundle.base.beans.idwrapper;
 
 import java.util.Random;
 
+import org.quickbundle.base.beans.NumberIncrementService;
+import org.quickbundle.base.beans.TableIdRuleVo;
 import org.quickbundle.itf.base.IRmIdWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +14,11 @@ import org.springframework.dao.DataAccessException;
  * 
  * @author 白小勇
  */
-public class NumberFromOneIdWrapper implements IRmIdWrapper {
-	private static Logger log = LoggerFactory.getLogger(NumberFromOneIdWrapper.class.getName());
+public class NumberIncrementWrapper implements IRmIdWrapper {
+	private static Logger log = LoggerFactory.getLogger(NumberIncrementWrapper.class.getName());
 	
 	TableIdRuleVo ruleVo = null;
-	NumberFromOneService nfoService = null;
+	NumberIncrementService nfoService = null;
 
 	static Random random = new Random();
 	
@@ -28,9 +30,9 @@ public class NumberFromOneIdWrapper implements IRmIdWrapper {
 	long nextId = -1;
 
 
-	public NumberFromOneIdWrapper(TableIdRuleVo ruleVo) {
+	public NumberIncrementWrapper(TableIdRuleVo ruleVo) {
 		this.ruleVo = ruleVo;
-		nfoService = new NumberFromOneService(); 
+		nfoService = new NumberIncrementService(); 
 	}
 
 	public void init() {

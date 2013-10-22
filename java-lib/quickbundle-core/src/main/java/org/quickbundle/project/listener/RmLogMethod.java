@@ -9,7 +9,7 @@
  * 2008-9-11 上午09:33:35 创建1.0.0版 (Administrator)
  * 
  */
-package org.quickbundle.project.aop;
+package org.quickbundle.project.listener;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,7 +21,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.quickbundle.config.RmBaseConfig;
-import org.quickbundle.project.listener.RmGlobalMonitor;
 import org.quickbundle.tools.helper.RmUUIDHelper;
 import org.quickbundle.tools.support.log.RmLogHelper;
 import org.slf4j.Logger;

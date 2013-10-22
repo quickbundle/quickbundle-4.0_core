@@ -1,5 +1,6 @@
-package org.quickbundle.base.beans;
+package org.quickbundle.base.beans.idwrapper;
 
+import org.quickbundle.base.beans.TableIdRuleVo;
 import org.quickbundle.itf.base.IRmIdWrapper;
 import org.quickbundle.tools.helper.RmUUIDHelper;
 
