@@ -10,8 +10,7 @@ public class RmBaseConfigVo {
 	private String warHome = System.getProperty("user.home") + "/.qbhome/default";
 	
 	/**
-	 * 	<!-- cloud node info collected automatically? or read from rm.xml? #change in production -->
-		<cloudNodeInfoAuto>false</cloudNodeInfoAuto>
+	 * 	<!-- cloud node info collected automatically? or read from rm.xml? -->
 	 * @return 是集群模式？或单机？
 	 */
 	private boolean clusterMode = false;
@@ -29,7 +28,8 @@ public class RmBaseConfigVo {
     private boolean systemDebugMode = true;
 	
 	/**
-	 * 本集群节点RmIdFactory产生的主键前缀
+	 * primary key prefix of this cluster node, range: 1000-9222 
+	        本集群节点RmIdFactory产生的主键前缀
 	 */
 	private String shardingPrefix = "1000";
 
