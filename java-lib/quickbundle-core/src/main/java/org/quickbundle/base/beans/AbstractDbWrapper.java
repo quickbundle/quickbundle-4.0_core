@@ -4,6 +4,9 @@ import org.quickbundle.ICoreConstants;
 import org.quickbundle.config.RmBaseConfig;
 
 public abstract class AbstractDbWrapper {
+	
+	public final static int MAX_LONG_LENGTH = String.valueOf(Long.MAX_VALUE).length(); 
+	
 	protected TableIdRuleVo ruleVo = null;
 	public AbstractDbWrapper(TableIdRuleVo ruleVo) {
 		this.ruleVo = ruleVo;
@@ -13,8 +16,8 @@ public abstract class AbstractDbWrapper {
    protected long getMaxIdOrDefault(String maxId) {
     	long result = 0L;
 		if(maxId != null && maxId.length() > 0) {
-			if(maxId.length() > 19) {
-				result = Long.parseLong(maxId.substring(0, 19)) + 1;
+			if(maxId.length() > MAX_LONG_LENGTH) {
+				result = Long.parseLong(maxId.substring(0, MAX_LONG_LENGTH)) + 1;
 			} else {
 				result = Long.parseLong(maxId) + 1;
 			}
@@ -25,10 +28,16 @@ public abstract class AbstractDbWrapper {
     }
    
 	protected String firstValue() {
-		return RmBaseConfig.getSingleton().getShardingPrefix() + ruleVo.getTableCode() + "00000000001";
+		String idPrefix = getIdPrefix();
+		StringBuilder result = new StringBuilder(idPrefix);
+		for(int i=0; i<MAX_LONG_LENGTH-idPrefix.length()-1; i++) {
+			result.append("0");
+		}
+		result.append("1");
+		return result.toString();
 	}
 	
-	private String getShardingPrefix() {
+	private String getIdPrefix() {
 		return RmBaseConfig.getSingleton().getShardingPrefix() + ruleVo.getTableCode();
 	}
 	
@@ -42,7 +51,7 @@ public abstract class AbstractDbWrapper {
 		sql.append(" where ");
 		sql.append(parseColumn(ruleVo.getIdName()));
 		sql.append(" like '");
-		sql.append(getShardingPrefix());
+		sql.append(getIdPrefix());
 		sql.append("%'");
     	return sql.toString();
     }
