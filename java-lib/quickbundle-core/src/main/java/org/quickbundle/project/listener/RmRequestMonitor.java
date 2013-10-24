@@ -110,7 +110,7 @@ public class RmRequestMonitor {
         	sb.append("|");
         	sb.append(exception.getClass().getName());
         	sb.append(":");
-        	sb.append(exception.getMessage().trim());
+        	sb.append(exception.getMessage() != null ? exception.getMessage().trim() : "");
         }
     	String sbStr = sb.toString().replaceAll("[\\r\\n]+", " ");
     	logRequest.debug(sbStr);
