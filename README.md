@@ -46,7 +46,7 @@ eclipse/plugins目录格式，直接复制到Eclipse下，安装快
 		1，确保qb-core/eclipse-plugin/quickbundle-gp/t/j1下删掉了软链接目录quickbundle-rmwebdemo
 		2，先安装qb-core到$M2_REPO。
 			cd qb-core/
-			mvn install -o 【-o表示离线模式，不用每次都检查tycho库】
+			mvn install -o 【-o表示离线模式，不用每次都检查tycho库。首次执行要去掉-o】
 		3，打包。
 			cd qb-archetype/build/build-rmwebdemo
 			mvn clean package
