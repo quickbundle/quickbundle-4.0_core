@@ -73,7 +73,7 @@ Ext.onReady(function(){
 					<xsl:when test="@humanDisplayType='rm.listReference'">
 					items: [{
 						xtype: 'referencefield', fieldLabel: '<xsl:value-of select="$charLt"/>%=<xsl:value-of select="$ITableNameConstants"/>.TABLE_COLUMN_DISPLAY.get("<xsl:value-of select="$columnNameFormatLower"/>")%>', anchor:'95%', name: '<xsl:value-of select="$columnNameFormatLower"/>', 
-						urlPath: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$humanDisplayTypeKeyword"/>Action.do?cmd=queryReference<xsl:value-of select="$charAmp"/>referenceInputType=radio'
+						urlPath: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$humanDisplayTypeKeyword"/>/reference?referenceInputType=radio'
 					}]</xsl:when>
 					<!--处理rm.dictionary.select or rm.dictionary.checkbox(人性化展现方式)-->
 					<xsl:when test="@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox'">
@@ -184,7 +184,7 @@ Ext.onReady(function(){
                 dataIndex: '<xsl:value-of select="$columnNameFormatLower"/>',<xsl:choose>
 				<!--处理rm.listReference(列表参照)-->
 				<xsl:when test="@humanDisplayType='rm.listReference'">
-				editor: new fm.ReferenceField({ <xsl:if test="@nullable='NO'">allowBlank: false, </xsl:if>urlPath: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$humanDisplayTypeKeyword"/>Action.do?cmd=queryReference<xsl:value-of select="$charAmp"/>referenceInputType=radio' })</xsl:when>
+				editor: new fm.ReferenceField({ <xsl:if test="@nullable='NO'">allowBlank: false, </xsl:if>urlPath: '<xsl:value-of select="$charLt"/>%=request.getContextPath()%>/<xsl:value-of select="$humanDisplayTypeKeyword"/>/reference?referenceInputType=radio' })</xsl:when>
 				<!--处理rm.dictionary.select or rm.dictionary.checkbox-->
 				<xsl:when test="@humanDisplayType='rm.dictionary.select' or @humanDisplayType='rm.dictionary.checkbox'">
 				editor: rm_<xsl:value-of select="$columnNameFormatLower"/>,
