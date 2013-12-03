@@ -40,16 +40,14 @@ public class MySql5PageHepler {
 	/**
 	 * 得到分页的SQL
 	 * 
-	 * @param offset
-	 *            偏移量
-	 * @param limit
-	 *            位置
+	 * @param offset 偏移量
+	 * @param limit 位置
 	 * @return 分页SQL
 	 */
 	public static String getLimitString(String querySelect, int offset, int limit) {
 		querySelect = getLineSql(querySelect);
 		StringBuilder sql = new StringBuilder();
-		sql.append(querySelect.replaceAll("[^\\s,]+\\.", "")).append(" limit ").append(offset).append(",").append(limit);
+		sql.append(querySelect).append(" limit ").append(offset).append(",").append(limit);  //replaceAll("[^\\s,]+\\.", "")
 		return sql.toString();
 
 	}
