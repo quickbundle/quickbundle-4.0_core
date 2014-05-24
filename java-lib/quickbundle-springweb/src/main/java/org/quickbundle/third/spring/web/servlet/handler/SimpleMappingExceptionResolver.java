@@ -176,7 +176,7 @@ public class SimpleMappingExceptionResolver extends AbstractHandlerExceptionReso
 					HandlerMethod hm = (HandlerMethod)handler;
 					RequestMapping rm = hm.getMethodAnnotation(RequestMapping.class);
 					if(Arrays.binarySearch(rm.produces(), MediaType.APPLICATION_JSON_VALUE) > -1) {
-						setDefaultErrorView("/common/errAjax");
+						viewName = "/common/errAjax";
 					}
 				}
 			}
