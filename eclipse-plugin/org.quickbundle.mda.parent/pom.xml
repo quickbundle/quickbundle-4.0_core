@@ -10,7 +10,7 @@
 		<maven>3.0</maven>
 	</prerequisites>
 	<properties>
-		<tycho-version>0.18.1</tycho-version>
+		<tycho-version>0.20.0</tycho-version>
 		<manifest-location>META-INF</manifest-location>
 		<encoding>UTF-8</encoding>
 		<jdk.version>1.5</jdk.version>
@@ -170,7 +170,7 @@ encoding/<project>=UTF-8]]></content>
 											tycho-packaging-plugin
 										</artifactId>
 										<versionRange>
-											[0.18.1,)
+											[0.20.0,)
 										</versionRange>
 										<goals>
 											<goal>validate-id</goal>
@@ -189,7 +189,7 @@ encoding/<project>=UTF-8]]></content>
 											tycho-packaging-plugin
 										</artifactId>
 										<versionRange>
-											[0.18.1,)
+											[0.20.0,)
 										</versionRange>
 										<goals>
 											<goal>validate-version</goal>
@@ -208,7 +208,7 @@ encoding/<project>=UTF-8]]></content>
 											tycho-packaging-plugin
 										</artifactId>
 										<versionRange>
-											[0.18.1,)
+											[0.20.0,)
 										</versionRange>
 										<goals>
 											<goal>build-qualifier</goal>
@@ -227,7 +227,7 @@ encoding/<project>=UTF-8]]></content>
 											tycho-packaging-plugin
 										</artifactId>
 										<versionRange>
-											[0.18.1,)
+											[0.20.0,)
 										</versionRange>
 										<goals>
 											<goal>
