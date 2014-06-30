@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>quickbundle by quickbundle</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>quickbundle</h1>
+        <h2>core component of quickbundle</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/quickbundle/qb-core/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/quickbundle/qb-core/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/quickbundle/qb-core" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a name="quickbundle%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6" class="anchor" href="#quickbundle%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="octicon octicon-link"></span></a>quickbundle核心组件</h1>
+
+<h2>
+<a name="%E7%89%B9%E8%89%B2%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" class="anchor" href="#%E7%89%B9%E8%89%B2%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D"><span class="octicon octicon-link"></span></a>特色功能介绍</h2>
+
+<h3>
+<a name="%E5%8A%9F%E8%83%BD%E4%BC%98%E5%8A%BF" class="anchor" href="#%E5%8A%9F%E8%83%BD%E4%BC%98%E5%8A%BF"><span class="octicon octicon-link"></span></a>功能优势</h3>
+
+<ul>
+<li>支持父子表、多对多表的智能关系分析及生成</li>
+<li>JavaEE标准版的代码生成器，可以做企业应用、互联网后端、2B的门户、及网站前台(需要单独设计页面)</li>
+<li>跨平台的Mobile端的代码生成器(即将发布)，用一套代码通吃iOS各版本、Android各版本、winphone，可用于企业移动端应用、2C的轻应用</li>
+<li>安全强化JavaEE版的代码生成器(即将发布)，吸纳了“Build Security In” + OWASP + MASS，适用于对安全有要求的应用开发</li>
+</ul><h3>
+<a name="%E9%9D%A9%E5%91%BD%E6%80%A7%E7%9A%84%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E6%96%B0%E7%90%86%E5%BF%B5" class="anchor" href="#%E9%9D%A9%E5%91%BD%E6%80%A7%E7%9A%84%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E6%96%B0%E7%90%86%E5%BF%B5"><span class="octicon octicon-link"></span></a>革命性的代码生成器新理念</h3>
+
+<ul>
+<li>支持本地模板源和远程模板源的扩展，这样能引入模板供应商(Template Provider)，使得代码生成以在线服务的方式提供</li>
+<li>模板虚拟机的设计，可以扩展为支持多样的Model格式、多样的模板引擎、多样的处理流程</li>
+</ul><h3>
+<a name="%E6%9E%B6%E6%9E%84%E5%8F%8A%E6%8A%80%E6%9C%AF%E4%BC%98%E5%8A%BF" class="anchor" href="#%E6%9E%B6%E6%9E%84%E5%8F%8A%E6%8A%80%E6%9C%AF%E4%BC%98%E5%8A%BF"><span class="octicon octicon-link"></span></a>架构及技术优势</h3>
+
+<ul>
+<li>松耦合的设计，不仅支持生成Java工程，也可以生成大多数语言和框架的工程，无需改代码，只需要加模板</li>
+<li>xslt 2.0语法格式的模板，功能强大，前景好（因为html5的xml良构会带来xslt的第二春）</li>
+<li>纯maven + 纯OSGI的架构，高度组件化，支持一键编译</li>
+</ul><h2>
+<a name="%E6%BA%90%E4%BB%A3%E7%A0%81%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D" class="anchor" href="#%E6%BA%90%E4%BB%A3%E7%A0%81%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D"><span class="octicon octicon-link"></span></a>源代码模块介绍</h2>
+
+<h3>
+<a name="%E5%8C%85%E5%90%AB%E5%9F%BA%E7%A1%80jar%E5%8C%855%E4%B8%AA" class="anchor" href="#%E5%8C%85%E5%90%AB%E5%9F%BA%E7%A1%80jar%E5%8C%855%E4%B8%AA"><span class="octicon octicon-link"></span></a>包含基础jar包5个:</h3>
+
+<pre><code>    java-lib/quickbundle-tools  基础工具jar包，是一些其它quickbundle-xxx.jar的基础
+    java-lib/quickbundle-core  核心jar包，依赖于Spring
+    java-lib/quickbundle-mybatis  mybatis扩展
+    java-lib/quickbundle-springweb  spring mvc扩展
+    java-lib/quickbundle-struts  struts1 扩展
+</code></pre>
+
+<h3>
+<a name="eclipse%E6%8F%92%E4%BB%B6" class="anchor" href="#eclipse%E6%8F%92%E4%BB%B6"><span class="octicon octicon-link"></span></a>Eclipse插件</h3>
+
+<pre><code>    eclipse-plugin/org.quickbundle.mda.libs  osgi下的jar包接入点
+    eclipse-plugin/quickbundle-gp  项目生成器
+    eclipse-plugin/quickbundle-mvm  模型虚拟机
+    eclipse-plugin/quickbundle-gc  代码生成器
+
+    eclipse-plugin/org.quickbundle.mda.feature  Eclipse插件组合的feature工程
+    eclipse-plugin/org.quickbundle.mda.updatesite  Eclipse插件的在线/离线安装包的组合工程
+</code></pre>
+
+<h2>
+<a name="%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85" class="anchor" href="#%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85"><span class="octicon octicon-link"></span></a>编译打包</h2>
+
+<h3>
+<a name="%E4%B8%80%E9%94%AE%E7%BC%96%E8%AF%91quickbundle-400%E6%8F%92%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E4%B8%80%E6%8E%A8%E8%8D%90" class="anchor" href="#%E4%B8%80%E9%94%AE%E7%BC%96%E8%AF%91quickbundle-400%E6%8F%92%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E4%B8%80%E6%8E%A8%E8%8D%90"><span class="octicon octicon-link"></span></a>一键编译quickbundle-4.0.0插件的方式一（推荐）？</h3>
+
+<p>eclipse/plugins目录格式，直接复制到Eclipse下，安装快</p>
+
+<pre><code>    1，确保qb-core/eclipse-plugin/quickbundle-gp/t/j1下删掉了软链接目录quickbundle-rmwebdemo
+    2，先安装qb-core到$M2_REPO。
+        cd qb-core/
+        mvn install -o 【-o表示离线模式，不用每次都检查tycho库。首次执行要去掉-o】
+    3，打包。
+        cd qb-archetype/build/build-rmwebdemo
+        mvn clean package
+    4，安装插件包。
+        复制qb-archetype/build/build-rmwebdemo/target/eclipse目录到$ECLIPSE_HOME/links/org.quickbundle目录
+    5，重启Eclipse即可
+</code></pre>
+
+<h3>
+<a name="%E4%B8%80%E9%94%AE%E7%BC%96%E8%AF%91quickbundle-400%E6%8F%92%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E4%BA%8C" class="anchor" href="#%E4%B8%80%E9%94%AE%E7%BC%96%E8%AF%91quickbundle-400%E6%8F%92%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E4%BA%8C"><span class="octicon octicon-link"></span></a>一键编译quickbundle-4.0.0插件的方式二？</h3>
+
+<p>updatesite格式的安装版，安装到Eclipse时较慢</p>
+
+<pre><code>    1，使用Linux下的ln -s(或windows下的junction)，把qb-archetype/quickbundle-rmwebdemo目录软链接到qb-core/eclipse-plugin/quickbundle-gp/t/j1目录。
+    2，安装maven-3.0.5，在qb-core目录下，执行mvn install，即可安装到$M2_REPO/org/quickbundle/org.quickbundle.mda.updatesite/4.0.0/org.quickbundle.mda.updatesite-4.0.0.zip。
+</code></pre>
+
+<h2>
+<a name="%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B" class="anchor" href="#%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B"><span class="octicon octicon-link"></span></a>视频教程</h2>
+
+<p>1.<a href="http://www.quickbundle.org">到quickbundle主页看视频教程(即将发布)</a><br></p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
